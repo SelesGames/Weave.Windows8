@@ -1,0 +1,100 @@
+﻿<UserControl
+    x:Class="Weave.Views.StartHub.LatestArticles"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Weave.Views.StartHub"
+    xmlns:common="using:Weave.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    >
+    
+    <UserControl.Resources>
+        
+        <DataTemplate x:Key="MainTemplate">
+            <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0" Height="200">
+                    <Image Source="{Binding Image}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
+                </Grid>
+                <TextBlock Grid.Row="1" Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" FontWeight="Bold" Margin="0,10,0,0" />
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,20,0,0" VerticalAlignment="Top">
+                    <TextBlock Text="{Binding OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                </StackPanel>
+                <Rectangle Height="1" Grid.Row="2" VerticalAlignment="Bottom" Fill="{StaticResource SubtleTextBrush}" />
+            </Grid>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="LargeNoImageTemplate">
+            <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,0" />
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,20,0,0" VerticalAlignment="Top">
+                    <TextBlock Text="{Binding OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SmallTemplate">
+            <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0" Height="100">
+                    <Image Source="{Binding Image}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
+                </Grid>
+                <TextBlock Grid.Row="1" Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,10,0,0" />
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,20,0,0" VerticalAlignment="Top">
+                    <TextBlock Text="{Binding OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <common:StartLatestItemSelector x:Key="StartLatestItemSelector" MainTemplate="{StaticResource MainTemplate}" LargeNoImageTemplate="{StaticResource LargeNoImageTemplate}" SmallTemplate="{StaticResource SmallTemplate}" />
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Button Style="{StaticResource ButtonStyleBasic}" Padding="20" Margin="-20">
+            <StackPanel Orientation="Horizontal" Margin="5,0,0,0">
+                <TextBlock Text="{Binding Header}" Style="{StaticResource SubheaderTextStyle}" />
+                <TextBlock Style="{StaticResource ChevronHeaderStyle}" />
+            </StackPanel>
+        </Button>
+        <Grid Grid.Row="2" Margin="0,0,0,0">
+            <common:VariableGridView Margin="-5,-5,-5,-5" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{Binding Items}" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" ItemTemplateSelector="{StaticResource StartLatestItemSelector}" ItemContainerStyle="{StaticResource GridViewItemStyleWeave}">
+                <common:VariableGridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VariableSizedWrapGrid VerticalAlignment="Top" ItemWidth="250" ItemHeight="115" MaximumRowsOrColumns="4" Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </common:VariableGridView.ItemsPanel>
+            </common:VariableGridView>
+            <!--<TextBlock Text="Could not retrieve videos from YouTube" Style="{StaticResource SubheaderTextStyle}" Opacity="0.6" Visibility="{Binding ErrorLoadingItems, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
+            <ProgressRing IsActive="{Binding IsLoading}" Style="{StaticResource LargeLoadingRingStyle}" />
+        </Grid>
+    </Grid>
+</UserControl>
