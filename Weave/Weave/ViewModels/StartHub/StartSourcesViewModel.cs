@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Weave.ViewModels.StartHub
 {
-    public class StartSourcesViewModel
+    public class StartSourcesViewModel : StartItemBase
     {
         public struct SourceListing
         {

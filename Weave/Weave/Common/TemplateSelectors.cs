@@ -47,9 +47,9 @@ namespace Weave.Common
         {
             FrameworkElement element = container as FrameworkElement;
 
-            if (element != null && item is StartNewsItem)
+            if (element != null && item is StartNewsItemContainer)
             {
-                StartNewsItem newsItem = (StartNewsItem)item;
+                StartNewsItemContainer newsItem = (StartNewsItemContainer)item;
                 if (newsItem.WidthSpan == 2)
                 {
                     if (newsItem.IsMain)
@@ -82,9 +82,9 @@ namespace Weave.Common
         {
             FrameworkElement element = container as FrameworkElement;
 
-            if (element != null && item is StartNewsItem)
+            if (element != null && item is StartNewsItemContainer)
             {
-                StartNewsItem newsItem = (StartNewsItem)item;
+                StartNewsItemContainer newsItem = (StartNewsItemContainer)item;
                 if (newsItem.WidthSpan == 2)
                 {
                     if (newsItem.IsMain)

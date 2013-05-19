@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Weave.ViewModels.StartHub
 {
-    public class StartAddViewModel
+    public class StartAddViewModel : StartItemBase
     {
     } // end of class
 }

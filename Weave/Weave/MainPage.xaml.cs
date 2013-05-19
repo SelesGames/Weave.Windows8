@@ -16,6 +16,12 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 using Weave.ViewModels.StartHub;
+using System.Net.Http;
+using System.Runtime.Serialization;
+using System.Xml;
+using System.Runtime.Serialization.Json;
+using Newtonsoft.Json;
+using Weave.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -36,7 +42,7 @@ namespace Weave
 
         private static int _defaultStartItemCount; // default item count excluding clusters
 
-        private static ObservableCollection<Object> _startItems = new ObservableCollection<Object>();
+        private static ObservableCollection<StartItemBase> _startItems = new ObservableCollection<StartItemBase>();
 
         public MainPage()
         {
@@ -96,23 +102,7 @@ namespace Weave
 
         private async Task LoadTestData()
         {
-            await Task.Run(() =>
-            {
-                _heroArticleVm.Article = TestData.GetHeroItemSample();
-                List<StartNewsItem> sampleItems = TestData.GetLatestArticlesSample();
-                foreach (StartNewsItem item in sampleItems) _latestArticlesVm.Items.Add(item);
-                foreach (String str in TestData.GetSampleSources()) _sourcesVm.Items.Add(new StartSourcesViewModel.SourceListing() { Display = str, Key = str });
-
-                StartClusterViewModel cluster = new StartClusterViewModel();
-                cluster.Header = "World news";
-                _startItems.Insert(_startItems.Count - 1, cluster);
-                foreach (StartNewsItem item in TestData.GetWorldNewsSample()) cluster.Items.Add(item);
-
-                cluster = new StartClusterViewModel();
-                cluster.Header = "Business";
-                _startItems.Insert(_startItems.Count - 1, cluster);
-                foreach (StartNewsItem item in TestData.GetBusinessSample()) cluster.Items.Add(item);
-            });
+            foreach (String str in TestData.GetSampleSources()) _sourcesVm.Items.Add(new StartSourcesViewModel.SourceListing() { Display = str, Key = str });
         }
 
         private ScrollViewer _mainScrollViewer;
@@ -130,6 +120,8 @@ namespace Weave
 
         private async void LayoutAwarePage_Loaded(object sender, RoutedEventArgs e)
         {
+            await UserHelper.Instance.LoadUser();
+            await LoadViewModels();
             await LoadTestData();
             LstVwMain.ItemsSource = _startItems;
             PrgRngLoadingMain.IsActive = false;
@@ -140,6 +132,36 @@ namespace Weave
                 MainScrollViewer.ScrollToHorizontalOffset(_savedScrollPosition);
                 _savedScrollPosition = 0;
             }
+        }
+
+        private async Task LoadViewModels()
+        {
+            List<NewsItem> newsItems = UserHelper.Instance.GetLatestNews();
+            if (newsItems != null && newsItems.Count > 0)
+            {
+                List<StartNewsItemContainer> viewItems = new List<StartNewsItemContainer>();
+                int maxCount = StartLatestViewModel.BaseDisplayCount + (StartLatestViewModel.ExtraRows * 3) + 1; // add one for extraction of hero article
+                for (int i = 0; i < newsItems.Count && i < maxCount; i++)
+                {
+                    viewItems.Add(new StartNewsItemContainer(newsItems[i]));
+                }
+                _heroArticleVm.Article = viewItems[0].NewsItem;
+                viewItems.RemoveAt(0);
+                _latestArticlesVm.InitItems(viewItems);
+            }
+
+            int clusterFetchCount = StartClusterViewModel.BaseDisplayCount + StartClusterViewModel.ExtraRows + 1;
+            NewsList news = await UserHelper.Instance.GetCategoryNews("comic books", clusterFetchCount);
+            StartClusterViewModel cluster = new StartClusterViewModel();
+            cluster.Header = "Comic books";
+            _startItems.Insert(_startItems.Count - 1, cluster);
+            cluster.InitCluster(news);
+
+            news = await UserHelper.Instance.GetCategoryNews("business", clusterFetchCount);
+            cluster = new StartClusterViewModel();
+            cluster.Header = "Business";
+            _startItems.Insert(_startItems.Count - 1, cluster);
+            cluster.InitCluster(news);
         }
 
         public const double BaseHeight = 768; // base height of design screen
@@ -162,10 +184,14 @@ namespace Weave
             if (_expansionFactor > 0)
             {
                 GrdRoot.Tag = BaseSectionHeight + (int)(BinHeight * _expansionFactor);
+                StartClusterViewModel.ExtraRows = (int)(_expansionFactor * 2);
+                StartLatestViewModel.ExtraRows = (int)_expansionFactor;
             }
             else
             {
                 GrdRoot.Tag = BaseSectionHeight;
+                StartClusterViewModel.ExtraRows = 0;
+                StartLatestViewModel.ExtraRows = 0;
             }
         }
 

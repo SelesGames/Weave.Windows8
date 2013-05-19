@@ -143,5 +143,10 @@ namespace Weave
             element.SetBinding(prop, b);
         }
 
+        public static void LogError(String message, Exception e = null)
+        {
+            // add logging logic
+        }
+
     } // end of class
 }

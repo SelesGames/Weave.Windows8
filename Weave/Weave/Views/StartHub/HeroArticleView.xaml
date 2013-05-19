@@ -9,7 +9,15 @@
     >
 
     <Grid Background="{StaticResource ImagePlaceholderBrush}" Width="1100">
-        <Image Source="{Binding Article.Image}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
+        <Image Source="{Binding Article.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
+        <Rectangle VerticalAlignment="Bottom" Height="300">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="#00000000" Offset="0.0" />
+                    <GradientStop Color="#BB000000" Offset="1.0" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
         <Grid VerticalAlignment="Bottom" Margin="100,0,100,100">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

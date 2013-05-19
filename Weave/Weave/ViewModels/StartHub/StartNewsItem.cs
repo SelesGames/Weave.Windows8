@@ -3,12 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Weave.Common;
 using Weave.ViewModels;
 
 namespace Weave.ViewModels.StartHub
 {
-    public class StartNewsItem : NewsItem, IResizable
+    public class StartNewsItemContainer : IResizable
     {
+        private NewsItem _newsItem;
+        public NewsItem NewsItem
+        {
+            get { return _newsItem; }
+            set { _newsItem = value; }
+        }
+
+        public StartNewsItemContainer()
+        {
+        }
+
+        public StartNewsItemContainer(NewsItem item)
+        {
+            NewsItem = item;
+        }
+
         private int _widthSpan = 1;
         /// <summary>
         /// Gets or sets the width span of this video (used with variable size grid view).
@@ -29,7 +46,7 @@ namespace Weave.ViewModels.StartHub
             set { _heightSpan = value; }
         }
 
-        private bool _showImage;
+        private bool _showImage = true;
         /// <summary>
         /// Indicates if the image should be shown for this item.
         /// </summary>

@@ -7,14 +7,13 @@ using Weave.Common;
 
 namespace Weave.ViewModels.StartHub
 {
-    public class StartHeroArticle : StartItemBase
+    public class StartItemBase : BindableBase
     {
-        private NewsItem _article;
-
-        public NewsItem Article
+        private bool _isLoading;
+        public bool IsLoading
         {
-            get { return _article; }
-            set { SetProperty(ref _article, value); }
+            get { return _isLoading; }
+            set { SetProperty(ref _isLoading, value); }
         }
 
     } // end of class

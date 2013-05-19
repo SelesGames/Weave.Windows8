@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>Weave_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -112,6 +113,8 @@
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Common\TemplateSelectors.cs" />
     <Compile Include="Common\TestData.cs" />
+    <Compile Include="Common\UserAggregatorClient.cs" />
+    <Compile Include="Common\UserHelper.cs" />
     <Compile Include="Common\VariableGridView.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -121,6 +124,7 @@
     <Compile Include="ViewModels\StartHub\StartAddViewModel.cs" />
     <Compile Include="ViewModels\StartHub\StartClusterViewModel.cs" />
     <Compile Include="ViewModels\StartHub\StartHeroArticle.cs" />
+    <Compile Include="ViewModels\StartHub\StartItemBase.cs" />
     <Compile Include="ViewModels\StartHub\StartLatestViewModel.cs" />
     <Compile Include="ViewModels\StartHub\StartNewsItem.cs" />
     <Compile Include="ViewModels\StartHub\StartSourcesViewModel.cs" />
@@ -144,6 +148,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="packages.config" />
     <None Include="Weave_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -197,9 +202,27 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Weave.ViewModels">
-      <HintPath>..\lib\Weave.ViewModels.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.5\lib\netcore45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.UserFeedAggregator.Contracts\Weave.UserFeedAggregator.Contracts.csproj">
+      <Project>{02f3363f-7b0f-4c5f-9123-b388f2870c35}</Project>
+      <Name>Weave.UserFeedAggregator.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.UserFeedAggregator.DTOs\Weave.UserFeedAggregator.DTOs.csproj">
+      <Project>{75f2f4b1-beb2-4ac6-a935-5a795c5a79a0}</Project>
+      <Name>Weave.UserFeedAggregator.DTOs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.ViewModels.Repository\Weave.ViewModels.Repository.csproj">
+      <Project>{d326f8c2-8dcf-43d4-9bad-bc07ca6d6cce}</Project>
+      <Name>Weave.ViewModels.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.ViewModels\Weave.ViewModels.csproj">
+      <Project>{0f188fc9-d10c-48db-917a-ff1cb9c8e795}</Project>
+      <Name>Weave.ViewModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
