@@ -71,7 +71,7 @@ namespace Weave.Common
             throw new NotImplementedException();
         }
 
-        public Task AddFeed(Guid userId, UserFeedAggregator.DTOs.ServerIncoming.NewFeed feed)
+        public Task<UserFeedAggregator.DTOs.ServerOutgoing.Feed> AddFeed(Guid userId, UserFeedAggregator.DTOs.ServerIncoming.NewFeed feed)
         {
             throw new NotImplementedException();
         }
