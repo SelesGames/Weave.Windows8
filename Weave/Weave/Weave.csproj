@@ -147,7 +147,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="packages.config" />
     <None Include="Weave_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
