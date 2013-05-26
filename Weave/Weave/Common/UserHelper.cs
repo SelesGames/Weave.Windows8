@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,7 +49,7 @@ namespace Weave.Common
                     _loading = true;
                     _loadingEvent.Reset();
 
-                    _repo = new ViewModels.Repository.StandardRepository(Guid.Parse(CurrentUserId), new UserAggregatorClient());
+                    _repo = new ViewModels.Repository.StandardRepository(Guid.Parse(CurrentUserId), new Weave.UserFeedAggregator.Client.Client());
                     _currentUser = await _repo.GetUserInfo(false);
 
                     _loadingEvent.Set();
