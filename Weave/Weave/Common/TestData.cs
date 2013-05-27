@@ -36,6 +36,22 @@ namespace Weave.Common
             return sources;
         }
 
+        public static List<NewsItem> GetNewsFeedSample(int count)
+        {
+            List<NewsItem> items = new List<NewsItem>();
+            NewsItem newsItem;
+            for (int i = 0; i < count; i++)
+            {
+                newsItem = new NewsItem();
+                newsItem.Id = Guid.NewGuid();
+                newsItem.Title = "How one company taught its employees how to be happier";
+                newsItem.Feed = new Feed() { Name = "Fast Company" };
+                newsItem.UtcPublishDateTime = "Tuesday 12 April 2013, 3:22pm";
+                items.Add(newsItem);
+            }
+            return items;
+        }
+
         public static List<StartNewsItemContainer> GetWorldNewsSample()
         {
             List<StartNewsItemContainer> items = new List<StartNewsItemContainer>();

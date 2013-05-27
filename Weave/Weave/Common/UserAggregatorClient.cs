@@ -71,6 +71,21 @@ namespace Weave.Common
             throw new NotImplementedException();
         }
 
+        public Task<UserFeedAggregator.DTOs.ServerOutgoing.FeedsInfoList> GetFeeds(Guid userId, bool refresh = false, bool nested = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<UserFeedAggregator.DTOs.ServerOutgoing.FeedsInfoList> GetFeeds(Guid userId, string category, bool refresh = false, bool nested = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<UserFeedAggregator.DTOs.ServerOutgoing.FeedsInfoList> GetFeeds(Guid userId, Guid feedId, bool refresh = false, bool nested = false)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<UserFeedAggregator.DTOs.ServerOutgoing.Feed> AddFeed(Guid userId, UserFeedAggregator.DTOs.ServerIncoming.NewFeed feed)
         {
             throw new NotImplementedException();
@@ -115,5 +130,6 @@ namespace Weave.Common
         {
             throw new NotImplementedException();
         }
+
     } // end of class
 }

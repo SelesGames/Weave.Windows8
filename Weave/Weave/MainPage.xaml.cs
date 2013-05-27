@@ -120,9 +120,16 @@ namespace Weave
 
         private async void LayoutAwarePage_Loaded(object sender, RoutedEventArgs e)
         {
-            await UserHelper.Instance.LoadUser();
-            await LoadViewModels();
-            await LoadTestData();
+            _heroArticleVm.AttachedFrame = Frame;
+            _latestArticlesVm.AttachedFrame = Frame;
+            _sourcesVm.AttachedFrame = Frame;
+
+            if (_latestArticlesVm.Items.Count == 0)
+            {
+                await UserHelper.Instance.LoadUser();
+                await LoadViewModels();
+                await LoadTestData();
+            }
             LstVwMain.ItemsSource = _startItems;
             PrgRngLoadingMain.IsActive = false;
 
