@@ -20,7 +20,6 @@ using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Runtime.Serialization.Json;
-using Newtonsoft.Json;
 using Weave.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238

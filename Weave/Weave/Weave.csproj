@@ -116,7 +116,6 @@
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Common\TemplateSelectors.cs" />
     <Compile Include="Common\TestData.cs" />
-    <Compile Include="Common\UserAggregatorClient.cs" />
     <Compile Include="Common\UserHelper.cs" />
     <Compile Include="Common\VariableGridView.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -152,7 +151,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="packages.config" />
     <None Include="Weave_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -206,18 +204,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.5\lib\netcore45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.UserFeedAggregator.Contracts\Weave.UserFeedAggregator.Contracts.csproj">
       <Project>{02f3363f-7b0f-4c5f-9123-b388f2870c35}</Project>
       <Name>Weave.UserFeedAggregator.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.UserFeedAggregator.DTOs\Weave.UserFeedAggregator.DTOs.csproj">
-      <Project>{75f2f4b1-beb2-4ac6-a935-5a795c5a79a0}</Project>
-      <Name>Weave.UserFeedAggregator.DTOs</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.ViewModels.Repository\Weave.ViewModels.Repository.csproj">
       <Project>{d326f8c2-8dcf-43d4-9bad-bc07ca6d6cce}</Project>
@@ -226,6 +215,10 @@
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.ViewModels\Weave.ViewModels.csproj">
       <Project>{0f188fc9-d10c-48db-917a-ff1cb9c8e795}</Project>
       <Name>Weave.ViewModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weave.UserFeedAggregator.Client\Weave.UserFeedAggregator.Client.csproj">
+      <Project>{98813633-270c-449d-a7f4-6a914d47e269}</Project>
+      <Name>Weave.UserFeedAggregator.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
