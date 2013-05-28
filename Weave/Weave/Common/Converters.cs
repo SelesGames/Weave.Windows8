@@ -24,4 +24,18 @@ namespace Weave.Common
             throw new NotImplementedException();
         }
     }
+
+    public class UpperCaseConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is String) return ((String)value).ToUpper();
+            else return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

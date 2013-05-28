@@ -9,8 +9,6 @@ namespace Weave.ViewModels.StartHub
 {
     public class StartItemBase : BindableBase
     {
-        public Windows.UI.Xaml.Controls.Frame AttachedFrame { get; set; }
-
         public virtual void OnHeaderClick()
         {
             throw new NotImplementedException();

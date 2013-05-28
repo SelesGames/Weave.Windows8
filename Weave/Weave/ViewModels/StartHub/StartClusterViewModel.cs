@@ -137,5 +137,10 @@ namespace Weave.ViewModels.StartHub
             set { _extraRows = value; }
         }
 
+        public override void OnHeaderClick()
+        {
+            App.Navigate(typeof(BrowsePage));
+        }
+
     } // end of class
 }

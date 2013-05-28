@@ -4,12 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Weave.ViewModels;
+using Weave.ViewModels.Browse;
 using Weave.ViewModels.StartHub;
 
 namespace Weave.Common
 {
     public static class TestData
     {
+        public static List<object> GetNavigationSample()
+        {
+            List<Object> navItems = new List<Object>();
+
+            navItems.Add(new CategoryViewModel() { DisplayName = "All News", NewCount = 143 });
+
+            navItems.Add(new SpacerViewModel() { Height = 20 });
+
+            navItems.Add(new CategoryViewModel() { DisplayName = "Business", Info = new CategoryInfo() { Category = "Business" }, NewCount = 22 });
+            navItems.Add(new Feed() { Name = "Forbes" });
+            navItems.Add(new Feed() { Name = "Business Insider" });
+            navItems.Add(new Feed() { Name = "The Guardian" });
+
+            navItems.Add(new SpacerViewModel() { Height = 20 });
+
+            navItems.Add(new CategoryViewModel() { DisplayName = "World News", Info = new CategoryInfo() { Category = "World News" }, NewCount = 121 });
+            navItems.Add(new Feed() { Name = "New York Times" });
+            navItems.Add(new Feed() { Name = "Associated Press" });
+            navItems.Add(new Feed() { Name = "Wall Street Journal" });
+
+            navItems.Add(new SpacerViewModel() { Height = 20 });
+
+            return navItems;
+        }
+
         public static NewsItem GetHeroItemSample()
         {
             NewsItem item = new NewsItem();

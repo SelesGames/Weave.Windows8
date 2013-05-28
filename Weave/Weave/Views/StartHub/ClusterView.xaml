@@ -110,7 +110,7 @@
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Button Style="{StaticResource ButtonStyleBasic}" Padding="20" Margin="-20">
+        <Button Style="{StaticResource ButtonStyleBasic}" Padding="20" Margin="-20" Click="Header_Click">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Header}" Style="{StaticResource SubheaderTextStyle}" />
                 <TextBlock Style="{StaticResource ChevronHeaderStyle}" />

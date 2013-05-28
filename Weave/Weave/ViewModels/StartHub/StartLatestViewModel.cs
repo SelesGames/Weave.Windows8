@@ -62,7 +62,7 @@ namespace Weave.ViewModels.StartHub
 
         public override void OnHeaderClick()
         {
-            if (AttachedFrame != null) AttachedFrame.Navigate(typeof(BrowsePage));
+            App.Navigate(typeof(BrowsePage));
         }
 
     } // end of class

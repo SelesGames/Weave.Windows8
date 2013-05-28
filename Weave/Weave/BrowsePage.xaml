@@ -15,6 +15,8 @@
 
     <Page.Resources>
 
+        <common:UpperCaseConverter x:Key="UpperCaseConverter" />
+
         <Style x:Key="GridViewItemStyleArticle" TargetType="GridViewItem" BasedOn="{StaticResource GridViewItemStyleWeave}">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
@@ -53,6 +55,35 @@
             </Setter>
         </Style>
 
+        <Style x:Key="CategoryContainerStyle" TargetType="GridViewItem" BasedOn="{StaticResource GridViewItemStyleBrowse}">
+            <Setter Property="Padding" Value="0,0,0,0" />
+        </Style>
+
+        <Style x:Key="SpacerContainerStyle" TargetType="GridViewItem" BasedOn="{StaticResource GridViewItemStyleBrowse}">
+            <Setter Property="IsEnabled" Value="False" />
+        </Style>
+
+        <common:NavigationItemStyleSelector x:Name="NavigationItemStyleSelector" CategoryStyle="{StaticResource CategoryContainerStyle}" FeedStyle="{StaticResource GridViewItemStyleBrowse}" SpacerStyle="{StaticResource SpacerContainerStyle}" />
+
+        <DataTemplate x:Key="CategoryTemplate">
+            <Grid Margin="0,0,0,0">
+                <TextBlock Text="{Binding NewCount}" Foreground="{StaticResource WeaveBrush}" Margin="50,0,0,0" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
+                <TextBlock Margin="120,0,0,0" Text="{Binding DisplayName, Converter={StaticResource UpperCaseConverter}}" FontWeight="Bold" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="FeedTemplate">
+            <Grid Margin="120,0,0,0">
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SpacerTemplate">
+            <Rectangle Height="{Binding Height}" />
+        </DataTemplate>
+
+        <common:NavigationItemSelector x:Name="NavigationItemSelector" CategoryTemplate="{StaticResource CategoryTemplate}" FeedTemplate="{StaticResource FeedTemplate}" SpacerTemplate="{StaticResource SpacerTemplate}" />
+
     </Page.Resources>
 
     <!--
@@ -75,8 +106,8 @@
 
         <Rectangle Name="RectNavBackground" Grid.RowSpan="2" Fill="#101010" Margin="0,0,80,0" RenderTransformOrigin="0,0" RenderTransform="{Binding ElementName=LstVwNavigation, Path=RenderTransform}" />
 
-        <ListView Name="LstVwNavigation" Width="340" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" Grid.Row="1" Margin="0,40,80,0" RenderTransformOrigin="0,0" HorizontalAlignment="Left">
-            <ListView.Resources>
+        <GridView Name="GrdVwNavigation" Width="340" ItemContainerStyleSelector="{StaticResource NavigationItemStyleSelector}" ItemTemplateSelector="{StaticResource NavigationItemSelector}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" VerticalAlignment="Top" ItemsSource="{Binding Items}" Grid.Row="1" Margin="0,40,80,0" RenderTransformOrigin="0,0" HorizontalAlignment="Left">
+            <GridView.Resources>
                 <Storyboard x:Name="SbNavigationFlyIn">
                     <DoubleAnimation Storyboard.TargetName="TranslateNavigation" Storyboard.TargetProperty="X" From="280" To="70" Duration="0:0:0.1">
                         <DoubleAnimation.EasingFunction>
@@ -91,11 +122,16 @@
                         </DoubleAnimation.EasingFunction>
                     </DoubleAnimation>
                 </Storyboard>
-            </ListView.Resources>
-            <ListView.RenderTransform>
+            </GridView.Resources>
+                <GridView.RenderTransform>
                 <TranslateTransform x:Name="TranslateNavigation" />
-            </ListView.RenderTransform>
-        </ListView>
+            </GridView.RenderTransform>
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+        </GridView>
 
         <!-- Back button and page title -->
         <Grid Grid.ColumnSpan="2">

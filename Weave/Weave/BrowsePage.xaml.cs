@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Weave.Common;
 using Weave.ViewModels;
+using Weave.ViewModels.Browse;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.ViewManagement;
@@ -25,6 +27,7 @@ namespace Weave
     public sealed partial class BrowsePage : Weave.Common.LayoutAwarePage
     {
         private NewsFeed _feed = new NewsFeed();
+        private NavigationViewModel _nav = new NavigationViewModel();
 
         public BrowsePage()
         {
@@ -125,11 +128,18 @@ namespace Weave
 
         private bool _pageLoaded = false;
 
-        private void pageRoot_Loaded(object sender, RoutedEventArgs e)
+        private async void pageRoot_Loaded(object sender, RoutedEventArgs e)
         {
             _pageLoaded = true;
-            foreach (NewsItem item in TestData.GetNewsFeedSample(20)) _feed.Items.Add(item);
+            // add test data
+            await Task.Run(() =>
+            {
+                foreach (NewsItem item in TestData.GetNewsFeedSample(20)) _feed.Items.Add(item);
+
+                foreach (object o in TestData.GetNavigationSample()) _nav.Items.Add(o);
+            });
             this.DataContext = _feed;
+            GrdVwNavigation.DataContext = _nav;
         }
 
         private void UpdateMainScrollOrientation(ApplicationViewState viewState)
@@ -150,11 +160,6 @@ namespace Weave
             }
             else
             {
-                //MainScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
-                //MainScrollViewer.VerticalScrollMode = ScrollMode.Disabled;
-                //MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-                //MainScrollViewer.HorizontalScrollMode = ScrollMode.Enabled;
-                //if (_videosContentPanel != null) _videosContentPanel.Orientation = Orientation.Vertical;
                 MainScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
                 MainScrollViewer.VerticalScrollMode = ScrollMode.Enabled;
                 MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;

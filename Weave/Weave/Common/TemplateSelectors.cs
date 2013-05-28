@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Weave.ViewModels;
+using Weave.ViewModels.Browse;
 using Weave.ViewModels.StartHub;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -99,6 +100,27 @@ namespace Weave.Common
                     }
                 }
                 else return SmallTemplate;
+            }
+
+            return base.SelectTemplateCore(item, container);
+        }
+    }
+
+    public class NavigationItemSelector : DataTemplateSelector
+    {
+        public DataTemplate FeedTemplate { get; set; }
+        public DataTemplate CategoryTemplate { get; set; }
+        public DataTemplate AddSTemplate { get; set; }
+        public DataTemplate SpacerTemplate { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        {
+            if (item != null)
+            {
+                if (item is Feed) return FeedTemplate;
+                else if (item is CategoryViewModel) return CategoryTemplate;
+                else if (item is StartAddViewModel) return AddSTemplate;
+                else if (item is SpacerViewModel) return SpacerTemplate;
             }
 
             return base.SelectTemplateCore(item, container);
