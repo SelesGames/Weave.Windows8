@@ -122,9 +122,9 @@ namespace Weave
 
             if (_latestArticlesVm.Items.Count == 0)
             {
-                //await UserHelper.Instance.LoadUser();
-                //await LoadViewModels();
-                //await LoadTestData();
+                await UserHelper.Instance.LoadUser();
+                await LoadViewModels();
+                await LoadTestData();
             }
             LstVwMain.ItemsSource = _startItems;
             PrgRngLoadingMain.IsActive = false;
