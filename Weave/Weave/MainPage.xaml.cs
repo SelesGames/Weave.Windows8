@@ -154,13 +154,13 @@ namespace Weave
             }
 
             int clusterFetchCount = StartClusterViewModel.BaseDisplayCount + StartClusterViewModel.ExtraRows + 1;
-            NewsList news = await UserHelper.Instance.GetCategoryNews("comic books", clusterFetchCount);
+            NewsList news = await UserHelper.Instance.GetCategoryNews("comic books", 0, clusterFetchCount);
             StartClusterViewModel cluster = new StartClusterViewModel();
             cluster.Header = "Comic books";
             _startItems.Insert(_startItems.Count - 1, cluster);
             cluster.InitCluster(news);
 
-            news = await UserHelper.Instance.GetCategoryNews("business", clusterFetchCount);
+            news = await UserHelper.Instance.GetCategoryNews("business", 0, clusterFetchCount);
             cluster = new StartClusterViewModel();
             cluster.Header = "Business";
             _startItems.Insert(_startItems.Count - 1, cluster);

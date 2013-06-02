@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Weave.Common;
 using Weave.ViewModels;
 using Weave.ViewModels.Browse;
+using Windows.Data.Xml.Dom;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.ViewManagement;
@@ -13,8 +17,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
@@ -29,9 +35,15 @@ namespace Weave
         private NewsFeed _feed = new NewsFeed();
         private NavigationViewModel _nav = new NavigationViewModel();
 
+        private int _initialFeedCount = 20;
+
+        private Stack<Uri> _browserBackStack = new Stack<Uri>();
+
         public BrowsePage()
         {
             this.InitializeComponent();
+
+            _feed.FirstVideoLoaded += FirstVideoLoaded;
         }
 
         /// <summary>
@@ -45,6 +57,8 @@ namespace Weave
         /// session.  This will be null the first time a page is visited.</param>
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
+            this.DataContext = _feed;
+            _feed.IsLoading = true;
         }
 
         /// <summary>
@@ -59,7 +73,11 @@ namespace Weave
 
         private void itemGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            if (e.ClickedItem != null)
+            {
+                itemGridView.SelectedItem = e.ClickedItem;
+                ShowArticle(e.ClickedItem as NewsItem);
+            }
         }
 
         private async void GridView_Loaded(object sender, RoutedEventArgs e)
@@ -131,15 +149,47 @@ namespace Weave
         private async void pageRoot_Loaded(object sender, RoutedEventArgs e)
         {
             _pageLoaded = true;
-            // add test data
-            await Task.Run(() =>
-            {
-                foreach (NewsItem item in TestData.GetNewsFeedSample(20)) _feed.Items.Add(item);
-
-                foreach (object o in TestData.GetNavigationSample()) _nav.Items.Add(o);
-            });
-            this.DataContext = _feed;
+            InitNav();
             GrdVwNavigation.DataContext = _nav;
+            GrdVwNavigation.SelectedIndex = 0;
+        }
+
+        private const int NavSpacerHeight = 20;
+
+        private void InitNav()
+        {
+            ObservableCollection<object> items = _nav.Items;
+            items.Add(new CategoryViewModel() { DisplayName = "Latest News", Type = CategoryViewModel.CategoryType.Latest });
+            items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
+
+            String noCategoryKey = "";
+            Dictionary<String, List<Feed>> categoryFeeds = UserHelper.Instance.CategoryFeeds;
+            if (categoryFeeds != null && categoryFeeds.Count > 0)
+            {
+                List<String> orderedKeys = new List<string>(categoryFeeds.Keys.OrderBy(s => s));
+                foreach (String category in orderedKeys)
+                {
+                    if (!String.Equals(category, noCategoryKey))
+                    {
+                        items.Add(new CategoryViewModel() { DisplayName = category, Info = new CategoryInfo() { Category = category } });
+                        foreach (Feed feed in categoryFeeds[category])
+                        {
+                            items.Add(feed);
+                        }
+                        items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
+                    }
+                }
+
+                if (categoryFeeds.ContainsKey(noCategoryKey))
+                {
+                    items.Add(new CategoryViewModel() { DisplayName = "Other", Type = CategoryViewModel.CategoryType.Other });
+                    foreach (Feed feed in categoryFeeds[noCategoryKey])
+                    {
+                        items.Add(feed);
+                    }
+                    items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
+                }
+            }
         }
 
         private void UpdateMainScrollOrientation(ApplicationViewState viewState)
@@ -181,6 +231,270 @@ namespace Weave
                 {
                     UpdateMainScrollOrientation(state);
                 }
+            }
+        }
+
+        private async void GrdVwNavigation_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_pageLoaded && e.AddedItems.Count > 0)
+            {
+                if (MainScrollViewer != null) MainScrollViewer.ScrollToVerticalOffset(0);
+                itemGridView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                _feed.ClearData();
+                object selected = GrdVwNavigation.SelectedItem;
+                if (selected is Feed)
+                {
+                    await ProcessFeedSelection((Feed)selected);
+                }
+                else if (selected is CategoryViewModel)
+                {
+                    await ProcessCategorySelection((CategoryViewModel)selected);
+                }
+            }
+        }
+
+        private async Task ProcessFeedSelection(Feed feed)
+        {
+            _feed.IsLoading = true;
+
+            NewsList list = await UserHelper.Instance.GetFeedNews(feed.Id, 0, _initialFeedCount);
+            foreach (NewsItem item in list.News)
+            {
+                _feed.AddItem(item);
+            }
+
+            _feed.IsLoading = false;
+        }
+
+        private async Task ProcessCategorySelection(CategoryViewModel category)
+        {
+            _feed.IsLoading = true;
+
+            if (category.Type == CategoryViewModel.CategoryType.Latest)
+            {
+                foreach (NewsItem item in UserHelper.Instance.GetLatestNews())
+                {
+                    _feed.AddItem(item);
+                }
+            }
+            else if (category.Type == CategoryViewModel.CategoryType.Other)
+            {
+            }
+            else
+            {
+                String categoryName = category.Info.Category;
+                if (!String.IsNullOrEmpty(categoryName))
+                {
+                    NewsList list = await UserHelper.Instance.GetCategoryNews(categoryName, 0, _initialFeedCount);
+                    foreach (NewsItem item in list.News)
+                    {
+                        _feed.AddItem(item);
+                    }
+                }
+            }
+
+            _feed.IsLoading = false;
+        }
+
+        private void FirstVideoLoaded(object obj)
+        {
+            itemGridView.Visibility = Windows.UI.Xaml.Visibility.Visible;
+        }
+
+        private void RectOverlay_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            CloseArticle();
+        }
+
+        private void ShowArticle(NewsItem item)
+        {
+            _browserBackStack.Clear();
+            BtnBrowserBack.IsEnabled = false;
+            if (item != null)
+            {
+                RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                ScrlVwrArticle.DataContext = item;
+                ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                SbArticleFlyIn.Begin();
+                ParseArticle(item);
+            }
+        }
+
+        private void CloseArticle()
+        {
+            ScrlVwrArticle.DataContext = null;
+            RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            WebVwArticle.NavigateToString("");
+            //WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            //SbArticleFlyOut.Begin();
+        }
+
+        private void Image_ImageOpened(object sender, RoutedEventArgs e)
+        {
+            Windows.UI.Xaml.Controls.Image image = sender as Windows.UI.Xaml.Controls.Image;
+            if (image != null && image.Opacity < 1)
+            {
+                image.Opacity = 1;
+            }
+        }
+
+        private void Image_Loaded(object sender, RoutedEventArgs e)
+        {
+            Windows.UI.Xaml.Controls.Image image = sender as Windows.UI.Xaml.Controls.Image;
+            if (image != null && image.Source is BitmapImage)
+            {
+                BitmapImage bmp = (BitmapImage)image.Source;
+                if (bmp.PixelHeight != 0) image.Opacity = 1;
+            }
+        }
+
+        private void SbArticleFlyOut_Completed(object sender, object e)
+        {
+            ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+        }
+
+        private async void ParseArticle(NewsItem item)
+        {
+            if (item != null)
+            {
+                PrgRngBrowserLoading.IsActive = true;
+                WebVwArticle.Navigate(new Uri(item.Link, UriKind.Absolute));
+                TxtBxBrowserUrl.Text = item.Link;
+                //if (item.Feed.ArticleViewingType == ArticleViewingType.Mobilizer)
+                //{
+                //    RchTxtBlkArticle.Blocks.Clear();
+
+                //    MobilizerResult result = await MobilizerClient.GetAsync(item.Link);
+                //    String content = result.content.Replace("<br>", "<br/>");
+                //    StringBuilder sb = new StringBuilder();
+                //    int index = 0;
+                //    foreach (Match match in Regex.Matches(content, "<img[^>]+>"))
+                //    {
+                //        sb.Append(content.Substring(index, match.Index - index));
+                //        sb.Append(match.Value.Replace(">", "/>"));
+                //        index = match.Index + match.Length;
+                //    }
+                //    if (index < content.Length) sb.Append(content.Substring(index));
+                //    content = sb.ToString();
+
+                //    try
+                //    {
+                //        XmlDocument document = new XmlDocument();
+                //        document.LoadXml(content);
+                //        Paragraph para = new Paragraph();
+                //        para.Inlines.Add(new Run() { Text = document.InnerText.Trim() });
+                //        RchTxtBlkArticle.Blocks.Add(para);
+                //        //ParseElement((XmlElement)(document.FirstChild), new RichTextBlockTextContainer(RchTxtBlkArticle));
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        App.LogError("Error parsing article", e);
+                //    }
+                //}
+            }
+        }
+
+        private void ParseElement(XmlElement element, ITextContainer parent)
+        {
+            foreach (var child in element.ChildNodes)
+            {
+                if (child is Windows.Data.Xml.Dom.XmlText)
+                {
+                    if (string.IsNullOrEmpty(child.InnerText) ||
+                        child.InnerText == "\n")
+                    {
+                        continue;
+                    }
+
+                    parent.Add(new Run { Text = child.InnerText });
+                }
+                else if (child is XmlElement)
+                {
+                    XmlElement e = (XmlElement)child;
+                    switch (e.TagName.ToUpper())
+                    {
+                        case "P":
+                            var paragraph = new Paragraph();
+                            parent.Add(paragraph);
+                            ParseElement(e, new ParagraphTextContainer(paragraph));
+                            break;
+                        case "STRONG":
+                            var bold = new Bold();
+                            parent.Add(bold);
+                            ParseElement(e, new SpanTextContainer(bold));
+                            break;
+                        case "U":
+                            var underline = new Underline();
+                            parent.Add(underline);
+                            ParseElement(e, new SpanTextContainer(underline));
+                            break;
+                        case "A":
+                            ParseElement(e, parent);
+                            break;
+                        case "BR":
+                            parent.Add(new LineBreak());
+                            break;
+                        case "DIV":
+                            ParseElement(e, parent);
+                            break;
+                        case "SPAN":
+                            ParseElement(e, parent);
+                            break;
+                        case "SECTION":
+                            ParseElement(e, parent);
+                            break;
+                        case "ARTICLE":
+                            ParseElement(e, parent);
+                            break;
+                        case "UL":
+                            ParseElement(e, parent);
+                            break;
+                        case "LI":
+                            ParseElement(e, parent);
+                            break;
+                    }
+                }
+
+
+            }
+        }
+
+        private void WebVwArticle_LoadCompleted(object sender, NavigationEventArgs e)
+        {
+            if (!Uri.Equals(e.Uri, _backUri)) _browserBackStack.Push(e.Uri);
+            else _backUri = null;
+
+            if (_browserBackStack.Count > 1) BtnBrowserBack.IsEnabled = true;
+
+            WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            PrgRngBrowserLoading.IsActive = false;
+
+            if (e.Uri != null && !String.IsNullOrEmpty(e.Uri.OriginalString)) TxtBxBrowserUrl.Text = e.Uri.OriginalString;
+            else TxtBxBrowserUrl.Text = null;
+        }
+
+        private void TxtBxBrowserUrl_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TxtBxBrowserUrl.SelectAll();
+        }
+
+        private void TxtBxBrowserUrl_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TxtBxBrowserUrl.Select(0, 0);
+        }
+
+        private Uri _backUri;
+
+        private void BtnBrowserBack_Click(object sender, RoutedEventArgs e)
+        {
+            if (_browserBackStack.Count > 0)
+            {
+                _backUri = _browserBackStack.Pop();
+                _backUri = _browserBackStack.Peek();
+                if (_browserBackStack.Count < 2) BtnBrowserBack.IsEnabled = false;
+
+                WebVwArticle.Navigate(_backUri);
             }
         }
 

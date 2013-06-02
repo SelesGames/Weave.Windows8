@@ -23,7 +23,8 @@ namespace Weave.Common
         private bool _loading;
         private ManualResetEvent _loadingEvent = new ManualResetEvent(true);
 
-        private Dictionary<String, Weave.ViewModels.Feed> _feedIdMap = new Dictionary<string,ViewModels.Feed>();
+        private Dictionary<String, Feed> _feedIdMap = new Dictionary<string,ViewModels.Feed>();
+        private Dictionary<String, List<Feed>> _categoryFeedMap;
 
         private static UserHelper _instance = new UserHelper();
         public static UserHelper Instance
@@ -33,6 +34,28 @@ namespace Weave.Common
 
         private UserHelper()
         {
+        }
+
+        public Dictionary<String, List<Feed>> CategoryFeeds
+        {
+            get
+            {
+                if (_categoryFeedMap == null && _currentUser != null && _currentUser.Feeds != null)
+                {
+                    _categoryFeedMap = new Dictionary<string, List<Feed>>();
+                    String key;
+                    foreach (Feed feed in _currentUser.Feeds)
+                    {
+                        key = feed.Category == null ? "" : feed.Category;
+                        if (!_categoryFeedMap.ContainsKey(key))
+                        {
+                            _categoryFeedMap[key] = new List<Feed>();
+                        }
+                        _categoryFeedMap[key].Add(feed);
+                    }
+                }
+                return _categoryFeedMap;
+            }
         }
 
         public bool IsLoaded
@@ -60,9 +83,14 @@ namespace Weave.Common
             }
         }
 
-        public async Task<NewsList> GetCategoryNews(String category, int count)
+        public async Task<NewsList> GetCategoryNews(String category, int start, int count)
         {
-            return await _currentUser.GetNewsForCategory(category, false, false, 0, count);
+            return await _currentUser.GetNewsForCategory(category, false, false, start, count);
+        }
+
+        public async Task<NewsList> GetFeedNews(Guid feedId, int start, int count)
+        {
+            return await _currentUser.GetNewsForFeed(feedId, false, false, start, count);
         }
 
         public List<NewsItem> GetLatestNews()

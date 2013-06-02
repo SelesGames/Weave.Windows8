@@ -9,6 +9,39 @@ using Windows.UI.Xaml.Data;
 namespace Weave.Common
 {
     /// <summary>
+    /// Value converter that translates true to false and vice versa.
+    /// </summary>
+    public sealed class BooleanNegationConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return !(value is bool && (bool)value);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return !(value is bool && (bool)value);
+        }
+    }
+
+    /// <summary>
+    /// Value converter that translates true to <see cref="Visibility.Visible"/> and false to
+    /// <see cref="Visibility.Collapsed"/>.
+    /// </summary>
+    public sealed class BooleanToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return (value is bool && (bool)value) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return value is Visibility && (Visibility)value == Visibility.Visible;
+        }
+    }
+
+    /// <summary>
     /// Value converter that translates true to <see cref="Visibility.Collapsed"/> and false to
     /// <see cref="Visibility.Visible"/>.
     /// </summary>
@@ -38,4 +71,20 @@ namespace Weave.Common
             throw new NotImplementedException();
         }
     }
+
+    public class NewCountConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int && (int)value > 0) return value;
+            else return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }
