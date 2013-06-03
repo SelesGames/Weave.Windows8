@@ -124,7 +124,7 @@ namespace Weave
                 {
                     double loadMoreThreshold = sv.ViewportHeight * LoadMoreThresholdFactor;
                     if (loadMoreThreshold < 1) loadMoreThreshold = 1;
-                    //if (newValue > (sv.ScrollableHeight - loadMoreThreshold) && !_feed.IsLoading) _feed.LoadNextPage();
+                    if (newValue > (sv.ScrollableHeight - loadMoreThreshold) && !_feed.IsLoading && _feed.HasNextPage) _feed.LoadNextPage();
                 }
             }
         }
@@ -255,45 +255,29 @@ namespace Weave
 
         private async Task ProcessFeedSelection(Feed feed)
         {
-            _feed.IsLoading = true;
-
-            NewsList list = await UserHelper.Instance.GetFeedNews(feed.Id, 0, _initialFeedCount);
-            foreach (NewsItem item in list.News)
-            {
-                _feed.AddItem(item);
-            }
-
-            _feed.IsLoading = false;
+            _feed.FeedId = feed.Id;
+            _feed.LoadInitialData();
         }
 
         private async Task ProcessCategorySelection(CategoryViewModel category)
         {
-            _feed.IsLoading = true;
-
             if (category.Type == CategoryViewModel.CategoryType.Latest)
             {
+                _feed.IsLoading = true;
                 foreach (NewsItem item in UserHelper.Instance.GetLatestNews())
                 {
                     _feed.AddItem(item);
                 }
+                _feed.IsLoading = false;
             }
             else if (category.Type == CategoryViewModel.CategoryType.Other)
             {
             }
             else
             {
-                String categoryName = category.Info.Category;
-                if (!String.IsNullOrEmpty(categoryName))
-                {
-                    NewsList list = await UserHelper.Instance.GetCategoryNews(categoryName, 0, _initialFeedCount);
-                    foreach (NewsItem item in list.News)
-                    {
-                        _feed.AddItem(item);
-                    }
-                }
+                _feed.CategoryName = category.Info.Category;
+                _feed.LoadInitialData();
             }
-
-            _feed.IsLoading = false;
         }
 
         private void FirstVideoLoaded(object obj)

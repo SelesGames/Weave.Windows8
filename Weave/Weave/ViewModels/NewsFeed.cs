@@ -10,14 +10,40 @@ namespace Weave.ViewModels
 {
     public class NewsFeed : BindableBase
     {
+        public const int InitialFetchCount = 20;
+        private const int NextPageCount = 20;
+
         public event Action<object> FirstVideoLoaded;
 
         private HashSet<Guid> _idsAdded = new HashSet<Guid>();
+        private int _total;
 
         private ObservableCollection<NewsItem> _items = new ObservableCollection<NewsItem>();
         public ObservableCollection<NewsItem> Items
         {
             get { return _items; }
+        }
+
+        private String _categoryName;
+        public String CategoryName
+        {
+            private get { return _categoryName; }
+            set
+            {
+                SetProperty(ref _categoryName, value);
+                if (value != null && FeedId != null) FeedId = null;
+            }
+        }
+
+        private Guid? _feedId;
+        public Guid? FeedId
+        {
+            private get { return _feedId; }
+            set
+            {
+                SetProperty(ref _feedId, value);
+                if (value != null && CategoryName != null) CategoryName = null;
+            }
         }
 
         public bool AddItem(NewsItem item)
@@ -44,8 +70,50 @@ namespace Weave.ViewModels
 
         public void ClearData()
         {
+            FeedId = null;
+            CategoryName = null;
+            _total = 0;
             Items.Clear();
             _idsAdded.Clear();
+        }
+
+        public async void LoadInitialData()
+        {
+            await LoadData(InitialFetchCount);
+        }
+
+        public async void LoadNextPage()
+        {
+            if (HasNextPage) await LoadData(NextPageCount);
+        }
+
+        private async Task LoadData(int count)
+        {
+            IsLoading = true;
+            NewsList list = null;
+            if (FeedId != null)
+            {
+                list = await UserHelper.Instance.GetFeedNews(FeedId.Value, _idsAdded.Count, count);
+            }
+            else if (!String.IsNullOrEmpty(CategoryName))
+            {
+                list = await UserHelper.Instance.GetCategoryNews(CategoryName, _idsAdded.Count, count);
+            }
+
+            if (list != null)
+            {
+                _total = list.TotalArticleCount;
+                foreach (NewsItem item in list.News)
+                {
+                    AddItem(item);
+                }
+            }
+            IsLoading = false;
+        }
+
+        public bool HasNextPage
+        {
+            get { return _idsAdded.Count < _total; }
         }
 
     } // end of class
