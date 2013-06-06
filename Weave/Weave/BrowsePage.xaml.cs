@@ -37,6 +37,8 @@ namespace Weave
 
         private int _initialFeedCount = 20;
 
+        private const int DefaultBrowserWidth = 750;
+
         private Stack<Uri> _browserBackStack = new Stack<Uri>();
 
         public BrowsePage()
@@ -310,6 +312,8 @@ namespace Weave
             RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             WebVwArticle.NavigateToString("");
+            GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            ScrlVwrArticle.Width = DefaultBrowserWidth;
             //WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             //SbArticleFlyOut.Begin();
         }
@@ -343,104 +347,19 @@ namespace Weave
             if (item != null)
             {
                 PrgRngBrowserLoading.IsActive = true;
-                WebVwArticle.Navigate(new Uri(item.Link, UriKind.Absolute));
-                TxtBxBrowserUrl.Text = item.Link;
-                //if (item.Feed.ArticleViewingType == ArticleViewingType.Mobilizer)
-                //{
-                //    RchTxtBlkArticle.Blocks.Clear();
 
-                //    MobilizerResult result = await MobilizerClient.GetAsync(item.Link);
-                //    String content = result.content.Replace("<br>", "<br/>");
-                //    StringBuilder sb = new StringBuilder();
-                //    int index = 0;
-                //    foreach (Match match in Regex.Matches(content, "<img[^>]+>"))
-                //    {
-                //        sb.Append(content.Substring(index, match.Index - index));
-                //        sb.Append(match.Value.Replace(">", "/>"));
-                //        index = match.Index + match.Length;
-                //    }
-                //    if (index < content.Length) sb.Append(content.Substring(index));
-                //    content = sb.ToString();
-
-                //    try
-                //    {
-                //        XmlDocument document = new XmlDocument();
-                //        document.LoadXml(content);
-                //        Paragraph para = new Paragraph();
-                //        para.Inlines.Add(new Run() { Text = document.InnerText.Trim() });
-                //        RchTxtBlkArticle.Blocks.Add(para);
-                //        //ParseElement((XmlElement)(document.FirstChild), new RichTextBlockTextContainer(RchTxtBlkArticle));
-                //    }
-                //    catch (Exception e)
-                //    {
-                //        App.LogError("Error parsing article", e);
-                //    }
-                //}
-            }
-        }
-
-        private void ParseElement(XmlElement element, ITextContainer parent)
-        {
-            foreach (var child in element.ChildNodes)
-            {
-                if (child is Windows.Data.Xml.Dom.XmlText)
+                if (item.Feed.ArticleViewingType == ArticleViewingType.Mobilizer)
                 {
-                    if (string.IsNullOrEmpty(child.InnerText) ||
-                        child.InnerText == "\n")
-                    {
-                        continue;
-                    }
-
-                    parent.Add(new Run { Text = child.InnerText });
+                    String content = await MobilizerHelper.GetMobilizedHtml(item);
+                    WebVwArticle.NavigateToString(content);
                 }
-                else if (child is XmlElement)
+                else
                 {
-                    XmlElement e = (XmlElement)child;
-                    switch (e.TagName.ToUpper())
-                    {
-                        case "P":
-                            var paragraph = new Paragraph();
-                            parent.Add(paragraph);
-                            ParseElement(e, new ParagraphTextContainer(paragraph));
-                            break;
-                        case "STRONG":
-                            var bold = new Bold();
-                            parent.Add(bold);
-                            ParseElement(e, new SpanTextContainer(bold));
-                            break;
-                        case "U":
-                            var underline = new Underline();
-                            parent.Add(underline);
-                            ParseElement(e, new SpanTextContainer(underline));
-                            break;
-                        case "A":
-                            ParseElement(e, parent);
-                            break;
-                        case "BR":
-                            parent.Add(new LineBreak());
-                            break;
-                        case "DIV":
-                            ParseElement(e, parent);
-                            break;
-                        case "SPAN":
-                            ParseElement(e, parent);
-                            break;
-                        case "SECTION":
-                            ParseElement(e, parent);
-                            break;
-                        case "ARTICLE":
-                            ParseElement(e, parent);
-                            break;
-                        case "UL":
-                            ParseElement(e, parent);
-                            break;
-                        case "LI":
-                            ParseElement(e, parent);
-                            break;
-                    }
+                    WebVwArticle.Navigate(new Uri(item.Link, UriKind.Absolute));
+                    TxtBxBrowserUrl.Text = item.Link;
+                    GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    ScrlVwrArticle.Width = 1000;
                 }
-
-
             }
         }
 
@@ -454,8 +373,16 @@ namespace Weave
             WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Visible;
             PrgRngBrowserLoading.IsActive = false;
 
-            if (e.Uri != null && !String.IsNullOrEmpty(e.Uri.OriginalString)) TxtBxBrowserUrl.Text = e.Uri.OriginalString;
-            else TxtBxBrowserUrl.Text = null;
+            if (e.Uri != null && !String.IsNullOrEmpty(e.Uri.OriginalString))
+            {
+                TxtBxBrowserUrl.Text = e.Uri.OriginalString;
+                GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            }
+            else
+            {
+                TxtBxBrowserUrl.Text = "";
+                GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            }
         }
 
         private void TxtBxBrowserUrl_GotFocus(object sender, RoutedEventArgs e)

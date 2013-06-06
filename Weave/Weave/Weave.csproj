@@ -111,7 +111,7 @@
     <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\HtmlToXaml.cs" />
     <Compile Include="Common\LayoutAwarePage.cs" />
-    <Compile Include="Common\Mobilizer.cs" />
+    <Compile Include="Common\MobilizerHelper.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\StyleSelectors.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
@@ -231,6 +231,10 @@
     <ProjectReference Include="..\SelesGames.Rest\SelesGames.Rest.csproj">
       <Project>{b9cb0e64-278a-4cc3-add0-1651622d5209}</Project>
       <Name>SelesGames.Rest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weave.Mobilizer.Client\Weave.Mobilizer.Client.csproj">
+      <Project>{e69950f6-0a2e-4481-adcf-839301969b3e}</Project>
+      <Name>Weave.Mobilizer.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\Weave.UserFeedAggregator.Client\Weave.UserFeedAggregator.Client.csproj">
       <Project>{98813633-270c-449d-a7f4-6a914d47e269}</Project>

@@ -382,22 +382,22 @@
         
         <Rectangle Name="RectOverlay" Visibility="Collapsed" PointerPressed="RectOverlay_PointerPressed" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="Black" Opacity="0.75" />
 
-        <ScrollViewer Name="ScrlVwrArticle" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Width="1000" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White">
+        <ScrollViewer Name="ScrlVwrArticle" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Width="750" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White">
             <ScrollViewer.Resources>
                 <Storyboard x:Name="SbArticleFlyIn">
-                    <DoubleAnimation Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="500" To="0" Duration="0:0:0.1">
+                    <DoubleAnimation Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="750" To="0" Duration="0:0:0.1">
                         <DoubleAnimation.EasingFunction>
                             <QuadraticEase EasingMode="EaseIn"/>
                         </DoubleAnimation.EasingFunction>
                     </DoubleAnimation>
                 </Storyboard>
-                <Storyboard x:Name="SbArticleFlyOut" Completed="SbArticleFlyOut_Completed">
-                    <DoubleAnimation Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="0" To="1000" Duration="0:0:0.3">
+                <!--<Storyboard x:Name="SbArticleFlyOut" Completed="SbArticleFlyOut_Completed">
+                    <DoubleAnimation Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="0" To="750" Duration="0:0:0.3">
                         <DoubleAnimation.EasingFunction>
                             <QuadraticEase EasingMode="EaseOut"/>
                         </DoubleAnimation.EasingFunction>
                     </DoubleAnimation>
-                </Storyboard>
+                </Storyboard>-->
             </ScrollViewer.Resources>
             <ScrollViewer.RenderTransform>
                 <TranslateTransform x:Name="TranslateArticle" />
@@ -408,7 +408,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <WebView Name="WebVwArticle" LoadCompleted="WebVwArticle_LoadCompleted" />
-                <Grid Name="GrdBrowserControls" Grid.Row="1" Background="#343434">
+                <Grid Name="GrdBrowserControls" Grid.Row="1" Background="#343434" Visibility="Collapsed">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
