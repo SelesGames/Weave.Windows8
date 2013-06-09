@@ -347,18 +347,28 @@ namespace Weave
             if (item != null)
             {
                 PrgRngBrowserLoading.IsActive = true;
+                bool loadWebBrowser = true;
 
                 if (item.Feed.ArticleViewingType == ArticleViewingType.Mobilizer)
                 {
+                    loadWebBrowser = false;
                     String content = await MobilizerHelper.GetMobilizedHtml(item);
-                    WebVwArticle.NavigateToString(content);
+                    if (content != null)
+                    {
+                        WebVwArticle.NavigateToString(content);
+                    }
+                    else
+                    {
+                        loadWebBrowser = true;
+                    }
                 }
-                else
+
+                if (loadWebBrowser)
                 {
+                    ScrlVwrArticle.Width = 1000;
                     WebVwArticle.Navigate(new Uri(item.Link, UriKind.Absolute));
                     TxtBxBrowserUrl.Text = item.Link;
                     GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                    ScrlVwrArticle.Width = 1000;
                 }
             }
         }

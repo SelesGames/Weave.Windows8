@@ -38,7 +38,8 @@ namespace Weave.Mobilizer.Client
             string background, 
             string fontName, 
             string fontSize, 
-            string linkColor)
+            string linkColor,
+            string imageLink)
         {
             if (!areTemplatesLoaded)
                 await ReadHtmlTemplate();
@@ -58,6 +59,8 @@ namespace Weave.Mobilizer.Client
                         .ToString())
 
                 .AppendLine(htmlTemplate2)
+
+                .AppendLine(imageLink == null ? "" : String.Format("<img src=\"{0}\" width=\"750px\" style=\"margin: 0\" />", imageLink))
 
                 .AppendLine(
                     new StringBuilder(bodyTemplate)

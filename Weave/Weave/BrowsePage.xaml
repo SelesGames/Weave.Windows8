@@ -407,7 +407,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <WebView Name="WebVwArticle" LoadCompleted="WebVwArticle_LoadCompleted" />
+                <WebView Name="WebVwArticle" LoadCompleted="WebVwArticle_LoadCompleted" Margin="0" />
                 <Grid Name="GrdBrowserControls" Grid.Row="1" Background="#343434" Visibility="Collapsed">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
