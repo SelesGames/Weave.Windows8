@@ -256,7 +256,22 @@
             </Setter>
         </Style>
 
-        <DataTemplate x:Key="ArticleItemTemplate">
+        <DataTemplate x:Key="ArticleTextItemTemplate">
+            <Grid HorizontalAlignment="Left" Width="300" Margin="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" Foreground="White" FontWeight="Light" Margin="20,20,20,0" MaxHeight="60" TextTrimming="None" />
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,40,0,20">
+                    <TextBlock Text="{Binding OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ArticleImageItemTemplate">
             <Grid HorizontalAlignment="Left" Width="300" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="150" />
@@ -276,7 +291,7 @@
         </DataTemplate>
 
         <Style x:Key="GridViewStyleLandscape" TargetType="GridView">
-            <Setter Property="ItemTemplate" Value="{StaticResource ArticleItemTemplate}" />
+            <Setter Property="ItemTemplate" Value="{StaticResource ArticleImageItemTemplate}" />
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>

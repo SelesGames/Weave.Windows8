@@ -58,9 +58,12 @@ namespace Weave.Mobilizer.Client
                         .Replace("[ACCENT]", linkColor)
                         .ToString())
 
-                .AppendLine(htmlTemplate2)
+                .AppendLine(
+                    new StringBuilder(htmlTemplate2)
+                    .Replace("[IMAGE_URL]", imageLink == null ? "" : imageLink)
+                    .ToString())
 
-                .AppendLine(imageLink == null ? "" : String.Format("<img src=\"{0}\" width=\"750px\" style=\"margin: 0\" />", imageLink))
+                //.AppendLine(imageLink == null ? "" : String.Format("<img src=\"{0}\" width=\"750px\" style=\"margin: 0\" />", imageLink))
 
                 .AppendLine(
                     new StringBuilder(bodyTemplate)

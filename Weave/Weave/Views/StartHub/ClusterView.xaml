@@ -23,7 +23,7 @@
                 <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
-                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0">
+                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0" Visibility="Collapsed">
                     <Image Source="{Binding AuthorImage}" Stretch="UniformToFill" />
                 </Grid>
                 <Grid VerticalAlignment="Bottom">
@@ -41,7 +41,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" FontWeight="Bold" Margin="0,0,0,0" MaxHeight="60" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Top">
-                    <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,10,0">
+                    <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,10,0" Visibility="Collapsed">
                         <Image Source="{Binding AuthorImage}" Stretch="UniformToFill" />
                     </Grid>
                     <TextBlock Text="{Binding NewsItem.OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
@@ -57,7 +57,7 @@
                 <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
-                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0">
+                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0" Visibility="Collapsed">
                     <Image Source="{Binding AuthorImage}" Stretch="UniformToFill" />
                 </Grid>
                 <Grid VerticalAlignment="Bottom">
@@ -75,7 +75,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,0" MaxHeight="60" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Top">
-                    <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,10,0">
+                    <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,10,0" Visibility="Collapsed">
                         <Image Source="{Binding AuthorImage}" Stretch="UniformToFill" />
                     </Grid>
                     <TextBlock Text="{Binding NewsItem.OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
@@ -90,7 +90,7 @@
                 <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
-                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0">
+                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0" Visibility="Collapsed">
                     <Image Source="{Binding AuthorImage}" Stretch="UniformToFill" />
                 </Grid>
                 <Grid VerticalAlignment="Bottom">

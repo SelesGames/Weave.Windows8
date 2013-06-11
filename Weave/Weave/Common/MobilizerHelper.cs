@@ -25,7 +25,7 @@ namespace Weave.Common
                 int firstCharIndex = -1;
                 StringBuilder sb = new StringBuilder();
 
-                foreach (Match m in Regex.Matches(body, "<p[^>]*>(?<content>.*)</p>"))
+                foreach (Match m in Regex.Matches(body, "<p[^>]*>(?<content>.*)</p>", RegexOptions.Singleline))
                 {
                     if (m.Success && m.Groups["content"].Success)
                     {
@@ -48,7 +48,7 @@ namespace Weave.Common
                     sb.Append(body.Substring(firstCharIndex + 1));
                 }
                 else sb.Append(body);
-                result = await _formatter.CreateHtml(item.FormattedForMainPageSourceAndDate, item.Title, item.Link, sb.ToString(), "#000000", "#FFFFFF", "Segoe UI", "12", "#0000FF", item.ImageUrl);
+                result = await _formatter.CreateHtml(item.FormattedForMainPageSourceAndDate, item.Title, item.Link, sb.ToString(), "#333333", "#FFFFFF", "Segoe UI", "12", "#0000FF", item.ImageUrl);
             }
             catch (Exception e)
             {
