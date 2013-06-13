@@ -75,6 +75,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!--<Grid Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,-20,0,0" Visibility="Collapsed">
+            <Image Source="Assets/MainLogoColour.png" Stretch="None" />
+        </Grid>-->
+
         <SemanticZoom Name="semanticZoomControl" Grid.RowSpan="2" ViewChangeCompleted="semanticZoomControl_ViewChangeCompleted" Padding="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollMode="Disabled">
             <SemanticZoom.ZoomedInView>
                 <ListView Name="LstVwMain" Style="{StaticResource MainListViewStyle}" SelectionMode="None" IsItemClickEnabled="False" ItemContainerStyle="{StaticResource ListViewItemStyleFlat}">
@@ -85,6 +89,10 @@
                 </ListView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
+
+        <Grid Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible">
+            <Image Source="Assets/MainLogoWhite.png" Stretch="None" />
+        </Grid>
 
         <ProgressRing Name="PrgRngLoadingMain" Grid.Row="1" Style="{StaticResource LargeLoadingRingStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="100" IsActive="False" />
 

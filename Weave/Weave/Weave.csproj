@@ -159,7 +159,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Add.png" />
+    <Content Include="Assets\LiveTile.png" />
+    <Content Include="Assets\LiveTileWide.png" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\MainLogoColour.png" />
+    <Content Include="Assets\MainLogoWhite.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />

@@ -15,8 +15,8 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Weave.App">
-      <VisualElements DisplayName="Weave" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Weave" ForegroundText="light" BackgroundColor="#464646">
-        <DefaultTile ShowName="allLogos" />
+      <VisualElements DisplayName="Weave" Logo="Assets\LiveTile.png" SmallLogo="Assets\SmallLogo.png" Description="Weave" ForegroundText="light" BackgroundColor="#222222">
+        <DefaultTile ShowName="noLogos" WideLogo="Assets\LiveTileWide.png" />
         <SplashScreen Image="Assets\SplashScreen.png" />
       </VisualElements>
     </Application>

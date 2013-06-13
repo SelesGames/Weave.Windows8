@@ -165,6 +165,12 @@ namespace Weave
             cluster.Header = "Business";
             _startItems.Insert(_startItems.Count - 1, cluster);
             cluster.InitCluster(news);
+
+            news = await UserHelper.Instance.GetCategoryNews("cars", 0, clusterFetchCount);
+            cluster = new StartClusterViewModel();
+            cluster.Header = "Cars";
+            _startItems.Insert(_startItems.Count - 1, cluster);
+            cluster.InitCluster(news);
         }
 
         public const double BaseHeight = 768; // base height of design screen
