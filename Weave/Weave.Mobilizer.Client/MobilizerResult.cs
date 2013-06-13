@@ -7,6 +7,7 @@ namespace Weave.Mobilizer.Client
         public string content { get; set; }
         public string date_published { get; set; }
         public string domain { get; set; }
+        public string lead_image_url { get; set; }
         public string title { get; set; }
         public string url { get; set; }
         public string word_count { get; set; }

@@ -123,9 +123,12 @@
     <Compile Include="Formatter.cs" />
     <Compile Include="MobilizerResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadabilityResult.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Mobilizer.DTOs\Weave.Mobilizer.DTOs.csproj">
+      <Project>{0a9019e4-e76f-4fac-a5c7-70f32cf5e2c1}</Project>
+      <Name>Weave.Mobilizer.DTOs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SelesGames.Rest.JsonDotNet\SelesGames.Rest.JsonDotNet.csproj">
       <Project>{467aacf0-a84b-46bd-9fe4-1ad6849f4e72}</Project>
       <Name>SelesGames.Rest.JsonDotNet</Name>

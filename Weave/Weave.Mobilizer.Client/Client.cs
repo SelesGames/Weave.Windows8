@@ -1,9 +1,8 @@
 ﻿using SelesGames.Rest.JsonDotNet;
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Weave.Readability;
+using Weave.Mobilizer.DTOs;
 
 namespace Weave.Mobilizer.Client
 {
@@ -29,6 +28,7 @@ namespace Weave.Mobilizer.Client
                 content = result.content,
                 date_published = result.date_published,
                 domain = result.domain,
+                lead_image_url = result.lead_image_url,
                 title = result.title,
                 url = result.url,
                 word_count = result.word_count,
