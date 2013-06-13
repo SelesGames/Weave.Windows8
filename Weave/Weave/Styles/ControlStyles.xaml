@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     >
 
-    <SolidColorBrush x:Key="WeaveBrush" Color="#FFE47E18" />
+    <SolidColorBrush x:Key="WeaveBrush" Color="#FFE96113" />
     <SolidColorBrush x:Key="WeavePageBackground" Color="Black" />
 
     <Style x:Key="LargeLoadingRingStyle" TargetType="ProgressRing">

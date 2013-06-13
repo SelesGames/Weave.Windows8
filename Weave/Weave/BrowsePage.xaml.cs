@@ -365,12 +365,18 @@ namespace Weave
 
                 if (loadWebBrowser)
                 {
-                    ScrlVwrArticle.Width = 1000;
-                    WebVwArticle.Navigate(new Uri(item.Link, UriKind.Absolute));
-                    TxtBxBrowserUrl.Text = item.Link;
-                    GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    BrowseToWebPage(item.Link);
                 }
             }
+        }
+
+        private void BrowseToWebPage(String url)
+        {
+            PrgRngBrowserLoading.IsActive = true;
+            ScrlVwrArticle.Width = 1000;
+            WebVwArticle.Navigate(new Uri(url, UriKind.Absolute));
+            TxtBxBrowserUrl.Text = url;
+            GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Visible;
         }
 
         private void WebVwArticle_LoadCompleted(object sender, NavigationEventArgs e)
@@ -417,6 +423,46 @@ namespace Weave
 
                 WebVwArticle.Navigate(_backUri);
             }
+        }
+
+        private async void WebVwArticle_ScriptNotify(object sender, NotifyEventArgs e)
+        {
+            try
+            {
+                Dictionary<String, String> parameters = ParseParameters(e.Value, '&');
+                if (parameters.ContainsKey("LaunchLink"))
+                {
+                    String id = parameters.ContainsKey("Id") ? parameters["Id"] : null;
+                    if (!String.Equals(id, "sg_link"))
+                    {
+                        WebVwArticle.NavigateToString("");
+                        await Task.Delay(50);
+                        BrowseToWebPage(parameters["LaunchLink"]);
+                    }
+                    else
+                    {
+                        Windows.System.Launcher.LaunchUriAsync(new Uri(parameters["LaunchLink"], UriKind.Absolute));
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private Dictionary<String, String> ParseParameters(String s, char separator)
+        {
+            Dictionary<String, String> parameters = new Dictionary<string, string>();
+            String[] components;
+            foreach (String str in s.Split(separator))
+            {
+                components = str.Split('=');
+                if (components.Length > 1)
+                {
+                    parameters[components[0]] = components[1];
+                }
+            }
+            return parameters;
         }
 
     } // end of class

@@ -234,11 +234,11 @@
                                         <Border x:Name="HintGlyphBorder" HorizontalAlignment="Right" Height="40" Margin="4" Opacity="0" VerticalAlignment="Top" Width="40">
                                             <Path x:Name="HintGlyph" Data="F1 M133.1,17.9 L137.2,13.2 L144.6,19.6 L156.4,5.8 L161.2,9.9 L145.6,28.4 z" Fill="{StaticResource ListViewItemCheckHintThemeBrush}" FlowDirection="LeftToRight" HorizontalAlignment="Right" Height="13" Margin="0,5.5,5.5,0" Opacity="0" Stretch="Fill" VerticalAlignment="Top" Width="15"/>
                                         </Border>
-                                        <Border x:Name="PointerOverBorder" BorderBrush="#1B1B1B" BorderThickness="3" IsHitTestVisible="False" Margin="1" Opacity="0"/>
+                                        <Border x:Name="PointerOverBorder" BorderBrush="#1B1B1B" BorderThickness="1" IsHitTestVisible="False" Margin="1" Opacity="0"/>
                                         <Rectangle x:Name="FocusVisual" IsHitTestVisible="False" Opacity="0" Stroke="{StaticResource ListViewItemFocusBorderThemeBrush}" StrokeThickness="2"/>
                                         <Border x:Name="ContentBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Margin="4">
                                             <Grid>
-                                                <Rectangle x:Name="SelectionBackground" Fill="{StaticResource WeaveBrush}" Opacity="0" HorizontalAlignment="Left" Width="5" />
+                                                <Rectangle x:Name="SelectionBackground" Fill="{StaticResource WeaveBrush}" Opacity="0" HorizontalAlignment="Left" Width="2" />
                                                 <ContentPresenter x:Name="contentPresenter" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                                                 <TextBlock x:Name="PlaceholderTextBlock" Foreground="{x:Null}" IsHitTestVisible="False" Margin="{TemplateBinding Padding}" Text="Xg" Visibility="Collapsed"/>
                                                 <Rectangle x:Name="PlaceholderRect" Fill="{StaticResource WeaveBrush}" IsHitTestVisible="False" Visibility="Collapsed"/>
@@ -257,41 +257,44 @@
         </Style>
 
         <DataTemplate x:Key="ArticleTextItemTemplate">
-            <Grid HorizontalAlignment="Left" Width="300" Margin="0">
+            <Grid HorizontalAlignment="Left" Width="250" Height="250" Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" Foreground="White" FontWeight="Light" Margin="20,20,20,0" MaxHeight="60" TextTrimming="None" />
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,40,0,20">
-                    <TextBlock Text="{Binding OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                <Rectangle Grid.RowSpan="2" Fill="White" Opacity="0.05" />
+                <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" VerticalAlignment="Top" Foreground="White" FontWeight="Light" Margin="20,14,20,0" MaxHeight="150" TextTrimming="None" />
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,0,0,20">
+                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="ArticleImageItemTemplate">
-            <Grid HorizontalAlignment="Left" Width="300" Margin="0">
+            <Grid HorizontalAlignment="Left" Width="250" Height="250" Margin="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="150" />
+                    <RowDefinition Height="160" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Border Height="200" Background="{StaticResource ImagePlaceholderBrush}">
                     <Image Source="{Binding ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </Border>
-                <TextBlock Grid.Row="1" Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" Foreground="White" FontWeight="Light" Margin="0,10,0,0" MaxHeight="60" TextTrimming="None" />
-                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,20,0,0">
-                    <TextBlock Text="{Binding OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                <TextBlock Grid.Row="1" Text="{Binding Title}" FontSize="15" Foreground="White" FontWeight="SemiBold" Margin="0,20,0,0" MaxHeight="40" TextTrimming="None" TextWrapping="Wrap" />
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,3,0,0">
+                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
 
+        <common:BrowseArticleSelector x:Name="ArticleSelector" ImageTemplate="{StaticResource ArticleImageItemTemplate}" TextTemplate="{StaticResource ArticleTextItemTemplate}" />
+
         <Style x:Key="GridViewStyleLandscape" TargetType="GridView">
-            <Setter Property="ItemTemplate" Value="{StaticResource ArticleImageItemTemplate}" />
+            <Setter Property="ItemTemplateSelector" Value="{StaticResource ArticleSelector}" />
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
@@ -422,7 +425,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <WebView Name="WebVwArticle" LoadCompleted="WebVwArticle_LoadCompleted" Margin="0" />
+                <WebView Name="WebVwArticle" LoadCompleted="WebVwArticle_LoadCompleted" Margin="0" ScriptNotify="WebVwArticle_ScriptNotify" />
                 <Grid Name="GrdBrowserControls" Grid.Row="1" Background="#343434" Visibility="Collapsed">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

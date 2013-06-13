@@ -126,4 +126,22 @@ namespace Weave.Common
             return base.SelectTemplateCore(item, container);
         }
     }
+
+    public class BrowseArticleSelector : DataTemplateSelector
+    {
+        public DataTemplate ImageTemplate { get; set; }
+        public DataTemplate TextTemplate { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        {
+            if (item != null && item is NewsItem)
+            {
+                NewsItem article = (NewsItem)item;
+                if (article.HasImage) return ImageTemplate;
+                else return TextTemplate;
+            }
+
+            return base.SelectTemplateCore(item, container);
+        }
+    }
 }

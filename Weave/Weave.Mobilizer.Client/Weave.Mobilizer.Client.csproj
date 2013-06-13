@@ -103,9 +103,11 @@
     <Content Include="Templates\body_template.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Templates\css_imageHeader.txt" />
     <Content Include="Templates\css_template.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Templates\css_textHeader.txt" />
     <Content Include="Templates\html_template1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -13,6 +13,8 @@ namespace Weave.Mobilizer.Client
         const string HTML_TEMPLATE_PATH3 = "ms-appx:///Weave.Mobilizer.Client/Templates/html_template3.txt";
         const string CSS_TEMPLATE_PATH = "ms-appx:///Weave.Mobilizer.Client/Templates/css_template.txt";
         const string BODY_TEMPLATE_PATH = "ms-appx:///Weave.Mobilizer.Client/Templates/body_template.txt";
+        const string CSS_IMAGE_HEADER_PATH = "ms-appx:///Weave.Mobilizer.Client/Templates/css_imageHeader.txt";
+        const string CSS_TEXT_HEADER_PATH = "ms-appx:///Weave.Mobilizer.Client/Templates/css_textHeader.txt";
 
         bool areTemplatesLoaded = false;
 
@@ -21,6 +23,8 @@ namespace Weave.Mobilizer.Client
         string htmlTemplate3;
         string cssTemplate;
         string bodyTemplate;
+        string cssImageHeader;
+        string cssTextHeader;
 
         public Encoding Encoding { get; set; }
 
@@ -58,10 +62,9 @@ namespace Weave.Mobilizer.Client
                         .Replace("[ACCENT]", linkColor)
                         .ToString())
 
-                .AppendLine(
-                    new StringBuilder(htmlTemplate2)
-                    .Replace("[IMAGE_URL]", imageLink == null ? "" : imageLink)
-                    .ToString())
+                .AppendLine(imageLink == null ? cssTextHeader : cssImageHeader.Replace("[IMAGE_URL]", imageLink))
+
+                .AppendLine(htmlTemplate2)
 
                 //.AppendLine(imageLink == null ? "" : String.Format("<img src=\"{0}\" width=\"750px\" style=\"margin: 0\" />", imageLink))
 
@@ -85,6 +88,8 @@ namespace Weave.Mobilizer.Client
             htmlTemplate3 = await LoadTemplate(HTML_TEMPLATE_PATH3);
             cssTemplate = await LoadTemplate(CSS_TEMPLATE_PATH);
             bodyTemplate = await LoadTemplate(BODY_TEMPLATE_PATH);
+            cssImageHeader = await LoadTemplate(CSS_IMAGE_HEADER_PATH);
+            cssTextHeader = await LoadTemplate(CSS_TEXT_HEADER_PATH);
             areTemplatesLoaded = true;
         }
 
