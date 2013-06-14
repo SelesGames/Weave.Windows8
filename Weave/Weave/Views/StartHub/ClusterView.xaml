@@ -125,7 +125,7 @@
         </Button>
 
         <Grid Grid.Row="2" VerticalAlignment="Top">
-            <common:VariableGridView Margin="-5,-5,5,-5" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{Binding Items}" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" ItemTemplateSelector="{StaticResource StartClusterItemSelector}" ItemContainerStyle="{StaticResource GridViewItemStyleWeave}">
+            <common:VariableGridView Margin="-5,-5,5,-5" SelectionMode="None" IsItemClickEnabled="True" ItemClick="VariableGridView_ItemClick" ItemsSource="{Binding Items}" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" ItemTemplateSelector="{StaticResource StartClusterItemSelector}" ItemContainerStyle="{StaticResource GridViewItemStyleWeave}">
                 <common:VariableGridView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VariableSizedWrapGrid VerticalAlignment="Top" ItemWidth="210" ItemHeight="120" MaximumRowsOrColumns="2" Orientation="Horizontal" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Weave.ViewModels.StartHub;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -41,6 +42,12 @@ namespace Weave.Views.StartHub
                 BitmapImage bmp = (BitmapImage)image.Source;
                 if (bmp.PixelHeight != 0) image.Opacity = 1;
             }
+        }
+
+        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            StartItemBase vm = this.DataContext as StartItemBase;
+            if (vm != null) vm.OnItemClick(this.DataContext);
         }
     } // end of class
 }

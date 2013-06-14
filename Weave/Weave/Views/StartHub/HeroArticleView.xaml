@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     >
 
-    <Grid Background="{StaticResource ImagePlaceholderBrush}" Width="1100">
+    <Grid Background="{StaticResource ImagePlaceholderBrush}" Width="1100" Tapped="Grid_Tapped">
         <Image Source="{Binding Article.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
         <Rectangle VerticalAlignment="Bottom" Height="1100">
             <Rectangle.Fill>

@@ -32,6 +32,9 @@ namespace Weave
     /// </summary>
     public sealed partial class BrowsePage : Weave.Common.LayoutAwarePage
     {
+        public const String NavParamSelectionKey = "Selection";
+        public const String NavParamSelectedCategoryKey = "Category";
+
         private NewsFeed _feed = new NewsFeed();
         private NavigationViewModel _nav = new NavigationViewModel();
 
@@ -40,6 +43,9 @@ namespace Weave
         private const int DefaultBrowserWidth = 750;
 
         private Stack<Uri> _browserBackStack = new Stack<Uri>();
+
+        private String _initialSelectedCategory;
+        private Guid? _initialSelectedItemId = null;
 
         public BrowsePage()
         {
@@ -60,6 +66,14 @@ namespace Weave
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             this.DataContext = _feed;
+
+            if (navigationParameter != null && navigationParameter is Dictionary<String, object>)
+            {
+                Dictionary<String, object> parameters = (Dictionary<String, object>)navigationParameter;
+                if (parameters.ContainsKey(NavParamSelectedCategoryKey)) _initialSelectedCategory = parameters[NavParamSelectedCategoryKey] as String;
+                if (parameters.ContainsKey(NavParamSelectionKey)) _initialSelectedItemId = (Guid)parameters[NavParamSelectionKey];
+            }
+
             _feed.IsLoading = true;
         }
 
@@ -151,15 +165,16 @@ namespace Weave
         private async void pageRoot_Loaded(object sender, RoutedEventArgs e)
         {
             _pageLoaded = true;
-            InitNav();
+            int initialSelection = InitNav();
             GrdVwNavigation.DataContext = _nav;
-            GrdVwNavigation.SelectedIndex = 0;
+            GrdVwNavigation.SelectedIndex = initialSelection;
         }
 
         private const int NavSpacerHeight = 20;
 
-        private void InitNav()
+        private int InitNav()
         {
+            int initialSelection = 0;
             ObservableCollection<object> items = _nav.Items;
             items.Add(new CategoryViewModel() { DisplayName = "Latest News", Type = CategoryViewModel.CategoryType.Latest });
             items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
@@ -173,6 +188,8 @@ namespace Weave
                 {
                     if (!String.Equals(category, noCategoryKey))
                     {
+                        if (_initialSelectedCategory != null && String.Equals(_initialSelectedCategory, category, StringComparison.OrdinalIgnoreCase)) initialSelection = items.Count;
+
                         items.Add(new CategoryViewModel() { DisplayName = category, Info = new CategoryInfo() { Category = category } });
                         foreach (Feed feed in categoryFeeds[category])
                         {
@@ -192,6 +209,7 @@ namespace Weave
                     items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
                 }
             }
+            return initialSelection;
         }
 
         private void UpdateMainScrollOrientation(ApplicationViewState viewState)
@@ -252,13 +270,25 @@ namespace Weave
                 {
                     await ProcessCategorySelection((CategoryViewModel)selected);
                 }
+
+                if (_initialSelectedItemId != null)
+                {
+                    NewsItem initialSelection = _feed.FindItemById(_initialSelectedItemId.Value);
+                    if (initialSelection != null)
+                    {
+                        itemGridView.SelectedItem = initialSelection;
+                        await Task.Delay(1); // allow rendering of page
+                        ShowArticle(initialSelection);
+                    }
+                }
             }
         }
 
         private async Task ProcessFeedSelection(Feed feed)
         {
             _feed.FeedId = feed.Id;
-            _feed.LoadInitialData();
+            await _feed.LoadInitialData();
+            
         }
 
         private async Task ProcessCategorySelection(CategoryViewModel category)
@@ -278,7 +308,7 @@ namespace Weave
             else
             {
                 _feed.CategoryName = category.Info.Category;
-                _feed.LoadInitialData();
+                await _feed.LoadInitialData();
             }
         }
 
@@ -463,6 +493,14 @@ namespace Weave
                 }
             }
             return parameters;
+        }
+
+        private void NavigationPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.NewSize.Height > 1 && GrdVwNavigation.SelectedIndex > 0)
+            {
+                GrdVwNavigation.ScrollIntoView(GrdVwNavigation.Items[GrdVwNavigation.SelectedIndex]);
+            }
         }
 
     } // end of class

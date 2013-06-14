@@ -63,6 +63,18 @@ namespace Weave
             PrgRngLoadingMain.IsActive = true;
         }
 
+        protected override void SaveState(Dictionary<string, object> pageState)
+        {
+            ApplicationViewState viewState = ApplicationView.Value;
+            if (viewState == ApplicationViewState.FullScreenPortrait || viewState == ApplicationViewState.Snapped)
+            {
+            }
+            else
+            {
+                _savedScrollPosition = MainScrollViewer.HorizontalOffset;
+            }
+        }
+
         private void PopupFlyout_Opened(object sender, object e)
         {
             SbFlyoutPopIn.Begin();
@@ -104,6 +116,8 @@ namespace Weave
             foreach (String str in TestData.GetSampleSources()) _sourcesVm.Items.Add(new StartSourcesViewModel.SourceListing() { Display = str, Key = str });
         }
 
+        private bool _mainScrollNotificationBound = false;
+
         private ScrollViewer _mainScrollViewer;
         private ScrollViewer MainScrollViewer
         {
@@ -112,6 +126,7 @@ namespace Weave
                 if (_mainScrollViewer == null)
                 {
                     _mainScrollViewer = App.FindSimpleVisualChild<ScrollViewer>(LstVwMain);
+                    
                 }
                 return _mainScrollViewer;
             }
@@ -119,6 +134,11 @@ namespace Weave
 
         private async void pageRoot_Loaded(object sender, RoutedEventArgs e)
         {
+            if (!_mainScrollNotificationBound)
+            {
+                App.RegisterForNotification("HorizontalOffset", MainScrollViewer, 0, MainScrollChanged);
+                _mainScrollNotificationBound = true;
+            }
 
             if (_latestArticlesVm.Items.Count == 0)
             {
@@ -131,10 +151,39 @@ namespace Weave
 
             if (_savedScrollPosition > 0)
             {
-                await Task.Delay(10); // allow scroll to render
+                ImgMainLogo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                await Task.Delay(1); // allow scroll to render
                 MainScrollViewer.ScrollToHorizontalOffset(_savedScrollPosition);
+                UpdateMainLogo(_savedScrollPosition);
                 _savedScrollPosition = 0;
+                ImgMainLogo.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
+        }
+
+        private int FindHeroArticleIndex(List<StartNewsItemContainer> items)
+        {
+            int heroIndex = 0;
+            int index = 0;
+            int largestSize = 0;
+            int currentSize;
+            NewsItem news;
+
+            foreach (StartNewsItemContainer container in items)
+            {
+                news = container.NewsItem;
+                if (news.Image != null)
+                {
+                    currentSize = news.Image.Width * news.Image.Height;
+                    if (currentSize > largestSize)
+                    {
+                        heroIndex = index;
+                        largestSize = currentSize;
+                    }
+                }
+                index++;
+            }
+
+            return heroIndex;
         }
 
         private async Task LoadViewModels()
@@ -148,25 +197,29 @@ namespace Weave
                 {
                     viewItems.Add(new StartNewsItemContainer(newsItems[i]));
                 }
-                _heroArticleVm.Article = viewItems[0].NewsItem;
-                viewItems.RemoveAt(0);
+                int heroIndex = FindHeroArticleIndex(viewItems);
+                _heroArticleVm.Article = viewItems[heroIndex].NewsItem;
+                viewItems.RemoveAt(heroIndex);
                 _latestArticlesVm.InitItems(viewItems);
             }
 
+            String categoryName = "comic books";
             int clusterFetchCount = StartClusterViewModel.BaseDisplayCount + StartClusterViewModel.ExtraRows + 1;
-            NewsList news = await UserHelper.Instance.GetCategoryNews("comic books", 0, clusterFetchCount);
+            NewsList news = await UserHelper.Instance.GetCategoryNews(categoryName, 0, clusterFetchCount);
             StartClusterViewModel cluster = new StartClusterViewModel();
             cluster.Header = "Comic books";
             _startItems.Insert(_startItems.Count - 1, cluster);
             cluster.InitCluster(news);
 
-            news = await UserHelper.Instance.GetCategoryNews("business", 0, clusterFetchCount);
+            categoryName = "business";
+            news = await UserHelper.Instance.GetCategoryNews(categoryName, 0, clusterFetchCount);
             cluster = new StartClusterViewModel();
             cluster.Header = "Business";
             _startItems.Insert(_startItems.Count - 1, cluster);
             cluster.InitCluster(news);
 
-            news = await UserHelper.Instance.GetCategoryNews("cars", 0, clusterFetchCount);
+            categoryName = "cars";
+            news = await UserHelper.Instance.GetCategoryNews(categoryName, 0, clusterFetchCount);
             cluster = new StartClusterViewModel();
             cluster.Header = "Cars";
             _startItems.Insert(_startItems.Count - 1, cluster);
@@ -207,6 +260,37 @@ namespace Weave
         private void pageRoot_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             AdjustForScreenResolution();
+        }
+
+        private void MainScrollChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            UpdateMainLogo((double)MainScrollViewer.HorizontalOffset);
+        }
+
+        private const int LogoMinX = -100;
+        private const int LogoMinY = -50;
+        private const int LogoStartOffset = 1000;
+        private const double LogoMovementScaleX = 10;
+        private const double LogoRelativeScaleY = 2;
+
+        private void UpdateMainLogo(double val)
+        {
+            if (val > LogoStartOffset)
+            {
+                double newX = (LogoStartOffset - val) / LogoMovementScaleX;
+                double newY = newX / LogoRelativeScaleY;
+
+                if (newX < LogoMinX) newX = LogoMinX;
+                if (newY < LogoMinY) newY = LogoMinY;
+
+                TranslateLogo.X = newX;
+                TranslateLogo.Y = newY;
+            }
+            else
+            {
+                TranslateLogo.X = 0;
+                TranslateLogo.Y = 0;
+            }
         }
 
     } // end of class

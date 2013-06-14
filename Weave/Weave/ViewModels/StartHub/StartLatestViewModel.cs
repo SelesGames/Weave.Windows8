@@ -65,5 +65,15 @@ namespace Weave.ViewModels.StartHub
             App.Navigate(typeof(BrowsePage));
         }
 
+        public override void OnItemClick(object item)
+        {
+            Dictionary<String, object> parameters = new Dictionary<string, object>();
+            if (item is StartNewsItemContainer)
+            {
+                parameters[BrowsePage.NavParamSelectionKey] = ((StartNewsItemContainer)item).NewsItem.Id;
+            }
+            App.Navigate(typeof(BrowsePage), parameters);
+        }
+
     } // end of class
 }

@@ -14,6 +14,11 @@ namespace Weave.ViewModels.StartHub
             throw new NotImplementedException();
         }
 
+        public virtual void OnItemClick(object item)
+        {
+            throw new NotImplementedException();
+        }
+
         private bool _isLoading;
         public bool IsLoading
         {

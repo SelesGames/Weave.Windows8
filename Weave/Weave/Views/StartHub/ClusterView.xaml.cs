@@ -50,5 +50,11 @@ namespace Weave.Views.StartHub
             if (vm != null) vm.OnHeaderClick();
         }
 
+        private void VariableGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StartItemBase vm = this.DataContext as StartItemBase;
+            if (vm != null) vm.OnItemClick(e.ClickedItem);
+        }
+
     } // end of class
 }

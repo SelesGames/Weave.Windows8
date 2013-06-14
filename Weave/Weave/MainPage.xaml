@@ -90,8 +90,11 @@
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
 
-        <Grid Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible">
-            <Image Source="Assets/MainLogoWhite.png" Stretch="None" />
+        <Grid Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" IsHitTestVisible="False" RenderTransformOrigin="0,0">
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="TranslateLogo" />
+            </Grid.RenderTransform>
+            <Image Name="ImgMainLogo" Source="Assets/MainLogoWhite.png" Stretch="None" />
         </Grid>
 
         <ProgressRing Name="PrgRngLoadingMain" Grid.Row="1" Style="{StaticResource LargeLoadingRingStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="100" IsActive="False" />

@@ -77,7 +77,7 @@ namespace Weave.ViewModels
             _idsAdded.Clear();
         }
 
-        public async void LoadInitialData()
+        public async Task LoadInitialData()
         {
             await LoadData(InitialFetchCount);
         }
@@ -114,6 +114,26 @@ namespace Weave.ViewModels
         public bool HasNextPage
         {
             get { return _idsAdded.Count < _total; }
+        }
+
+        public int FindItemIndexById(Guid id)
+        {
+            int index = 0;
+            foreach (NewsItem news in Items)
+            {
+                if (news.Id == id) return index;
+                index++;
+            }
+            return -1;
+        }
+
+        public NewsItem FindItemById(Guid id)
+        {
+            foreach (NewsItem news in Items)
+            {
+                if (news.Id == id) return news;
+            }
+            return null;
         }
 
     } // end of class

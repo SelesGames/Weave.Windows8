@@ -17,5 +17,15 @@ namespace Weave.ViewModels.StartHub
             set { SetProperty(ref _article, value); }
         }
 
+        public override void OnItemClick(object item)
+        {
+            Dictionary<String, object> parameters = new Dictionary<string, object>();
+            if (item is StartHeroArticle)
+            {
+                parameters[BrowsePage.NavParamSelectionKey] = ((StartHeroArticle)item).Article.Id;
+            }
+            App.Navigate(typeof(BrowsePage), parameters);
+        }
+
     } // end of class
 }

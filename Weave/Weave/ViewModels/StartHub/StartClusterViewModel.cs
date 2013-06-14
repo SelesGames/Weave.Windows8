@@ -27,106 +27,143 @@ namespace Weave.ViewModels.StartHub
         public void InitCluster(NewsList news)
         {
             List<StartNewsItemContainer> containerItems = new List<StartNewsItemContainer>();
-            List<int> noImageIndices = new List<int>();
+            Queue<int> noImageIndices = new Queue<int>();
+            Queue<int> imageIndices = new Queue<int>();
             int index = 0;
             foreach (NewsItem item in news.News)
             {
-                if (!item.HasImage) noImageIndices.Add(index);
+                if (!item.HasImage) noImageIndices.Enqueue(index);
+                else imageIndices.Enqueue(index);
                 containerItems.Add(new StartNewsItemContainer(item));
                 index++;
             }
 
             int layoutChoice = _random.Next() % LayoutCount;
-            if (noImageIndices.Contains(0)) layoutChoice = 1;
+            if (noImageIndices.Count > 0 && noImageIndices.Peek() == 0) layoutChoice = 1;
             else if (layoutChoice == _previousLayout) layoutChoice = (layoutChoice + 1) % 2;
             switch (layoutChoice)
             {
                 case 0:
-                    InitLayout_0(containerItems);
+                    InitLayout_0(containerItems, imageIndices, noImageIndices);
                     break;
                 case 1:
-                    InitLayout_1(containerItems);
+                    InitLayout_1(containerItems, imageIndices, noImageIndices);
                     break;
                 default:
-                    InitLayout_0(containerItems);
+                    InitLayout_0(containerItems, imageIndices, noImageIndices);
                     layoutChoice = 0;
                     break;
             }
             _previousLayout = layoutChoice;
         }
 
-        private void InitLayout_0(List<StartNewsItemContainer> items)
+        private void InitLayout_0(List<StartNewsItemContainer> items, Queue<int> imageIndices, Queue<int> noImageIndices)
         {
-            int index = 0;
             int displayCount = BaseDisplayCount + ExtraRows;
             bool showImageFlag = false;
-            foreach (StartNewsItemContainer i in items)
+
+            StartNewsItemContainer container;
+            for (int i = 0; i < items.Count && i < displayCount; i++)
             {
-                if (index == 0)
+                if (i == 0)
                 {
-                    i.IsMain = true;
-                    i.WidthSpan = 2;
-                    i.HeightSpan = 2;
+                    if (imageIndices.Count > 0) container = items[imageIndices.Dequeue()];
+                    else container = items[noImageIndices.Dequeue()];
+                    container.IsMain = true;
+                    container.WidthSpan = 2;
+                    container.HeightSpan = 2;
+                    container.ShowImage = container.NewsItem.HasImage;
                 }
-                else if (index < 3)
+                else if (i < 3)
                 {
-                    i.WidthSpan = 1;
-                    i.HeightSpan = 1;
+                    if (imageIndices.Count > 0) container = items[imageIndices.Dequeue()];
+                    else container = items[noImageIndices.Dequeue()];
+                    container.WidthSpan = 1;
+                    container.HeightSpan = 1;
+                    container.ShowImage = container.NewsItem.HasImage;
                 }
                 else
                 {
-                    i.WidthSpan = 2;
-                    i.HeightSpan = 1;
-                    i.ShowImage = showImageFlag;
+                    if (showImageFlag)
+                    {
+                        if (imageIndices.Count > 0) container = items[imageIndices.Dequeue()];
+                        else container = items[noImageIndices.Dequeue()];
+                    }
+                    else
+                    {
+                        if (noImageIndices.Count > 0) container = items[noImageIndices.Dequeue()];
+                        else container = items[imageIndices.Dequeue()];
+                    }
+                    container.WidthSpan = 2;
+                    container.HeightSpan = 1;
+                    container.ShowImage = showImageFlag && container.NewsItem.HasImage;
                     showImageFlag = !showImageFlag;
                 }
-                Items.Add(i);
-                index++;
-                if (index >= displayCount) break;
+                Items.Add(container);
             }
         }
 
-        private void InitLayout_1(List<StartNewsItemContainer> items)
+        private void InitLayout_1(List<StartNewsItemContainer> items, Queue<int> imageIndices, Queue<int> noImageIndices)
         {
             int index = 0;
             int displayCount = BaseDisplayCount + ExtraRows;
             bool showImageFlag = false;
-            foreach (StartNewsItemContainer i in items)
+
+            StartNewsItemContainer container;
+            for (int i = 0; i < items.Count && i < displayCount; i++)
             {
-                if (index == 0)
+                if (i == 0)
                 {
-                    i.IsMain = true;
-                    i.WidthSpan = 2;
-                    i.HeightSpan = 1;
-                    i.ShowImage = false;
+                    if (noImageIndices.Count > 0) container = items[noImageIndices.Dequeue()];
+                    else container = items[imageIndices.Dequeue()];
+                    container.IsMain = true;
+                    container.WidthSpan = 2;
+                    container.HeightSpan = 1;
+                    container.ShowImage = false;
                 }
-                else if (index == 1)
+                else if (i == 1)
                 {
-                    i.WidthSpan = 2;
-                    i.HeightSpan = 1;
-                    i.ShowImage = false;
+                    if (noImageIndices.Count > 0) container = items[noImageIndices.Dequeue()];
+                    else container = items[imageIndices.Dequeue()];
+                    container.WidthSpan = 2;
+                    container.HeightSpan = 1;
+                    container.ShowImage = false;
                 }
-                else if (index < 4)
+                else if (i < 4)
                 {
-                    i.WidthSpan = 1;
-                    i.HeightSpan = 1;
+                    if (imageIndices.Count > 0) container = items[imageIndices.Dequeue()];
+                    else container = items[noImageIndices.Dequeue()];
+                    container.WidthSpan = 1;
+                    container.HeightSpan = 1;
+                    container.ShowImage = container.NewsItem.HasImage;
+
                 }
-                else if (index == 4)
+                else if (i == 4)
                 {
-                    i.WidthSpan = 2;
-                    i.HeightSpan = 1;
-                    i.ShowImage = false;
+                    if (noImageIndices.Count > 0) container = items[noImageIndices.Dequeue()];
+                    else container = items[imageIndices.Dequeue()];
+                    container.WidthSpan = 2;
+                    container.HeightSpan = 1;
+                    container.ShowImage = false;
                 }
                 else
                 {
-                    i.WidthSpan = 2;
-                    i.HeightSpan = 1;
-                    i.ShowImage = showImageFlag;
+                    if (showImageFlag)
+                    {
+                        if (imageIndices.Count > 0) container = items[imageIndices.Dequeue()];
+                        else container = items[noImageIndices.Dequeue()];
+                    }
+                    else
+                    {
+                        if (noImageIndices.Count > 0) container = items[noImageIndices.Dequeue()];
+                        else container = items[imageIndices.Dequeue()];
+                    }
+                    container.WidthSpan = 2;
+                    container.HeightSpan = 1;
+                    container.ShowImage = showImageFlag && container.NewsItem.HasImage;
                     showImageFlag = !showImageFlag;
                 }
-                Items.Add(i);
-                index++;
-                if (index >= displayCount + 1) break;
+                Items.Add(container);
             }
         }
 
@@ -139,7 +176,20 @@ namespace Weave.ViewModels.StartHub
 
         public override void OnHeaderClick()
         {
-            App.Navigate(typeof(BrowsePage));
+            Dictionary<String, object> parameters = new Dictionary<string, object>();
+            parameters[BrowsePage.NavParamSelectedCategoryKey] = Header;
+            App.Navigate(typeof(BrowsePage), parameters);
+        }
+
+        public override void OnItemClick(object item)
+        {
+            Dictionary<String, object> parameters = new Dictionary<string, object>();
+            parameters[BrowsePage.NavParamSelectedCategoryKey] = Header;
+            if (item is StartNewsItemContainer)
+            {
+                parameters[BrowsePage.NavParamSelectionKey] = ((StartNewsItemContainer)item).NewsItem.Id;
+            }
+            App.Navigate(typeof(BrowsePage), parameters);
         }
 
     } // end of class
