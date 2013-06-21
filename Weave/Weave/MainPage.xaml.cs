@@ -21,6 +21,7 @@ using System.Runtime.Serialization;
 using System.Xml;
 using System.Runtime.Serialization.Json;
 using Weave.ViewModels;
+using Weave.ViewModels.Browse;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -111,11 +112,6 @@ namespace Weave
             }
         }
 
-        private async Task LoadTestData()
-        {
-            foreach (String str in TestData.GetSampleSources()) _sourcesVm.Items.Add(new StartSourcesViewModel.SourceListing() { Display = str, Key = str });
-        }
-
         private bool _mainScrollNotificationBound = false;
 
         private ScrollViewer _mainScrollViewer;
@@ -144,7 +140,6 @@ namespace Weave
             {
                 await UserHelper.Instance.LoadUser();
                 await LoadViewModels();
-                await LoadTestData();
             }
             LstVwMain.ItemsSource = _startItems;
             PrgRngLoadingMain.IsActive = false;
@@ -203,6 +198,8 @@ namespace Weave
                 _latestArticlesVm.InitItems(viewItems);
             }
 
+            _sourcesVm.InitSources();
+
             String categoryName = "comic books";
             int clusterFetchCount = StartClusterViewModel.BaseDisplayCount + StartClusterViewModel.ExtraRows + 1;
             NewsList news = await UserHelper.Instance.GetCategoryNews(categoryName, 0, clusterFetchCount);
@@ -233,7 +230,6 @@ namespace Weave
 
         private void AdjustForScreenResolution()
         {
-            //return;
             if (ApplicationView.Value == ApplicationViewState.FullScreenPortrait)
             {
                 _expansionFactor = ((this.ActualWidth - BaseHeight) / BinHeight);
@@ -248,12 +244,14 @@ namespace Weave
                 GrdRoot.Tag = BaseSectionHeight + (int)(BinHeight * _expansionFactor);
                 StartClusterViewModel.ExtraRows = (int)(_expansionFactor * 2);
                 StartLatestViewModel.ExtraRows = (int)_expansionFactor;
+                StartSourcesViewModel.ExtraRows = (int)(_expansionFactor * 5);
             }
             else
             {
                 GrdRoot.Tag = BaseSectionHeight;
                 StartClusterViewModel.ExtraRows = 0;
                 StartLatestViewModel.ExtraRows = 0;
+                StartSourcesViewModel.ExtraRows = 0;
             }
         }
 
@@ -290,6 +288,166 @@ namespace Weave
             {
                 TranslateLogo.X = 0;
                 TranslateLogo.Y = 0;
+            }
+        }
+
+        private Button _addClusterButton;
+
+        private void AddView_Loaded(object sender, RoutedEventArgs e)
+        {
+            Weave.Views.StartHub.AddView view = sender as Weave.Views.StartHub.AddView;
+            if (view != null && _addClusterButton == null)
+            {
+                _addClusterButton = view.AddButton;
+                _addClusterButton.Click += BtnAddCluster_Click;
+            }
+        }
+
+        private void GrdPopupListContent_Loaded(object sender, RoutedEventArgs e)
+        {
+            GrdPopupListContent = sender as Grid;
+            ResizeAddPopup();
+        }
+
+        private void ResizeAddPopup()
+        {
+            if (GrdPopupListContent != null)
+            {
+                ApplicationViewState viewState = ApplicationView.Value;
+                double baseHeight = BinHeight + (BinHeight / 2) - 10;
+                if (_expansionFactor > 0 && viewState != ApplicationViewState.Snapped)
+                {
+                    GrdPopupListContent.Height = baseHeight + (BinHeight * (int)_expansionFactor);
+                }
+                else
+                {
+                    GrdPopupListContent.Height = baseHeight;
+                }
+
+                Point p = new Point();
+
+                if (viewState == ApplicationViewState.Snapped) GrdPopupListContent.Width = 280;
+                else GrdPopupListContent.Width = 350;
+
+                bool displayAbove = viewState == ApplicationViewState.FullScreenPortrait || viewState == ApplicationViewState.Snapped;
+
+                if (_addClusterButton != null)
+                {
+                    p = _addClusterButton.TransformToVisual(this).TransformPoint(p);
+                    if (displayAbove)
+                    {
+                        double remainingHeight = Window.Current.Bounds.Bottom - (p.Y + _addClusterButton.ActualHeight);
+                        if (remainingHeight < 0)
+                        {
+                            p.X += remainingHeight;
+                        }
+                    }
+                    else
+                    {
+                        double remainingWidth = Window.Current.Bounds.Right - p.X;
+                        if (remainingWidth < GrdPopupListContent.Width)
+                        {
+                            p.X -= (GrdPopupListContent.Width - remainingWidth);
+                        }
+                    }
+                }
+
+                if (displayAbove)
+                {
+                    GrdPopupListContent.Margin = new Thickness(p.X, p.Y - GrdPopupListContent.Height + 60, 0, 0);
+                }
+                else
+                {
+                    GrdPopupListContent.Margin = new Thickness(p.X, p.Y, 0, 0);
+                }
+            }
+        }
+
+        private List<Object> InitCategoryListings()
+        {
+            List<Object> categoryListings = new List<object>();
+
+            String noCategoryKey = "";
+            Dictionary<String, List<Feed>> categoryFeeds = UserHelper.Instance.CategoryFeeds;
+            if (categoryFeeds != null && categoryFeeds.Count > 0)
+            {
+                List<String> orderedKeys = new List<string>(categoryFeeds.Keys.OrderBy(s => s));
+                foreach (String category in orderedKeys)
+                {
+                    if (!String.Equals(category, noCategoryKey))
+                    {
+                        categoryListings.Add(new CategoryViewModel() { DisplayName = category, Info = new CategoryInfo() { Category = category } });
+                        List<Feed> feeds = categoryFeeds[category];
+                        feeds.Sort((a, b) => String.Compare(a.Name, b.Name));
+                        foreach (Feed feed in feeds)
+                        {
+                            categoryListings.Add(feed);
+                        }
+                        categoryListings.Add(new SpacerViewModel() { Height = BrowsePage.NavSpacerHeight });
+                    }
+                }
+
+                if (categoryFeeds.ContainsKey(noCategoryKey))
+                {
+                    categoryListings.Add(new CategoryViewModel() { DisplayName = "Other", Type = CategoryViewModel.CategoryType.Other });
+                    List<Feed> feeds = categoryFeeds[noCategoryKey];
+                    feeds.Sort((a, b) => String.Compare(a.Name, b.Name));
+                    foreach (Feed feed in feeds)
+                    {
+                        categoryListings.Add(feed);
+                    }
+                    categoryListings.Add(new SpacerViewModel() { Height = BrowsePage.NavSpacerHeight });
+                }
+            }
+
+            return categoryListings;
+        }
+
+        private void LstBxCategorySelector_Loaded(object sender, RoutedEventArgs e)
+        {
+            ListBox listbox = sender as ListBox;
+            if (listbox != null)
+            {
+                if (listbox.ItemsSource == null) listbox.ItemsSource = InitCategoryListings();
+                listbox.SelectedItem = null;
+            }
+        }
+
+        private void LstBxCategorySelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox listbox = sender as ListBox;
+            if (listbox != null && e.AddedItems.Count > 0)
+            {
+                listbox.SelectedItem = null;
+            }
+        }
+
+        private void ListItem_Click(object sender, RoutedEventArgs e)
+        {
+            //FrameworkElement element = sender as FrameworkElement;
+            //if (element != null && element.DataContext is CategoryListing)
+            //{
+            //    CategoryListing category = (CategoryListing)element.DataContext;
+            //    if (PopupListSelector != null)
+            //    {
+            //        PopupListSelector.IsOpen = false;
+            //        AddCategoryCluster(category.Key);
+            //    }
+            //}
+        }
+
+        private void PopupListSelector_Opened(object sender, object e)
+        {
+            Popup popup = sender as Popup;
+            SbListSelectorPopIn.Begin();
+        }
+
+        private void BtnAddCluster_Click(object sender, RoutedEventArgs e)
+        {
+            if (PopupListSelector != null)
+            {
+                PopupListSelector.IsOpen = true;
+                ResizeAddPopup();
             }
         }
 

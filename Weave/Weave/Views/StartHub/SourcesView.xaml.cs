@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Weave.ViewModels.StartHub;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -21,6 +22,16 @@ namespace Weave.Views.StartHub
         public SourcesView()
         {
             this.InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null)
+            {
+                StartItemBase vm = this.DataContext as StartItemBase;
+                if (vm != null) vm.OnItemClick(button.DataContext);
+            }
         }
     }
 }

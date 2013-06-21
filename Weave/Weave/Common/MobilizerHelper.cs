@@ -64,15 +64,32 @@ namespace Weave.Common
             int found = -1;
             int tagLevel = 0;
             int index = 0;
+            bool insideSpecialChar = false;
             foreach (Char c in s.ToCharArray())
             {
-                if (Char.IsLetter(c) && tagLevel == 0)
+                if (Char.IsLetter(c) && tagLevel == 0 && !insideSpecialChar)
                 {
                     found = index;
                     break;
                 }
-                else if (c == '<') tagLevel++;
-                else if (c == '>') tagLevel--;
+                else
+                {
+                    switch (c)
+                    {
+                        case '<':
+                            tagLevel++;
+                            break;
+                        case '>':
+                            tagLevel--;
+                            break;
+                        case '&':
+                            if (!insideSpecialChar) insideSpecialChar = true;
+                            break;
+                        case ';':
+                            if (insideSpecialChar) insideSpecialChar = false;
+                            break;
+                    }
+                }
                 index++;
             }
 

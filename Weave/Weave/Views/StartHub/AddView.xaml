@@ -13,7 +13,7 @@
     <StackPanel Width="270" HorizontalAlignment="Left" VerticalAlignment="Top">
         <TextBlock Text=" " Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,20" />
         <Grid Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <Button Style="{StaticResource ButtonStyleBasic}" ToolTipService.ToolTip="Add custom column">
+            <Button Name="BtnAdd" Style="{StaticResource ButtonStyleBasic}" ToolTipService.ToolTip="Add custom column">
                 <Grid>
                     <Rectangle Fill="{StaticResource WeaveBrush}" Width="60" Height="60" />
                     <Image Source="/Assets/Add.png" Stretch="None" />

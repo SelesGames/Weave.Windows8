@@ -170,7 +170,7 @@ namespace Weave
             GrdVwNavigation.SelectedIndex = initialSelection;
         }
 
-        private const int NavSpacerHeight = 20;
+        public const int NavSpacerHeight = 20;
 
         private int InitNav()
         {
@@ -191,7 +191,9 @@ namespace Weave
                         if (_initialSelectedCategory != null && String.Equals(_initialSelectedCategory, category, StringComparison.OrdinalIgnoreCase)) initialSelection = items.Count;
 
                         items.Add(new CategoryViewModel() { DisplayName = category, Info = new CategoryInfo() { Category = category } });
-                        foreach (Feed feed in categoryFeeds[category])
+                        List<Feed> feeds = categoryFeeds[category];
+                        feeds.Sort((a,b) => String.Compare(a.Name, b.Name));
+                        foreach (Feed feed in feeds)
                         {
                             items.Add(feed);
                         }
@@ -202,7 +204,9 @@ namespace Weave
                 if (categoryFeeds.ContainsKey(noCategoryKey))
                 {
                     items.Add(new CategoryViewModel() { DisplayName = "Other", Type = CategoryViewModel.CategoryType.Other });
-                    foreach (Feed feed in categoryFeeds[noCategoryKey])
+                    List<Feed> feeds = categoryFeeds[noCategoryKey];
+                    feeds.Sort((a, b) => String.Compare(a.Name, b.Name));
+                    foreach (Feed feed in feeds)
                     {
                         items.Add(feed);
                     }
@@ -279,6 +283,7 @@ namespace Weave
                         itemGridView.SelectedItem = initialSelection;
                         await Task.Delay(1); // allow rendering of page
                         ShowArticle(initialSelection);
+                        _initialSelectedItemId = null;
                     }
                 }
             }

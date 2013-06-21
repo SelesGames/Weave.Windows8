@@ -22,5 +22,10 @@ namespace Weave.Views.StartHub
         {
             this.InitializeComponent();
         }
+
+        public Button AddButton
+        {
+            get { return BtnAdd; }
+        }
     }
 }

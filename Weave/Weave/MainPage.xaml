@@ -13,7 +13,133 @@
     >
     
     <Page.Resources>
-        
+
+        <common:UpperCaseConverter x:Key="UpperCaseConverter" />
+
+        <Style x:Key="ListBoxItemStyleCategory" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="TabNavigation" Value="Local"/>
+            <Setter Property="Padding" Value="0,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="LayoutRoot" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="InnerGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="InnerGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#1B1B1B"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="LayoutRoot">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Gray"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="SelectionStates">
+                                    <VisualState x:Name="Unselected"/>
+                                    <VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="InnerGrid">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource WeaveBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedUnfocused">
+                                        <Storyboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="InnerGrid">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource WeaveBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedDisabled">
+                                        <Storyboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="InnerGrid">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource WeaveBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedPointerOver">
+                                        <Storyboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="InnerGrid">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource WeaveBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedPressed">
+                                        <Storyboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="InnerGrid">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource WeaveBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="FocusStates">
+                                    <VisualState x:Name="Focused">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualWhite"/>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualBlack"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unfocused"/>
+                                    <VisualState x:Name="PointerFocused"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid x:Name="InnerGrid" Background="Transparent">
+                                <!--<Rectangle x:Name="PressedBackground" Fill="{StaticResource MetrotubeBrush}" Opacity="0"/>-->
+                                <ContentPresenter x:Name="ContentPresenter" Foreground="Black" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                <Rectangle x:Name="FocusVisualWhite" Opacity="0" StrokeDashOffset=".5" StrokeEndLineCap="Square" Stroke="{StaticResource FocusVisualWhiteStrokeThemeBrush}" StrokeDashArray="1,1"/>
+                                <Rectangle x:Name="FocusVisualBlack" Opacity="0" StrokeDashOffset="1.5" StrokeEndLineCap="Square" Stroke="{StaticResource FocusVisualBlackStrokeThemeBrush}" StrokeDashArray="1,1"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <DataTemplate x:Key="LatestArticlesTemplate">
             <views:LatestArticles Margin="0,140,80,0" />
         </DataTemplate>
@@ -31,7 +157,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="AddTemplate">
-            <views:AddView Margin="5,140,120,0" />
+            <views:AddView Margin="5,140,120,0" Loaded="AddView_Loaded" />
         </DataTemplate>
 
         <common:StartItemSelector x:Name="StartItemSelector" HeroTemplate="{StaticResource HeroTemplate}" LatestTemplate="{StaticResource LatestArticlesTemplate}" SourcesTemplate="{StaticResource SourcesTemplate}" ClusterTemplate="{StaticResource ClusterTemplate}"  AddTemplate="{StaticResource AddTemplate}" />
@@ -66,6 +192,30 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="SpacerContainerStyle" TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemStyleCategory}">
+            <Setter Property="IsEnabled" Value="False" />
+        </Style>
+
+        <common:NavigationItemStyleSelector x:Name="PinItemStyleSelector" CategoryStyle="{StaticResource ListBoxItemStyleCategory}" FeedStyle="{StaticResource ListBoxItemStyleCategory}" SpacerStyle="{StaticResource SpacerContainerStyle}" />
+
+        <DataTemplate x:Key="CategoryTemplate">
+            <Button Style="{StaticResource ButtonStyleBasic}" Click="ListItem_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
+                <TextBlock Margin="8,10" HorizontalAlignment="Left" Text="{Binding DisplayName, Converter={StaticResource UpperCaseConverter}}" Foreground="White" TextTrimming="WordEllipsis" FontSize="{StaticResource ControlContentThemeFontSize}" FontWeight="Bold" VerticalAlignment="Center" />
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="FeedTemplate">
+            <Button Style="{StaticResource ButtonStyleBasic}" Click="ListItem_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
+                <TextBlock Margin="8,10" HorizontalAlignment="Left" Text="{Binding Name}" Foreground="White" TextTrimming="WordEllipsis" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" />
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SpacerTemplate">
+            <Rectangle Height="{Binding Height}" />
+        </DataTemplate>
+
+        <common:NavigationItemSelector x:Name="PinItemSelector" CategoryTemplate="{StaticResource CategoryTemplate}" FeedTemplate="{StaticResource FeedTemplate}" SpacerTemplate="{StaticResource SpacerTemplate}" />
 
     </Page.Resources>
 
@@ -108,6 +258,37 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}" />
             <Image Name="ImgLogo" Source="/Assets/Logo.png" Grid.Column="1" Stretch="None" HorizontalAlignment="Left" Margin="-5,0,0,0" />
         </Grid>-->
+
+        <Popup Name="PopupListSelector" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupListSelector_Opened">
+            <Popup.Resources>
+                <Storyboard x:Name="SbListSelectorPopIn">
+                    <PopInThemeAnimation TargetName="GrdPopupListContent" FromVerticalOffset="0" FromHorizontalOffset="-100" />
+                </Storyboard>
+            </Popup.Resources>
+            <Grid Background="#272727" Name="GrdPopupListContent" Width="350" Loaded="GrdPopupListContent_Loaded">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Background="#373737">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock FontFamily="Segoe UI Symbol" Text="&#xE141;" Margin="20,20,0,20" VerticalAlignment="Center" FontSize="26" />
+                    <TextBlock Grid.Column="1" Text="Select a category or source to pin to your main hub..." TextWrapping="Wrap" FontWeight="Light" FontSize="15" Foreground="{StaticResource SubtleTextBrush}" Margin="20,20,20,20" />
+                </Grid>
+                <Grid Margin="40" Grid.Row="1">
+                    <ListBox Name="LstBxCategorySelector" Style="{StaticResource ListBoxStyleListSelector}" ItemTemplateSelector="{StaticResource PinItemSelector}" Grid.Row="4" SelectionMode="Single" Margin="-10" SelectionChanged="LstBxCategorySelector_SelectionChanged" ItemContainerStyleSelector="{StaticResource PinItemStyleSelector}" Background="Transparent" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Loaded="LstBxCategorySelector_Loaded">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                </Grid>
+            </Grid>
+            </Popup>
 
         <Popup Name="PopupFlyout" Margin="0,0,346,0" HorizontalAlignment="Right" Grid.RowSpan="2" VerticalAlignment="Top" IsOpen="False" IsLightDismissEnabled="True" Closed="PopupFlyout_Closed" Opened="PopupFlyout_Opened">
             <Popup.Resources>

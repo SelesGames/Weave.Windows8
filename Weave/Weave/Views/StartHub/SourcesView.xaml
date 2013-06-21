@@ -31,7 +31,7 @@
             <ItemsControl Margin="40,-25,0,0" Height="{Binding ElementName=GrdRoot, Path=Tag}" ItemsSource="{Binding Items}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Style="{StaticResource ButtonStyleBasic}" VerticalAlignment="Stretch">
+                        <Button Style="{StaticResource ButtonStyleBasic}" VerticalAlignment="Stretch" Click="Button_Click">
                             <Grid Margin="0,15,0,15">
                                 <TextBlock Text="{Binding Display}" Style="{StaticResource SubheaderTextStyle}"  VerticalAlignment="Center" />
                             </Grid>
