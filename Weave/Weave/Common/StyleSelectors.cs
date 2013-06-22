@@ -22,7 +22,12 @@ namespace Weave.Common
             if (item != null)
             {
                 if (item is Feed) return FeedStyle;
-                else if (item is CategoryViewModel) return CategoryStyle;
+                else if (item is CategoryViewModel)
+                {
+                    CategoryViewModel vm = (CategoryViewModel)item;
+                    if (vm.Type == CategoryViewModel.CategoryType.Other) return SpacerStyle;
+                    else return CategoryStyle;
+                }
                 else if (item is Weave.ViewModels.StartHub.StartAddViewModel) return AddStyle;
                 else if (item is SpacerViewModel) return SpacerStyle;
             }

@@ -34,6 +34,7 @@ namespace Weave
     {
         public const String NavParamSelectionKey = "Selection";
         public const String NavParamSelectedCategoryKey = "Category";
+        public const String NavParamSelectedSourceKey = "Source";
 
         private NewsFeed _feed = new NewsFeed();
         private NavigationViewModel _nav = new NavigationViewModel();
@@ -46,6 +47,7 @@ namespace Weave
 
         private String _initialSelectedCategory;
         private Guid? _initialSelectedItemId = null;
+        private Guid? _initialSelectedSource = null;
 
         public BrowsePage()
         {
@@ -72,6 +74,7 @@ namespace Weave
                 Dictionary<String, object> parameters = (Dictionary<String, object>)navigationParameter;
                 if (parameters.ContainsKey(NavParamSelectedCategoryKey)) _initialSelectedCategory = parameters[NavParamSelectedCategoryKey] as String;
                 if (parameters.ContainsKey(NavParamSelectionKey)) _initialSelectedItemId = (Guid)parameters[NavParamSelectionKey];
+                if (parameters.ContainsKey(NavParamSelectedSourceKey)) _initialSelectedSource = (Guid)parameters[NavParamSelectedSourceKey];
             }
 
             _feed.IsLoading = true;
@@ -195,6 +198,7 @@ namespace Weave
                         feeds.Sort((a,b) => String.Compare(a.Name, b.Name));
                         foreach (Feed feed in feeds)
                         {
+                            if (_initialSelectedSource != null && _initialSelectedSource.Value == feed.Id) initialSelection = items.Count;
                             items.Add(feed);
                         }
                         items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
@@ -208,6 +212,7 @@ namespace Weave
                     feeds.Sort((a, b) => String.Compare(a.Name, b.Name));
                     foreach (Feed feed in feeds)
                     {
+                        if (_initialSelectedSource != null && initialSelection == 0 &&  _initialSelectedSource.Value == feed.Id) initialSelection = items.Count;
                         items.Add(feed);
                     }
                     items.Add(new SpacerViewModel() { Height = NavSpacerHeight });

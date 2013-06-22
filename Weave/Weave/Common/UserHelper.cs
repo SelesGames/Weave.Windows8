@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Weave.ViewModels;
+using Windows.Storage;
 
 namespace Weave.Common
 {
@@ -17,11 +18,16 @@ namespace Weave.Common
         private const String CurrentUserId = "0d13bf82-0f14-475f-9725-f97e5a123d5a";
         private const String UserInfoUrlFormat = CloudUrlPrefix + "info?userId={0}";
 
+        private String _currentUserId = CurrentUserId;
+
         private UserInfo _currentUser;
         private Weave.ViewModels.Contracts.Client.IViewModelRepository _repo;
         private bool _isLoaded;
         private bool _loading;
         private ManualResetEvent _loadingEvent = new ManualResetEvent(true);
+
+        private ApplicationDataContainer _localSettings;
+        private ApplicationDataContainer _roamingSettings;
 
         private Dictionary<String, Feed> _feedIdMap = new Dictionary<string,ViewModels.Feed>();
         private Dictionary<String, List<Feed>> _categoryFeedMap;
@@ -72,7 +78,7 @@ namespace Weave.Common
                     _loading = true;
                     _loadingEvent.Reset();
 
-                    _repo = new ViewModels.Repository.StandardRepository(Guid.Parse(CurrentUserId), new Weave.UserFeedAggregator.Client.Client());
+                    _repo = new ViewModels.Repository.StandardRepository(Guid.Parse(_currentUserId), new Weave.UserFeedAggregator.Client.Client());
                     _currentUser = await _repo.GetUserInfo(false);
 
                     _loadingEvent.Set();
@@ -129,6 +135,40 @@ namespace Weave.Common
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gets the settings container for the current user.
+        /// </summary>
+        /// <param name="roaming">Indicates if the roaming settings should be used.</param>
+        /// <returns>The settings container for the current user, or null if no user found.</returns>
+        public ApplicationDataContainer GetUserContainer(bool roaming)
+        {
+            ApplicationDataContainer container = null;
+            ApplicationDataContainer settingsContainer = roaming ? RoamingSettings : LocalSettings;
+
+            if (settingsContainer.Containers.ContainsKey(_currentUserId)) container = settingsContainer.Containers[_currentUserId];
+            else container = settingsContainer.CreateContainer(_currentUserId, ApplicationDataCreateDisposition.Always);
+
+            return container;
+        }
+
+        private ApplicationDataContainer LocalSettings
+        {
+            get
+            {
+                if (_localSettings == null) _localSettings = ApplicationData.Current.LocalSettings;
+                return _localSettings;
+            }
+        }
+
+        private ApplicationDataContainer RoamingSettings
+        {
+            get
+            {
+                if (_roamingSettings == null) _roamingSettings = ApplicationData.Current.RoamingSettings;
+                return _roamingSettings;
+            }
         }
 
     } // end of class

@@ -201,13 +201,13 @@
 
         <DataTemplate x:Key="CategoryTemplate">
             <Button Style="{StaticResource ButtonStyleBasic}" Click="ListItem_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
-                <TextBlock Margin="8,10" HorizontalAlignment="Left" Text="{Binding DisplayName, Converter={StaticResource UpperCaseConverter}}" Foreground="White" TextTrimming="WordEllipsis" FontSize="{StaticResource ControlContentThemeFontSize}" FontWeight="Bold" VerticalAlignment="Center" />
+                <TextBlock Margin="8,10" HorizontalAlignment="Left" Text="{Binding DisplayName, Converter={StaticResource UpperCaseConverter}}" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="WordEllipsis" FontSize="{StaticResource ControlContentThemeFontSize}" FontWeight="Bold" VerticalAlignment="Center" />
             </Button>
         </DataTemplate>
 
         <DataTemplate x:Key="FeedTemplate">
             <Button Style="{StaticResource ButtonStyleBasic}" Click="ListItem_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
-                <TextBlock Margin="8,10" HorizontalAlignment="Left" Text="{Binding Name}" Foreground="White" TextTrimming="WordEllipsis" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" />
+                <TextBlock Margin="8,10" HorizontalAlignment="Left" Text="{Binding Name}" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="WordEllipsis" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" />
             </Button>
         </DataTemplate>
 

@@ -16,7 +16,7 @@
             <Button Name="BtnAdd" Style="{StaticResource ButtonStyleBasic}" ToolTipService.ToolTip="Add custom column">
                 <Grid>
                     <Rectangle Fill="{StaticResource WeaveBrush}" Width="60" Height="60" />
-                    <Image Source="/Assets/Add.png" Stretch="None" />
+                    <TextBlock FontFamily="Segoe UI Symbol" Text="&#xE141;" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="26" Foreground="White" />
                 </Grid>
             </Button>
         </Grid>

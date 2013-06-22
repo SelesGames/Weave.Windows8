@@ -108,6 +108,7 @@
       <DependentUpon>BrowsePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Common\ClusterHelper.cs" />
     <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\HtmlToXaml.cs" />
     <Compile Include="Common\LayoutAwarePage.cs" />

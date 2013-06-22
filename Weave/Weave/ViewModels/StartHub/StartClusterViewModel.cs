@@ -18,13 +18,38 @@ namespace Weave.ViewModels.StartHub
 
         public String Header { get; set; }
 
+        public String Category { get; set; }
+
+        public Guid? FeedId { get; set; }
+
         private ObservableCollection<StartNewsItemContainer> _items = new ObservableCollection<StartNewsItemContainer>();
         public ObservableCollection<StartNewsItemContainer> Items
         {
             get { return _items; }
         }
 
-        public void InitCluster(NewsList news)
+        public async Task InitCluster()
+        {
+            IsLoading = true;
+            NewsList news = null;
+            int clusterFetchCount = StartClusterViewModel.BaseDisplayCount + StartClusterViewModel.ExtraRows + 1;
+            if (!String.IsNullOrEmpty(Category))
+            {
+                news = await UserHelper.Instance.GetCategoryNews(Category, 0, clusterFetchCount);
+            }
+            else if (FeedId != null)
+            {
+                news = await UserHelper.Instance.GetFeedNews(FeedId.Value, 0, clusterFetchCount);
+            }
+
+            if (news != null)
+            {
+                InitCluster(news);
+            }
+            IsLoading = false;
+        }
+
+        private void InitCluster(NewsList news)
         {
             List<StartNewsItemContainer> containerItems = new List<StartNewsItemContainer>();
             Queue<int> noImageIndices = new Queue<int>();
@@ -177,14 +202,18 @@ namespace Weave.ViewModels.StartHub
         public override void OnHeaderClick()
         {
             Dictionary<String, object> parameters = new Dictionary<string, object>();
-            parameters[BrowsePage.NavParamSelectedCategoryKey] = Header;
+            if (!String.IsNullOrEmpty(Category)) parameters[BrowsePage.NavParamSelectedCategoryKey] = Header;
+            else if (FeedId != null) parameters[BrowsePage.NavParamSelectedSourceKey] = FeedId;
             App.Navigate(typeof(BrowsePage), parameters);
         }
 
         public override void OnItemClick(object item)
         {
             Dictionary<String, object> parameters = new Dictionary<string, object>();
-            parameters[BrowsePage.NavParamSelectedCategoryKey] = Header;
+
+            if (!String.IsNullOrEmpty(Category)) parameters[BrowsePage.NavParamSelectedCategoryKey] = Header;
+            else if (FeedId != null) parameters[BrowsePage.NavParamSelectedSourceKey] = FeedId;
+
             if (item is StartNewsItemContainer)
             {
                 parameters[BrowsePage.NavParamSelectionKey] = ((StartNewsItemContainer)item).NewsItem.Id;

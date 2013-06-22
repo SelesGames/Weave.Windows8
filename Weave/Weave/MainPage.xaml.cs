@@ -200,27 +200,29 @@ namespace Weave
 
             _sourcesVm.InitSources();
 
-            String categoryName = "comic books";
-            int clusterFetchCount = StartClusterViewModel.BaseDisplayCount + StartClusterViewModel.ExtraRows + 1;
-            NewsList news = await UserHelper.Instance.GetCategoryNews(categoryName, 0, clusterFetchCount);
             StartClusterViewModel cluster = new StartClusterViewModel();
             cluster.Header = "Comic books";
+            cluster.Category = "comic books";
             _startItems.Insert(_startItems.Count - 1, cluster);
-            cluster.InitCluster(news);
+            cluster.InitCluster();
 
-            categoryName = "business";
-            news = await UserHelper.Instance.GetCategoryNews(categoryName, 0, clusterFetchCount);
             cluster = new StartClusterViewModel();
             cluster.Header = "Business";
+            cluster.Category = "business";
             _startItems.Insert(_startItems.Count - 1, cluster);
-            cluster.InitCluster(news);
+            cluster.InitCluster();
 
-            categoryName = "cars";
-            news = await UserHelper.Instance.GetCategoryNews(categoryName, 0, clusterFetchCount);
             cluster = new StartClusterViewModel();
             cluster.Header = "Cars";
+            cluster.Category = "cars";
             _startItems.Insert(_startItems.Count - 1, cluster);
-            cluster.InitCluster(news);
+            cluster.InitCluster();
+
+            cluster = new StartClusterViewModel();
+            cluster.Header = "Anandtech";
+            cluster.FeedId = new Guid("7653d36b-b79c-3a9c-1919-645b48c3ed59");
+            _startItems.Insert(_startItems.Count - 1, cluster);
+            cluster.InitCluster();
         }
 
         public const double BaseHeight = 768; // base height of design screen
