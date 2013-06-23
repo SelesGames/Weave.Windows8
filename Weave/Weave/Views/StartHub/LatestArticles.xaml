@@ -12,7 +12,7 @@
     <UserControl.Resources>
         
         <DataTemplate x:Key="MainTemplate">
-            <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4">
+            <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4" RightTapped="Grid_RightTapped">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -32,7 +32,7 @@
         </DataTemplate>
         
         <DataTemplate x:Key="LargeNoImageTemplate">
-            <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4">
+            <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4" RightTapped="Grid_RightTapped">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -47,7 +47,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="SmallTemplate">
-            <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4">
+            <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4" RightTapped="Grid_RightTapped">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

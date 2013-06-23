@@ -199,7 +199,7 @@ namespace Weave
                         foreach (Feed feed in feeds)
                         {
                             if (_initialSelectedSource != null && _initialSelectedSource.Value == feed.Id) initialSelection = items.Count;
-                            items.Add(feed);
+                            items.Add(new FeedWithIcon(feed));
                         }
                         items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
                     }
@@ -213,7 +213,7 @@ namespace Weave
                     foreach (Feed feed in feeds)
                     {
                         if (_initialSelectedSource != null && initialSelection == 0 &&  _initialSelectedSource.Value == feed.Id) initialSelection = items.Count;
-                        items.Add(feed);
+                        items.Add(new FeedWithIcon(feed));
                     }
                     items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
                 }
@@ -325,11 +325,6 @@ namespace Weave
         private void FirstVideoLoaded(object obj)
         {
             itemGridView.Visibility = Windows.UI.Xaml.Visibility.Visible;
-        }
-
-        private void RectOverlay_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            CloseArticle();
         }
 
         private void ShowArticle(NewsItem item)
@@ -511,6 +506,20 @@ namespace Weave
             {
                 GrdVwNavigation.ScrollIntoView(GrdVwNavigation.Items[GrdVwNavigation.SelectedIndex]);
             }
+        }
+
+        protected override void GoBack(object sender, RoutedEventArgs e)
+        {
+            if (RectOverlay.Visibility == Windows.UI.Xaml.Visibility.Visible)
+            {
+                CloseArticle();
+            }
+            else base.GoBack(sender, e);
+        }
+
+        private void RectOverlay_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            CloseArticle();
         }
 
     } // end of class

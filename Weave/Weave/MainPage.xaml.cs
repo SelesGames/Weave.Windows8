@@ -22,6 +22,7 @@ using System.Xml;
 using System.Runtime.Serialization.Json;
 using Weave.ViewModels;
 using Weave.ViewModels.Browse;
+using Windows.Storage;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -44,6 +45,8 @@ namespace Weave
 
         private static ObservableCollection<StartItemBase> _startItems = new ObservableCollection<StartItemBase>();
 
+        private const String CustomHeroIdKey = "CustomHeroId"; // stores the custom hero article id for showcasing
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -62,10 +65,15 @@ namespace Weave
         protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
         {
             PrgRngLoadingMain.IsActive = true;
+            ClusterHelper.ClusterRemoved += ClusterHelper_ClusterRemoved;
+            Weave.Views.StartHub.LatestArticles.HeroSelected += LatestArticles_HeroSelected;
         }
 
         protected override void SaveState(Dictionary<string, object> pageState)
         {
+            ClusterHelper.ClusterRemoved -= ClusterHelper_ClusterRemoved;
+            Weave.Views.StartHub.LatestArticles.HeroSelected -= LatestArticles_HeroSelected;
+
             ApplicationViewState viewState = ApplicationView.Value;
             if (viewState == ApplicationViewState.FullScreenPortrait || viewState == ApplicationViewState.Snapped)
             {
@@ -163,9 +171,17 @@ namespace Weave
             int currentSize;
             NewsItem news;
 
+            Guid? customId = LoadCustomHeroId();
+
             foreach (StartNewsItemContainer container in items)
             {
                 news = container.NewsItem;
+                if (customId != null && news.Id == customId)
+                {
+                    heroIndex = index;
+                    break;
+                }
+
                 if (news.Image != null)
                 {
                     currentSize = news.Image.Width * news.Image.Height;
@@ -190,7 +206,7 @@ namespace Weave
                 int maxCount = StartLatestViewModel.BaseDisplayCount + (StartLatestViewModel.ExtraRows * 3) + 1; // add one for extraction of hero article
                 for (int i = 0; i < newsItems.Count && i < maxCount; i++)
                 {
-                    viewItems.Add(new StartNewsItemContainer(newsItems[i]));
+                    viewItems.Add(new StartNewsItemContainer(new NewsItemIcon(newsItems[i])));
                 }
                 int heroIndex = FindHeroArticleIndex(viewItems);
                 _heroArticleVm.Article = viewItems[heroIndex].NewsItem;
@@ -200,29 +216,32 @@ namespace Weave
 
             _sourcesVm.InitSources();
 
-            StartClusterViewModel cluster = new StartClusterViewModel();
-            cluster.Header = "Comic books";
-            cluster.Category = "comic books";
-            _startItems.Insert(_startItems.Count - 1, cluster);
-            cluster.InitCluster();
+            await InitClusters();
+            RefreshClusters();
 
-            cluster = new StartClusterViewModel();
-            cluster.Header = "Business";
-            cluster.Category = "business";
-            _startItems.Insert(_startItems.Count - 1, cluster);
-            cluster.InitCluster();
+            //StartClusterViewModel cluster = new StartClusterViewModel();
+            //cluster.Header = "Comic books";
+            //cluster.Category = "comic books";
+            //_startItems.Insert(_startItems.Count - 1, cluster);
+            //cluster.InitCluster();
 
-            cluster = new StartClusterViewModel();
-            cluster.Header = "Cars";
-            cluster.Category = "cars";
-            _startItems.Insert(_startItems.Count - 1, cluster);
-            cluster.InitCluster();
+            //cluster = new StartClusterViewModel();
+            //cluster.Header = "Business";
+            //cluster.Category = "business";
+            //_startItems.Insert(_startItems.Count - 1, cluster);
+            //cluster.InitCluster();
 
-            cluster = new StartClusterViewModel();
-            cluster.Header = "Anandtech";
-            cluster.FeedId = new Guid("7653d36b-b79c-3a9c-1919-645b48c3ed59");
-            _startItems.Insert(_startItems.Count - 1, cluster);
-            cluster.InitCluster();
+            //cluster = new StartClusterViewModel();
+            //cluster.Header = "Cars";
+            //cluster.Category = "cars";
+            //_startItems.Insert(_startItems.Count - 1, cluster);
+            //cluster.InitCluster();
+
+            //cluster = new StartClusterViewModel();
+            //cluster.Header = "Anandtech";
+            //cluster.FeedId = new Guid("7653d36b-b79c-3a9c-1919-645b48c3ed59");
+            //_startItems.Insert(_startItems.Count - 1, cluster);
+            //cluster.InitCluster();
         }
 
         public const double BaseHeight = 768; // base height of design screen
@@ -383,7 +402,7 @@ namespace Weave
                         feeds.Sort((a, b) => String.Compare(a.Name, b.Name));
                         foreach (Feed feed in feeds)
                         {
-                            categoryListings.Add(feed);
+                            categoryListings.Add(new FeedWithIcon(feed));
                         }
                         categoryListings.Add(new SpacerViewModel() { Height = BrowsePage.NavSpacerHeight });
                     }
@@ -396,7 +415,7 @@ namespace Weave
                     feeds.Sort((a, b) => String.Compare(a.Name, b.Name));
                     foreach (Feed feed in feeds)
                     {
-                        categoryListings.Add(feed);
+                        categoryListings.Add(new FeedWithIcon(feed));
                     }
                     categoryListings.Add(new SpacerViewModel() { Height = BrowsePage.NavSpacerHeight });
                 }
@@ -426,16 +445,28 @@ namespace Weave
 
         private void ListItem_Click(object sender, RoutedEventArgs e)
         {
-            //FrameworkElement element = sender as FrameworkElement;
-            //if (element != null && element.DataContext is CategoryListing)
-            //{
-            //    CategoryListing category = (CategoryListing)element.DataContext;
-            //    if (PopupListSelector != null)
-            //    {
-            //        PopupListSelector.IsOpen = false;
-            //        AddCategoryCluster(category.Key);
-            //    }
-            //}
+            FrameworkElement element = sender as FrameworkElement;
+            if (element != null)
+            {
+                if (element.DataContext is CategoryViewModel)
+                {
+                    CategoryViewModel category = (CategoryViewModel)element.DataContext;
+                    if (PopupListSelector != null)
+                    {
+                        PopupListSelector.IsOpen = false;
+                        AddCategoryCluster(category.DisplayName, category.Info.Category);
+                    }
+                }
+                else if (element.DataContext is Feed)
+                {
+                    Feed feed = (Feed)element.DataContext;
+                    if (PopupListSelector != null)
+                    {
+                        PopupListSelector.IsOpen = false;
+                        AddFeedCluster(feed.Name, feed.Id);
+                    }
+                }
+            }
         }
 
         private void PopupListSelector_Opened(object sender, object e)
@@ -450,6 +481,114 @@ namespace Weave
             {
                 PopupListSelector.IsOpen = true;
                 ResizeAddPopup();
+            }
+        }
+
+        private async Task InitClusters()
+        {
+            if (_startItems.Count == _defaultStartItemCount + 1) // no clusters present
+            {
+                List<StartClusterViewModel> storedClusters = await ClusterHelper.GetStoredClusters();
+                foreach (StartClusterViewModel cluster in storedClusters)
+                {
+                    _startItems.Insert(_startItems.Count - 1, cluster);
+                    cluster.IsLoading = true;
+                }
+            }
+        }
+
+        private async void RefreshClusters()
+        {
+            StartClusterViewModel cluster;
+            for (int i = _defaultStartItemCount; i < _startItems.Count - 1; i++)
+            {
+                cluster = _startItems[i] as StartClusterViewModel;
+                if (cluster != null) await cluster.InitCluster();
+            }
+        }
+
+        private void ClearClusters()
+        {
+            int totalStartCount = _defaultStartItemCount + 1;
+            while (_startItems.Count > totalStartCount) _startItems.RemoveAt(_defaultStartItemCount);
+        }
+
+        private async void AddCategoryCluster(String header, String categoryKey)
+        {
+            if (!String.IsNullOrEmpty(categoryKey))
+            {
+                StartClusterViewModel cluster = new StartClusterViewModel();
+                cluster.Header = header;
+                cluster.Category = categoryKey;
+                ClusterHelper.StoreCategoryCluster(cluster);
+                _startItems.Insert(_startItems.Count - 1, cluster);
+                ClusterHelper.UpdateClusterOrder(GetClusterOrder());
+                await cluster.InitCluster();
+            }
+        }
+
+        private async void AddFeedCluster(String header, Guid feedId)
+        {
+            StartClusterViewModel cluster = new StartClusterViewModel();
+            cluster.Header = header;
+            cluster.FeedId = feedId;
+            ClusterHelper.StoreFeedCluster(cluster);
+            _startItems.Insert(_startItems.Count - 1, cluster);
+            ClusterHelper.UpdateClusterOrder(GetClusterOrder());
+            await cluster.InitCluster();
+        }
+
+        private List<String> GetClusterOrder()
+        {
+            List<String> clusterOrder = new List<string>();
+            StartClusterViewModel cluster;
+            for (int i = _defaultStartItemCount; i < _startItems.Count - 1; i++)
+            {
+                cluster = _startItems[i] as StartClusterViewModel;
+                if (!String.IsNullOrEmpty(cluster.Category)) clusterOrder.Add(cluster.Category);
+                else if (cluster.FeedId != null) clusterOrder.Add(cluster.FeedId.ToString());
+            }
+            return clusterOrder;
+        }
+
+        private void ClusterHelper_ClusterRemoved(StartClusterViewModel cluster)
+        {
+            if (cluster != null)
+            {
+                _startItems.Remove(cluster);
+                ClusterHelper.UpdateClusterOrder(GetClusterOrder());
+            }
+        }
+
+        private void LatestArticles_HeroSelected(StartNewsItemContainer obj)
+        {
+            if (obj != null)
+            {
+                SaveCustomHeroId(obj.NewsItem.Id.ToString());
+
+                int index = _latestArticlesVm.Items.IndexOf(obj);
+                if (index > -1)
+                {
+                    _latestArticlesVm.Items.RemoveAt(index);
+                    _latestArticlesVm.InserItem(index, new StartNewsItemContainer(_heroArticleVm.Article));
+                    _heroArticleVm.Article = obj.NewsItem;
+                }
+            }
+        }
+
+        private Guid? LoadCustomHeroId()
+        {
+            ApplicationDataContainer settings = UserHelper.Instance.GetUserContainer(false);
+            if (settings.Values.ContainsKey(CustomHeroIdKey)) return new Guid((String)settings.Values[CustomHeroIdKey]);
+            else return null;
+        }
+
+        private void SaveCustomHeroId(String id)
+        {
+            if (!String.IsNullOrEmpty(id))
+            {
+                ApplicationDataContainer settings = UserHelper.Instance.GetUserContainer(false);
+                settings.Values[CustomHeroIdKey] = id;
             }
         }
 

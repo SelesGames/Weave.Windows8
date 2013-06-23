@@ -15,7 +15,7 @@ namespace Weave.Common
     public class UserHelper
     {
         private const String CloudUrlPrefix = "http://weave-user.cloudapp.net/api/user/";
-        private const String CurrentUserId = "0d13bf82-0f14-475f-9725-f97e5a123d5a";
+        private const String CurrentUserId = "b41e8972-60cd-43cb-9974-0ec028bedf68";
         private const String UserInfoUrlFormat = CloudUrlPrefix + "info?userId={0}";
 
         private String _currentUserId = CurrentUserId;

@@ -323,7 +323,12 @@
 
         <DataTemplate x:Key="FeedTemplate">
             <Grid Margin="120,0,0,0">
-                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding IconUrl}" Stretch="UniformToFill" Width="30" Height="30" />
+                <TextBlock Text="{Binding Name}" Grid.Column="1" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Margin="10,0,0,0" />
             </Grid>
         </DataTemplate>
 
@@ -398,7 +403,7 @@
             </StackPanel>
         </Grid>
         
-        <Rectangle Name="RectOverlay" Visibility="Collapsed" PointerPressed="RectOverlay_PointerPressed" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="Black" Opacity="0.75" />
+        <Rectangle Name="RectOverlay" Visibility="Collapsed" Tapped="RectOverlay_Tapped" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="Black" Opacity="0.75" />
 
         <ScrollViewer Name="ScrlVwrArticle" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Width="750" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White">
             <ScrollViewer.Resources>

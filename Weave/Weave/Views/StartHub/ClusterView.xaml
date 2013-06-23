@@ -15,7 +15,7 @@
 
         <LinearGradientBrush x:Key="OpacityGradientBrush" StartPoint="0.5,0" EndPoint="0.5,1">
             <GradientStop Color="#00000000" Offset="0.0" />
-            <GradientStop Color="#BB000000" Offset="1.0" />
+            <GradientStop Color="#77000000" Offset="1.0" />
         </LinearGradientBrush>
 
         <DataTemplate x:Key="MainTemplate">
@@ -23,11 +23,11 @@
                 <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
-                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0" Visibility="Collapsed">
-                    <Image Source="{Binding AuthorImage}" Stretch="UniformToFill" />
+                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0">
+                    <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" />
                 </Grid>
+                <Rectangle Fill="{StaticResource OpacityGradientBrush}" />
                 <Grid VerticalAlignment="Bottom">
-                    <Rectangle Fill="{StaticResource OpacityGradientBrush}" />
                     <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" FontWeight="Medium" Margin="10,10,10,10" MaxHeight="60" TextTrimming="None" />
                 </Grid>
             </Grid>
@@ -41,8 +41,8 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" FontWeight="Bold" Margin="0,0,0,0" MaxHeight="60" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Top">
-                    <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,10,0" Visibility="Collapsed">
-                        <Image Source="{Binding AuthorImage}" Stretch="UniformToFill" />
+                    <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,10,0">
+                        <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" />
                     </Grid>
                     <TextBlock Text="{Binding NewsItem.OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
                     <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
@@ -57,11 +57,11 @@
                 <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
-                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0" Visibility="Collapsed">
-                    <Image Source="{Binding AuthorImage}" Stretch="UniformToFill" />
+                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0">
+                    <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" />
                 </Grid>
+                <Rectangle Fill="{StaticResource OpacityGradientBrush}" />
                 <Grid VerticalAlignment="Bottom">
-                    <Rectangle Fill="{StaticResource OpacityGradientBrush}" />
                     <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" FontSize="15" FontWeight="Normal" LineHeight="17" LineStackingStrategy="BlockLineHeight" Margin="10,10,10,10" MaxHeight="34" TextTrimming="None" />
                 </Grid>
             </Grid>
@@ -75,8 +75,8 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,0" MaxHeight="60" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Top">
-                    <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,10,0" Visibility="Collapsed">
-                        <Image Source="{Binding AuthorImage}" Stretch="UniformToFill" />
+                    <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" Height="20" Margin="0,0,10,0">
+                        <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" />
                     </Grid>
                     <TextBlock Text="{Binding NewsItem.OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
                     <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
@@ -90,12 +90,12 @@
                 <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
-                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0" Visibility="Collapsed">
-                    <Image Source="{Binding AuthorImage}" Stretch="UniformToFill" />
+                <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="10,0,0,0">
+                    <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" />
                 </Grid>
+                <Rectangle Fill="{StaticResource OpacityGradientBrush}" />
                 <Grid VerticalAlignment="Bottom">
-                    <Rectangle Fill="{StaticResource OpacityGradientBrush}" />
-                    <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" FontSize="12" TextWrapping="Wrap" Margin="10,10,10,10" MaxHeight="30" TextTrimming="None" />
+                    <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" FontSize="12" TextWrapping="Wrap" Margin="10,10,10,10" MaxHeight="32" TextTrimming="None" />
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -117,7 +117,7 @@
             </StackPanel>
         </Button>
 
-        <Button Style="{StaticResource ButtonStyleBasic}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="-10,-10,0,-10" Padding="10" Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+        <Button Style="{StaticResource ButtonStyleBasic}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="-10,-10,0,-10" Padding="10" Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}" Click="BtnRemoveCluster_Click">
             <StackPanel Orientation="Horizontal" Opacity="0.6">
                 <TextBlock Text="remove column" />
                 <TextBlock FontFamily="Segoe UI Symbol" Text="" Margin="5,0,0,-2" VerticalAlignment="Bottom" />

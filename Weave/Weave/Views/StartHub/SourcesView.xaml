@@ -26,7 +26,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="SOURCES" FontSize="56" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" FontWeight="Black" />
+                <TextBlock Text="CATEGORIES" FontSize="56" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" FontWeight="Black" />
             </Grid>
             <ItemsControl Margin="40,-25,0,0" Height="{Binding ElementName=GrdRoot, Path=Tag}" ItemsSource="{Binding Items}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled">
                 <ItemsControl.ItemTemplate>

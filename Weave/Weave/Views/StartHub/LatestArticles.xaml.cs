@@ -20,6 +20,9 @@ namespace Weave.Views.StartHub
 {
     public sealed partial class LatestArticles : UserControl
     {
+        // special event for testing to select hero image
+        public static event Action<StartNewsItemContainer> HeroSelected;
+
         public LatestArticles()
         {
             this.InitializeComponent();
@@ -54,6 +57,27 @@ namespace Weave.Views.StartHub
         {
             StartItemBase vm = this.DataContext as StartItemBase;
             if (vm != null) vm.OnItemClick(e.ClickedItem);
+        }
+
+        private async void Grid_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            StartNewsItemContainer item = ((FrameworkElement)sender).DataContext as StartNewsItemContainer;
+            if (item != null)
+            {
+                Windows.UI.Popups.PopupMenu contextMenu = new Windows.UI.Popups.PopupMenu();
+                contextMenu.Commands.Add(new Windows.UI.Popups.UICommand("Select", null, "Select"));
+
+                //GeneralTransform buttonTransform = BtnAccount.TransformToVisual(null);
+                //Point point = buttonTransform.TransformPoint(new Point(-29, 0));
+                Point point = e.GetPosition(null);
+                Rect position = new Rect(point, new Size());
+
+                Windows.UI.Popups.IUICommand response = await contextMenu.ShowForSelectionAsync(position, Windows.UI.Popups.Placement.Default);
+                if (response != null)
+                {
+                    if (HeroSelected != null) HeroSelected(item);
+                }
+            }
         }
 
     } // end of class

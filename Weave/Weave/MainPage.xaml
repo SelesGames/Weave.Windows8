@@ -207,7 +207,16 @@
 
         <DataTemplate x:Key="FeedTemplate">
             <Button Style="{StaticResource ButtonStyleBasic}" Click="ListItem_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
-                <TextBlock Margin="8,10" HorizontalAlignment="Left" Text="{Binding Name}" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="WordEllipsis" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" />
+                <Grid Margin="8,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Height="30" Margin="0,0,0,0">
+                        <Image Source="{Binding IconUrl}" Stretch="UniformToFill" />
+                    </Grid>
+                    <TextBlock Margin="10,0,0,0" Grid.Column="1" HorizontalAlignment="Left" Text="{Binding Name}" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="WordEllipsis" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" />
+                </Grid>
             </Button>
         </DataTemplate>
 

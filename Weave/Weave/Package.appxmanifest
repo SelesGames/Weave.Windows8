@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="9277d83f-2b49-4aca-b271-feaab32956e8" Publisher="CN=Michael" Version="0.0.5.3" />
+  <Identity Name="9277d83f-2b49-4aca-b271-feaab32956e8" Publisher="CN=Michael" Version="0.0.5.4" />
   <Properties>
     <DisplayName>Weave</DisplayName>
     <PublisherDisplayName>Michael</PublisherDisplayName>

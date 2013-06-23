@@ -37,27 +37,38 @@ namespace Weave.ViewModels.StartHub
             int index = 0;
             foreach (StartNewsItemContainer item in newsItems)
             {
-                if (index == 0)
-                {
-                    item.IsMain = true;
-                    item.WidthSpan = 2;
-                    item.HeightSpan = 3;
-                }
-                else if (index == 1)
-                {
-                    item.WidthSpan = 2;
-                    item.HeightSpan = 1;
-                    item.ShowImage = false;
-                }
-                else
-                {
-                    item.WidthSpan = 1;
-                    item.HeightSpan = 2;
-                }
+                PrepareItem(index, item);
 
                 Items.Add(item);
                 index++;
             }
+        }
+
+        private void PrepareItem(int index, StartNewsItemContainer item)
+        {
+            if (index == 0)
+            {
+                item.IsMain = true;
+                item.WidthSpan = 2;
+                item.HeightSpan = 3;
+            }
+            else if (index == 1)
+            {
+                item.WidthSpan = 2;
+                item.HeightSpan = 1;
+                item.ShowImage = false;
+            }
+            else
+            {
+                item.WidthSpan = 1;
+                item.HeightSpan = 2;
+            }
+        }
+
+        public void InserItem(int index, StartNewsItemContainer item)
+        {
+            PrepareItem(index, item);
+            Items.Insert(index, item);
         }
 
         public override void OnHeaderClick()

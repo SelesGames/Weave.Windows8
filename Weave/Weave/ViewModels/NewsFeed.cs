@@ -52,7 +52,7 @@ namespace Weave.ViewModels
             {
                 _idsAdded.Add(item.Id);
                 if (_idsAdded.Count == 1 && FirstVideoLoaded != null) FirstVideoLoaded(this);
-                Items.Add(item);
+                Items.Add(new NewsItemIcon(item));
                 return true;
             }
             else return false;

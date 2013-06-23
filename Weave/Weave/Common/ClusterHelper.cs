@@ -19,10 +19,18 @@ namespace Weave.Common
 
         private const String CategoryKey = "Category";
 
+        public static event Action<StartClusterViewModel> ClusterRemoved;
+
         private enum ClusterType
         {
             Feed,
             Category
+        }
+
+        public static void test()
+        {
+            ApplicationDataContainer container = GetClusterContainer();
+            container.Values.Remove(FeedIdKey);
         }
 
         /// <summary>
@@ -129,8 +137,11 @@ namespace Weave.Common
             {
                 ApplicationDataContainer clusterContainer = GetClusterContainer();
                 ApplicationDataCompositeValue compositeValue = new ApplicationDataCompositeValue();
-                compositeValue.Add(FeedIdKey, cluster.FeedId.ToString());
+                compositeValue.Add(ClusterHeaderKey, cluster.Header);
+                String feedIdString = cluster.FeedId.ToString();
+                compositeValue.Add(FeedIdKey, feedIdString);
                 compositeValue.Add(ClusterTypeKey, ClusterType.Feed.ToString());
+                clusterContainer.Values[feedIdString] = compositeValue;
             }
         }
 
@@ -140,16 +151,22 @@ namespace Weave.Common
             {
                 ApplicationDataContainer clusterContainer = GetClusterContainer();
                 ApplicationDataCompositeValue compositeValue = new ApplicationDataCompositeValue();
+                compositeValue.Add(ClusterHeaderKey, cluster.Header);
                 compositeValue.Add(CategoryKey, cluster.Category);
                 compositeValue.Add(ClusterTypeKey, ClusterType.Category.ToString());
+                clusterContainer.Values[cluster.Category] = compositeValue;
             }
         }
 
         public static void RemoveCluster(StartClusterViewModel cluster)
         {
             ApplicationDataContainer clusterContainer = GetClusterContainer();
+            bool removed = true;
             if (!String.IsNullOrEmpty(cluster.Category)) clusterContainer.Values.Remove(cluster.Category);
             else if (cluster.FeedId != null) clusterContainer.Values.Remove(cluster.FeedId.Value.ToString());
+            else removed = false;
+
+            if (removed && ClusterRemoved != null) ClusterRemoved(cluster);
         }
 
     } // end of class

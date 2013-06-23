@@ -56,5 +56,18 @@ namespace Weave.Views.StartHub
             if (vm != null) vm.OnItemClick(e.ClickedItem);
         }
 
+        private void BtnRemoveCluster_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null)
+            {
+                StartClusterViewModel cluster = button.DataContext as StartClusterViewModel;
+                if (cluster != null)
+                {
+                    Weave.Common.ClusterHelper.RemoveCluster(cluster);
+                }
+            }
+        }
+
     } // end of class
 }

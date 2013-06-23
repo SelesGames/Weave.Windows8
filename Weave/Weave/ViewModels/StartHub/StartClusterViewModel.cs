@@ -59,13 +59,13 @@ namespace Weave.ViewModels.StartHub
             {
                 if (!item.HasImage) noImageIndices.Enqueue(index);
                 else imageIndices.Enqueue(index);
-                containerItems.Add(new StartNewsItemContainer(item));
+                containerItems.Add(new StartNewsItemContainer(new NewsItemIcon(item)));
                 index++;
             }
 
             int layoutChoice = _random.Next() % LayoutCount;
-            //if (noImageIndices.Count > 0 && noImageIndices.Peek() == 0) layoutChoice = 1;
-            if (layoutChoice == _previousLayout) layoutChoice = (layoutChoice + 1) % 2;
+            if (imageIndices.Count == 0) layoutChoice = 1;
+            else if (layoutChoice == _previousLayout) layoutChoice = (layoutChoice + 1) % 2;
             switch (layoutChoice)
             {
                 case 0:

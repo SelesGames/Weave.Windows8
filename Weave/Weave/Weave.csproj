@@ -114,6 +114,7 @@
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\MobilizerHelper.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
+    <Compile Include="Common\SourceIconHelper.cs" />
     <Compile Include="Common\StyleSelectors.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Common\TemplateSelectors.cs" />
@@ -127,8 +128,10 @@
     <Compile Include="ViewModels\Browse\CategoryViewModel.cs" />
     <Compile Include="ViewModels\Browse\NavigationViewModel.cs" />
     <Compile Include="ViewModels\Browse\SpacerViewModel.cs" />
+    <Compile Include="ViewModels\FeedWithIcon.cs" />
     <Compile Include="ViewModels\IResizeable.cs" />
     <Compile Include="ViewModels\NewsFeed.cs" />
+    <Compile Include="ViewModels\NewsItemIcon.cs" />
     <Compile Include="ViewModels\StartHub\StartAddViewModel.cs" />
     <Compile Include="ViewModels\StartHub\StartClusterViewModel.cs" />
     <Compile Include="ViewModels\StartHub\StartHeroArticle.cs" />
@@ -166,6 +169,19 @@
     <Content Include="Assets\MainLogoColour.png" />
     <Content Include="Assets\MainLogoWhite.png" />
     <Content Include="Assets\SmallLogo.png" />
+    <Content Include="Assets\SourceIcons\BleacherReport.jpg" />
+    <Content Include="Assets\SourceIcons\CNET.jpg" />
+    <Content Include="Assets\SourceIcons\CNN.jpg" />
+    <Content Include="Assets\SourceIcons\ESPN.jpg" />
+    <Content Include="Assets\SourceIcons\HuffingtonPost.jpg" />
+    <Content Include="Assets\SourceIcons\SI.jpg" />
+    <Content Include="Assets\SourceIcons\TheGuardian.jpg" />
+    <Content Include="Assets\SourceIcons\TheTelegraph.jpg" />
+    <Content Include="Assets\SourceIcons\TheVerge.jpg" />
+    <Content Include="Assets\SourceIcons\TNW.jpg" />
+    <Content Include="Assets\SourceIcons\WinRumors.jpg" />
+    <Content Include="Assets\SourceIcons\WPCentral.jpg" />
+    <Content Include="Assets\SourceIcons\ZDnet.jpg" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
   </ItemGroup>

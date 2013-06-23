@@ -95,8 +95,7 @@ namespace Weave.Common
                     }
                     else
                     {
-                        if (newsItem.ShowImage) return LargeTemplate;
-                        else return LargeNoImageTemplate;
+                        return LargeNoImageTemplate;
                     }
                 }
                 else return SmallTemplate;
