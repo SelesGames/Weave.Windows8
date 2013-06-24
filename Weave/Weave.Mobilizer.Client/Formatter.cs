@@ -43,10 +43,15 @@ namespace Weave.Mobilizer.Client
             string fontName, 
             string fontSize, 
             string linkColor,
-            string imageLink)
+            string imageLink,
+            string sourceIconLink
+            )
         {
             if (!areTemplatesLoaded)
                 await ReadHtmlTemplate();
+
+            if (sourceIconLink != null) sourceIconLink = String.Format("<img id=\"sg_sourceIcon\" alt=\"Source icon\" src=\"{0}\" />", sourceIconLink);
+            else sourceIconLink = "";
 
             var sb = new StringBuilder();
                 
@@ -74,6 +79,7 @@ namespace Weave.Mobilizer.Client
                         .Replace("[TITLE]", title)
                         .Replace("[LINK]", link)
                         .Replace("[BODY]", body)
+                        .Replace("[SOURCE_ICON]", sourceIconLink)
                         .ToString())
 
                 .AppendLine(htmlTemplate3);

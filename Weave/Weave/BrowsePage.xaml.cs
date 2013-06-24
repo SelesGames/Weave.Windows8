@@ -287,7 +287,7 @@ namespace Weave
                     {
                         itemGridView.SelectedItem = initialSelection;
                         await Task.Delay(1); // allow rendering of page
-                        ShowArticle(initialSelection);
+                        ShowArticle(initialSelection, false);
                         _initialSelectedItemId = null;
                     }
                 }
@@ -327,7 +327,7 @@ namespace Weave
             itemGridView.Visibility = Windows.UI.Xaml.Visibility.Visible;
         }
 
-        private void ShowArticle(NewsItem item)
+        private void ShowArticle(NewsItem item, bool showLoading = true)
         {
             _browserBackStack.Clear();
             BtnBrowserBack.IsEnabled = false;
@@ -336,6 +336,8 @@ namespace Weave
                 RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 ScrlVwrArticle.DataContext = item;
                 ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                PrgRngArticleLoading.IsActive = true;
+                if (showLoading) WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 SbArticleFlyIn.Begin();
                 ParseArticle(item);
             }
@@ -343,14 +345,13 @@ namespace Weave
 
         private void CloseArticle()
         {
-            ScrlVwrArticle.DataContext = null;
-            RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            WebVwArticle.NavigateToString("");
-            GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            ScrlVwrArticle.Width = DefaultBrowserWidth;
-            //WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            //SbArticleFlyOut.Begin();
+            //ScrlVwrArticle.DataContext = null;
+            //RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            //ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            //WebVwArticle.NavigateToString("");
+            //GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            //ScrlVwrArticle.Width = DefaultBrowserWidth;
+            SbArticleFlyOut.Begin();
         }
 
         private void Image_ImageOpened(object sender, RoutedEventArgs e)
@@ -374,7 +375,12 @@ namespace Weave
 
         private void SbArticleFlyOut_Completed(object sender, object e)
         {
+            ScrlVwrArticle.DataContext = null;
+            RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            WebVwArticle.NavigateToString("");
+            GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            ScrlVwrArticle.Width = DefaultBrowserWidth;
         }
 
         private async void ParseArticle(NewsItem item)
@@ -402,6 +408,8 @@ namespace Weave
                 {
                     BrowseToWebPage(item.Link);
                 }
+                PrgRngArticleLoading.IsActive = false;
+                //WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
         }
 

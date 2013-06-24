@@ -142,17 +142,29 @@
     <Compile Include="Views\StartHub\AddView.xaml.cs">
       <DependentUpon>AddView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\StartHub\AddZoomedView.xaml.cs">
+      <DependentUpon>AddZoomedView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StartHub\ClusterView.xaml.cs">
       <DependentUpon>ClusterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StartHub\HeroArticleView.xaml.cs">
       <DependentUpon>HeroArticleView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\StartHub\HeroArticleZoomedView.xaml.cs">
+      <DependentUpon>HeroArticleZoomedView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StartHub\LatestArticles.xaml.cs">
       <DependentUpon>LatestArticles.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\StartHub\LatestArticleZoomedView.xaml.cs">
+      <DependentUpon>LatestArticleZoomedView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StartHub\SourcesView.xaml.cs">
       <DependentUpon>SourcesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StartHub\SourcesZoomedView.xaml.cs">
+      <DependentUpon>SourcesZoomedView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -169,19 +181,33 @@
     <Content Include="Assets\MainLogoColour.png" />
     <Content Include="Assets\MainLogoWhite.png" />
     <Content Include="Assets\SmallLogo.png" />
-    <Content Include="Assets\SourceIcons\BleacherReport.jpg" />
-    <Content Include="Assets\SourceIcons\CNET.jpg" />
-    <Content Include="Assets\SourceIcons\CNN.jpg" />
-    <Content Include="Assets\SourceIcons\ESPN.jpg" />
-    <Content Include="Assets\SourceIcons\HuffingtonPost.jpg" />
-    <Content Include="Assets\SourceIcons\SI.jpg" />
-    <Content Include="Assets\SourceIcons\TheGuardian.jpg" />
-    <Content Include="Assets\SourceIcons\TheTelegraph.jpg" />
-    <Content Include="Assets\SourceIcons\TheVerge.jpg" />
-    <Content Include="Assets\SourceIcons\TNW.jpg" />
-    <Content Include="Assets\SourceIcons\WinRumors.jpg" />
-    <Content Include="Assets\SourceIcons\WPCentral.jpg" />
-    <Content Include="Assets\SourceIcons\ZDnet.jpg" />
+    <Content Include="Assets\SourceIcons\BBC.png" />
+    <Content Include="Assets\SourceIcons\BBCSports.png" />
+    <Content Include="Assets\SourceIcons\BI.png" />
+    <Content Include="Assets\SourceIcons\br.png" />
+    <Content Include="Assets\SourceIcons\CBSSports.png" />
+    <Content Include="Assets\SourceIcons\CNBC.png" />
+    <Content Include="Assets\SourceIcons\Cnet.png" />
+    <Content Include="Assets\SourceIcons\CNN.png" />
+    <Content Include="Assets\SourceIcons\ESPN.png" />
+    <Content Include="Assets\SourceIcons\FastCompany.png" />
+    <Content Include="Assets\SourceIcons\HuffingtonPost.png" />
+    <Content Include="Assets\SourceIcons\IGN.png" />
+    <Content Include="Assets\SourceIcons\Joystiq.png" />
+    <Content Include="Assets\SourceIcons\Kotaku.png" />
+    <Content Include="Assets\SourceIcons\Mashable.png" />
+    <Content Include="Assets\SourceIcons\NBCSports.png" />
+    <Content Include="Assets\SourceIcons\Polygon.png" />
+    <Content Include="Assets\SourceIcons\Reuters.png" />
+    <Content Include="Assets\SourceIcons\TechCrunch.png" />
+    <Content Include="Assets\SourceIcons\TheGuardian.png" />
+    <Content Include="Assets\SourceIcons\TheTelegraph.png" />
+    <Content Include="Assets\SourceIcons\TheVerge.png" />
+    <Content Include="Assets\SourceIcons\TNW.png" />
+    <Content Include="Assets\SourceIcons\WinRumors.png" />
+    <Content Include="Assets\SourceIcons\WPCentral.png" />
+    <Content Include="Assets\SourceIcons\WSJ.png" />
+    <Content Include="Assets\SourceIcons\ZDnet.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
   </ItemGroup>
@@ -211,6 +237,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\StartHub\AddZoomedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\StartHub\ClusterView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -219,13 +249,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\StartHub\HeroArticleZoomedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\StartHub\LatestArticles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\StartHub\LatestArticleZoomedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\StartHub\SourcesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\StartHub\SourcesZoomedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

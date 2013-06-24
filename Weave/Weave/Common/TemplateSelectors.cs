@@ -78,6 +78,7 @@ namespace Weave.Common
         public DataTemplate LargeTemplate { get; set; }
         public DataTemplate LargeNoImageTemplate { get; set; }
         public DataTemplate SmallTemplate { get; set; }
+        public DataTemplate SmallNoImageTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
@@ -98,7 +99,11 @@ namespace Weave.Common
                         return LargeNoImageTemplate;
                     }
                 }
-                else return SmallTemplate;
+                else
+                {
+                    if (newsItem.ShowImage && newsItem.NewsItem.HasImage) return SmallTemplate;
+                    else return SmallNoImageTemplate;
+                }
             }
 
             return base.SelectTemplateCore(item, container);

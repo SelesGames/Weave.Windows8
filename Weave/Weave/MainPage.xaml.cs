@@ -95,12 +95,34 @@ namespace Weave
 
         private void semanticZoomControl_ViewChangeCompleted(object sender, SemanticZoomViewChangedEventArgs e)
         {
-            if (!e.IsSourceZoomedInView && _semanticItemTapped)
+            if (e.IsSourceZoomedInView)
             {
-                _semanticItemTapped = false;
-                BindableBase sourceItem = e.SourceItem.Item as BindableBase;
-                if (sourceItem != null)
+                GrdMainLogo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            }
+            else
+            {
+                GrdMainLogo.Visibility = Windows.UI.Xaml.Visibility.Visible;
+
+                if (_semanticItemTapped)
                 {
+                    _semanticItemTapped = false;
+                    StartItemBase sourceItem = e.SourceItem.Item as StartItemBase;
+                    if (sourceItem != null)
+                    {
+                        bool isPortrait = ApplicationView.Value == ApplicationViewState.FullScreenPortrait;
+                        int index = _startItems.IndexOf(sourceItem);
+                        if (index < 1)
+                        {
+                            if (isPortrait) MainScrollViewer.ScrollToVerticalOffset(0);
+                            else MainScrollViewer.ScrollToHorizontalOffset(0);
+                        }
+                        else if (index >= _startItems.Count - 2)
+                        {
+                            if (isPortrait) MainScrollViewer.ScrollToVerticalOffset(MainScrollViewer.ScrollableHeight);
+                            else MainScrollViewer.ScrollToHorizontalOffset(MainScrollViewer.ScrollableWidth);
+                        }
+                        else LstVwMain.ScrollIntoView(sourceItem, ScrollIntoViewAlignment.Leading);
+                    }
                 }
             }
         }
@@ -108,14 +130,9 @@ namespace Weave
         private bool _semanticItemTapped = false;
         private void ZoomedOutItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            BindableBase sourceItem = ((FrameworkElement)sender).DataContext as BindableBase;
+            StartItemBase sourceItem = ((FrameworkElement)sender).DataContext as StartItemBase;
             if (sourceItem != null)
             {
-                //int index = _startItems.IndexOf(sourceItem);
-                //if (index <= 1) MainScrollViewer.ScrollToHorizontalOffset(0);
-                //else if (index >= _startItems.Count - 2) MainScrollViewer.ScrollToHorizontalOffset(MainScrollViewer.ScrollableWidth);
-                //else LstVwMain.ScrollIntoView(sourceItem);
-                //e.Handled = true;
                 _semanticItemTapped = true;
             }
         }

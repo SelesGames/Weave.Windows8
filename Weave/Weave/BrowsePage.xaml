@@ -265,9 +265,10 @@
                 <Rectangle Grid.RowSpan="2" Fill="White" Opacity="0.05" />
                 <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" VerticalAlignment="Top" Foreground="White" FontWeight="Light" Margin="20,14,20,0" MaxHeight="150" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,0,0,20">
-                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="200" />
-                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
+                    <Image Source="{Binding SourceIconUrl}" Stretch="UniformToFill" Width="20" Height="20" Margin="0,0,10,0" />
+                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="110" VerticalAlignment="Center" />
+                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -414,13 +415,13 @@
                         </DoubleAnimation.EasingFunction>
                     </DoubleAnimation>
                 </Storyboard>
-                <!--<Storyboard x:Name="SbArticleFlyOut" Completed="SbArticleFlyOut_Completed">
-                    <DoubleAnimation Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="0" To="750" Duration="0:0:0.3">
+                <Storyboard x:Name="SbArticleFlyOut" Completed="SbArticleFlyOut_Completed">
+                    <DoubleAnimation Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="0" To="750" Duration="0:0:0.2">
                         <DoubleAnimation.EasingFunction>
                             <QuadraticEase EasingMode="EaseOut"/>
                         </DoubleAnimation.EasingFunction>
                     </DoubleAnimation>
-                </Storyboard>-->
+                </Storyboard>
             </ScrollViewer.Resources>
             <ScrollViewer.RenderTransform>
                 <TranslateTransform x:Name="TranslateArticle" />
@@ -431,6 +432,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <WebView Name="WebVwArticle" LoadCompleted="WebVwArticle_LoadCompleted" Margin="0" ScriptNotify="WebVwArticle_ScriptNotify" />
+                <ProgressRing Name="PrgRngArticleLoading" Style="{StaticResource LargeLoadingRingStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
                 <Grid Name="GrdBrowserControls" Grid.Row="1" Background="#343434" Visibility="Collapsed">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

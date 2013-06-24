@@ -161,6 +161,24 @@
         </DataTemplate>
 
         <common:StartItemSelector x:Name="StartItemSelector" HeroTemplate="{StaticResource HeroTemplate}" LatestTemplate="{StaticResource LatestArticlesTemplate}" SourcesTemplate="{StaticResource SourcesTemplate}" ClusterTemplate="{StaticResource ClusterTemplate}"  AddTemplate="{StaticResource AddTemplate}" />
+        
+        <DataTemplate x:Key="HeroTemplateZoomed">
+            <views:HeroArticleZoomedView Margin="0,0,80,0" Tapped="ZoomedOutItem_Tapped" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="LatestArticlesZoomedTemplate">
+            <views:LatestArticleZoomedView Padding="0,120,80,0" Tapped="ZoomedOutItem_Tapped" Width="300" Height="520" VerticalAlignment="Top" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="SourcesZoomedTemplate">
+            <views:SourcesZoomedView Padding="0,120,80,0" Tapped="ZoomedOutItem_Tapped" Height="520" VerticalAlignment="Top" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="AddZoomedTemplate">
+            <views:AddZoomedView Padding="0,120,80,0" Tapped="ZoomedOutItem_Tapped" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        </DataTemplate>
+
+        <common:StartItemSelector x:Name="ZoomedItemSelector" HeroTemplate="{StaticResource HeroTemplateZoomed}" LatestTemplate="{StaticResource LatestArticlesZoomedTemplate}" SourcesTemplate="{StaticResource SourcesZoomedTemplate}" ClusterTemplate="{StaticResource LatestArticlesZoomedTemplate}" AddTemplate="{StaticResource AddZoomedTemplate}" />
 
         <Style x:Key="MainListViewStyle" TargetType="ListView">
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
@@ -182,7 +200,7 @@
             <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
             <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
-            <!--<Setter Property="ItemTemplateSelector" Value="{StaticResource ZoomedOutSelector}" />-->
+            <Setter Property="ItemTemplateSelector" Value="{StaticResource ZoomedItemSelector}" />
             <Setter Property="ItemContainerStyle" Value="{StaticResource ListViewItemStyleSimple}" />
             <Setter Property="ItemsPanel">
                 <Setter.Value>
@@ -212,7 +230,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Grid Background="{StaticResource SourceImagePlaceholderBrush}" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Height="30" Margin="0,0,0,0">
+                    <Grid Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Height="30" Margin="0,0,0,0">
                         <Image Source="{Binding IconUrl}" Stretch="UniformToFill" />
                     </Grid>
                     <TextBlock Margin="10,0,0,0" Grid.Column="1" HorizontalAlignment="Left" Text="{Binding Name}" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="WordEllipsis" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" />
@@ -249,7 +267,7 @@
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
 
-        <Grid Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" IsHitTestVisible="False" RenderTransformOrigin="0,0">
+        <Grid Name="GrdMainLogo" Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" IsHitTestVisible="False" RenderTransformOrigin="0,0">
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="TranslateLogo" />
             </Grid.RenderTransform>

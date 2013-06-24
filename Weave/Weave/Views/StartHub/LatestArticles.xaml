@@ -10,6 +10,8 @@
     >
     
     <UserControl.Resources>
+
+        <common:UpperCaseConverter x:Key="UpperCaseConverter" />
         
         <DataTemplate x:Key="MainTemplate">
             <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4" RightTapped="Grid_RightTapped">
@@ -21,10 +23,10 @@
                 <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0" Height="200">
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
-                <TextBlock Grid.Row="1" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" FontWeight="Bold" Margin="0,10,0,0" MaxHeight="60" TextTrimming="None" />
+                <TextBlock Grid.Row="1" Text="{Binding NewsItem.Title, Converter={StaticResource UpperCaseConverter}}" Style="{StaticResource SubheaderTextStyle}" FontWeight="Bold" Margin="0,10,0,0" MaxHeight="60" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,20,0,0" VerticalAlignment="Top">
-                    <TextBlock Text="{Binding NewsItem.OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding NewsItem.OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="|" Margin="5,-1,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="{Binding NewsItem.PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                 </StackPanel>
                 <Rectangle Height="1" Grid.Row="2" VerticalAlignment="Bottom" Fill="{StaticResource SubtleTextBrush}" />
@@ -39,8 +41,8 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,0" MaxHeight="60" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,20,0,0" VerticalAlignment="Top">
-                    <TextBlock Text="{Binding NewsItem.OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding NewsItem.OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="|" Margin="5,-1,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="{Binding NewsItem.PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                 </StackPanel>
             </Grid>
@@ -58,8 +60,8 @@
                 </Grid>
                 <TextBlock Grid.Row="1" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,10,0,0" MaxHeight="60" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,20,0,0" VerticalAlignment="Top">
-                    <TextBlock Text="{Binding NewsItem.OriginalSource}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding NewsItem.OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="|" Margin="5,-1,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="{Binding NewsItem.PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                 </StackPanel>
             </Grid>

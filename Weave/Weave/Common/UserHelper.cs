@@ -86,6 +86,17 @@ namespace Weave.Common
                     _isLoaded = true;
                 }
                 else await Task.Run(() => _loadingEvent.WaitOne()); // wait for loading to complete
+
+                //Feed feed = new Feed();
+                //feed.Id = new Guid("8a26950a-d939-5c90-76e8-3a193f88bff0");
+                //await _currentUser.RemoveFeed(feed);
+
+                //feed = new Feed();
+                //feed.Uri = "http://www.cnbc.com/id/15837362/devices/rss.xml";
+                //feed.Name = "CNBC";
+                //feed.ArticleViewingType = ArticleViewingType.Mobilizer;
+                //feed.Category = "Business";
+                //await _currentUser.AddFeed(feed);
             }
         }
 

@@ -28,6 +28,13 @@ namespace Weave.ViewModels.StartHub
             get { return _items; }
         }
 
+        private NewsItem _zoomedArticle = null;
+        public NewsItem ZoomedArticle
+        {
+            get { return _zoomedArticle; }
+            set { SetProperty(ref _zoomedArticle, value); }
+        }
+
         public async Task InitCluster()
         {
             IsLoading = true;
@@ -55,17 +62,28 @@ namespace Weave.ViewModels.StartHub
             Queue<int> noImageIndices = new Queue<int>();
             Queue<int> imageIndices = new Queue<int>();
             int index = 0;
+            NewsItemIcon itemWithIcon;
             foreach (NewsItem item in news.News)
             {
+                itemWithIcon = new NewsItemIcon(item);
                 if (!item.HasImage) noImageIndices.Enqueue(index);
-                else imageIndices.Enqueue(index);
-                containerItems.Add(new StartNewsItemContainer(new NewsItemIcon(item)));
+                else
+                {
+                    imageIndices.Enqueue(index);
+                    if (ZoomedArticle == null) ZoomedArticle = itemWithIcon;
+                }
+                containerItems.Add(new StartNewsItemContainer(itemWithIcon));
                 index++;
             }
+            if (ZoomedArticle == null) ZoomedArticle = containerItems[0].NewsItem;
 
             int layoutChoice = _random.Next() % LayoutCount;
             if (imageIndices.Count == 0) layoutChoice = 1;
             else if (layoutChoice == _previousLayout) layoutChoice = (layoutChoice + 1) % 2;
+
+            // test selection
+            //layoutChoice = 0;
+
             switch (layoutChoice)
             {
                 case 0:
@@ -85,7 +103,7 @@ namespace Weave.ViewModels.StartHub
         private void InitLayout_0(List<StartNewsItemContainer> items, Queue<int> imageIndices, Queue<int> noImageIndices)
         {
             int displayCount = BaseDisplayCount + ExtraRows;
-            bool showImageFlag = false;
+            bool altContainer = false;
 
             StartNewsItemContainer container;
             for (int i = 0; i < items.Count && i < displayCount; i++)
@@ -98,6 +116,7 @@ namespace Weave.ViewModels.StartHub
                     container.WidthSpan = 2;
                     container.HeightSpan = 2;
                     container.ShowImage = container.NewsItem.HasImage;
+                    Items.Add(container);
                 }
                 else if (i < 3)
                 {
@@ -106,25 +125,34 @@ namespace Weave.ViewModels.StartHub
                     container.WidthSpan = 1;
                     container.HeightSpan = 1;
                     container.ShowImage = container.NewsItem.HasImage;
+                    Items.Add(container);
                 }
                 else
                 {
-                    if (showImageFlag)
+                    if (altContainer)
                     {
-                        if (imageIndices.Count > 0) container = items[imageIndices.Dequeue()];
-                        else container = items[noImageIndices.Dequeue()];
+                        for (int j = 0; j < 2 && i < items.Count && i < displayCount; i++, j++)
+                        {
+                            if (imageIndices.Count > 0) container = items[imageIndices.Dequeue()];
+                            else container = items[noImageIndices.Dequeue()];
+                            container.WidthSpan = 1;
+                            container.HeightSpan = 1;
+                            container.ShowImage = false;
+                            Items.Add(container);
+                        }
+                        altContainer = false;
                     }
                     else
                     {
                         if (noImageIndices.Count > 0) container = items[noImageIndices.Dequeue()];
                         else container = items[imageIndices.Dequeue()];
+                        container.WidthSpan = 2;
+                        container.HeightSpan = 1;
+                        container.ShowImage = false;
+                        Items.Add(container);
+                        altContainer = true;
                     }
-                    container.WidthSpan = 2;
-                    container.HeightSpan = 1;
-                    container.ShowImage = showImageFlag && container.NewsItem.HasImage;
-                    showImageFlag = !showImageFlag;
                 }
-                Items.Add(container);
             }
         }
 
@@ -132,11 +160,12 @@ namespace Weave.ViewModels.StartHub
         {
             int index = 0;
             int displayCount = BaseDisplayCount + ExtraRows;
-            bool showImageFlag = false;
+            bool altContainer = false;
 
             StartNewsItemContainer container;
             for (int i = 0; i < items.Count && i < displayCount; i++)
             {
+                container = null;
                 if (i == 0)
                 {
                     if (noImageIndices.Count > 0) container = items[noImageIndices.Dequeue()];
@@ -145,6 +174,7 @@ namespace Weave.ViewModels.StartHub
                     container.WidthSpan = 2;
                     container.HeightSpan = 1;
                     container.ShowImage = false;
+                    Items.Add(container);
                 }
                 else if (i == 1)
                 {
@@ -153,6 +183,7 @@ namespace Weave.ViewModels.StartHub
                     container.WidthSpan = 2;
                     container.HeightSpan = 1;
                     container.ShowImage = false;
+                    Items.Add(container);
                 }
                 else if (i < 4)
                 {
@@ -161,7 +192,7 @@ namespace Weave.ViewModels.StartHub
                     container.WidthSpan = 1;
                     container.HeightSpan = 1;
                     container.ShowImage = container.NewsItem.HasImage;
-
+                    Items.Add(container);
                 }
                 else if (i == 4)
                 {
@@ -170,25 +201,34 @@ namespace Weave.ViewModels.StartHub
                     container.WidthSpan = 2;
                     container.HeightSpan = 1;
                     container.ShowImage = false;
+                    Items.Add(container);
                 }
                 else
                 {
-                    if (showImageFlag)
+                    if (altContainer)
                     {
-                        if (imageIndices.Count > 0) container = items[imageIndices.Dequeue()];
-                        else container = items[noImageIndices.Dequeue()];
+                        for (int j = 0; j < 2 && i < items.Count && i < displayCount; i++, j++)
+                        {
+                            if (imageIndices.Count > 0) container = items[imageIndices.Dequeue()];
+                            else container = items[noImageIndices.Dequeue()];
+                            container.WidthSpan = 1;
+                            container.HeightSpan = 1;
+                            container.ShowImage = false;
+                            Items.Add(container);
+                        }
+                        altContainer = false;
                     }
                     else
                     {
                         if (noImageIndices.Count > 0) container = items[noImageIndices.Dequeue()];
                         else container = items[imageIndices.Dequeue()];
+                        container.WidthSpan = 2;
+                        container.HeightSpan = 1;
+                        container.ShowImage = false;
+                        Items.Add(container);
+                        altContainer = true;
                     }
-                    container.WidthSpan = 2;
-                    container.HeightSpan = 1;
-                    container.ShowImage = showImageFlag && container.NewsItem.HasImage;
-                    showImageFlag = !showImageFlag;
                 }
-                Items.Add(container);
             }
         }
 

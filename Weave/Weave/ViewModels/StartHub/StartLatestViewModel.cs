@@ -32,6 +32,13 @@ namespace Weave.ViewModels.StartHub
             set { _extraRows = value; }
         }
 
+        private NewsItem _zoomedArticle = null;
+        public NewsItem ZoomedArticle
+        {
+            get { return _zoomedArticle; }
+            set { SetProperty(ref _zoomedArticle, value); }
+        }
+
         public void InitItems(List<StartNewsItemContainer> newsItems)
         {
             int index = 0;
@@ -40,6 +47,9 @@ namespace Weave.ViewModels.StartHub
                 PrepareItem(index, item);
 
                 Items.Add(item);
+
+                if (ZoomedArticle == null && item.NewsItem.HasImage) ZoomedArticle = item.NewsItem;
+
                 index++;
             }
         }
