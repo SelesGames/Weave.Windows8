@@ -271,9 +271,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.UserFeedAggregator.Contracts\Weave.UserFeedAggregator.Contracts.csproj">
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.User.Service.Contracts\Weave.User.Service.Contracts.csproj">
       <Project>{02f3363f-7b0f-4c5f-9123-b388f2870c35}</Project>
-      <Name>Weave.UserFeedAggregator.Contracts</Name>
+      <Name>Weave.User.Service.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.ViewModels.Repository\Weave.ViewModels.Repository.csproj">
       <Project>{d326f8c2-8dcf-43d4-9bad-bc07ca6d6cce}</Project>
@@ -299,9 +299,9 @@
       <Project>{e69950f6-0a2e-4481-adcf-839301969b3e}</Project>
       <Name>Weave.Mobilizer.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Weave.UserFeedAggregator.Client\Weave.UserFeedAggregator.Client.csproj">
+    <ProjectReference Include="..\Weave.UserFeedAggregator.Client\Weave.User.Service.Client.csproj">
       <Project>{98813633-270c-449d-a7f4-6a914d47e269}</Project>
-      <Name>Weave.UserFeedAggregator.Client</Name>
+      <Name>Weave.User.Service.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

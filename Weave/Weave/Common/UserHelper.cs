@@ -78,7 +78,7 @@ namespace Weave.Common
                     _loading = true;
                     _loadingEvent.Reset();
 
-                    _repo = new ViewModels.Repository.StandardRepository(Guid.Parse(_currentUserId), new Weave.UserFeedAggregator.Client.Client());
+                    _repo = new ViewModels.Repository.StandardRepository(Guid.Parse(_currentUserId), new Weave.User.Service.Client.Client());
                     _currentUser = await _repo.GetUserInfo(false);
 
                     _loadingEvent.Set();
@@ -102,12 +102,12 @@ namespace Weave.Common
 
         public async Task<NewsList> GetCategoryNews(String category, int start, int count)
         {
-            return await _currentUser.GetNewsForCategory(category, false, false, start, count);
+            return await _currentUser.GetNewsForCategory(category, EntryType.Peek, start, count);
         }
 
         public async Task<NewsList> GetFeedNews(Guid feedId, int start, int count)
         {
-            return await _currentUser.GetNewsForFeed(feedId, false, false, start, count);
+            return await _currentUser.GetNewsForFeed(feedId, EntryType.Peek, start, count);
         }
 
         public List<NewsItem> GetLatestNews()

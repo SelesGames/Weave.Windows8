@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Weave.UserFeedAggregator.Contracts;
-using Incoming = Weave.UserFeedAggregator.DTOs.ServerIncoming;
-using Outgoing = Weave.UserFeedAggregator.DTOs.ServerOutgoing;
+using Weave.User.Service.Contracts;
+using Incoming = Weave.User.Service.DTOs.ServerIncoming;
+using Outgoing = Weave.User.Service.DTOs.ServerOutgoing;
 
-namespace Weave.UserFeedAggregator.Client
+namespace Weave.User.Service.Client
 {
     public class Client : IWeaveUserService
     {
@@ -59,14 +59,13 @@ namespace Weave.UserFeedAggregator.Client
 
         #region Get News for User (either by category or feedId)
 
-        public async Task<Outgoing.NewsList> GetNews(Guid userId,  string category, bool refresh = false, bool markEntry = false, int skip = 0, int take = 10, DTOs.NewsItemType type = DTOs.NewsItemType.Any, bool requireImage = false)
+        public async Task<Outgoing.NewsList> GetNews(Guid userId, string category, EntryType entry = EntryType.Peek, int skip = 0, int take = 10, DTOs.NewsItemType type = DTOs.NewsItemType.Any, bool requireImage = false)
         {
             string append = "news";
             var url = new UriBuilder(SERVICE_URL + append)
                 .AddParameter("userId", userId)
                 .AddParameter("category", category)
-                .AddParameter("refresh", refresh)
-                .AddParameter("markEntry", markEntry)
+                .AddParameter("entry", entry)
                 .AddParameter("skip", skip)
                 .AddParameter("take", take)
                 .AddParameter("type", (int)type)
@@ -80,14 +79,13 @@ namespace Weave.UserFeedAggregator.Client
             return result;
         }
 
-        public async Task<Outgoing.NewsList> GetNews(Guid userId, Guid feedId, bool refresh = false, bool markEntry = false, int skip = 0, int take = 10, DTOs.NewsItemType type = DTOs.NewsItemType.Any, bool requireImage = false)
+        public async Task<Outgoing.NewsList> GetNews(Guid userId, Guid feedId, EntryType entry = EntryType.Peek, int skip = 0, int take = 10, DTOs.NewsItemType type = DTOs.NewsItemType.Any, bool requireImage = false)
         {
             string append = "news";
             var url = new UriBuilder(SERVICE_URL + append)
                 .AddParameter("userId", userId)
                 .AddParameter("feedId", feedId)
-                .AddParameter("refresh", refresh)
-                .AddParameter("markEntry", markEntry)
+                .AddParameter("entry", entry)
                 .AddParameter("skip", skip)
                 .AddParameter("take", take)
                 .AddParameter("type", (int)type)
