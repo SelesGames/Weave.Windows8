@@ -78,7 +78,10 @@ namespace Weave.Common
                     _loading = true;
                     _loadingEvent.Reset();
 
-                    _repo = new ViewModels.Repository.StandardRepository(Guid.Parse(_currentUserId), new Weave.User.Service.Client.Client());
+                    _repo = new ViewModels.Repository.StandardRepository(
+                        Guid.Parse(_currentUserId), 
+                        new Weave.User.Service.Client.Client(),
+                        new Weave.Article.Service.Client.ServiceClient());
                     _currentUser = await _repo.GetUserInfo(false);
 
                     _loadingEvent.Set();

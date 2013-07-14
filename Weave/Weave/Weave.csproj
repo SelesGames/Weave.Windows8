@@ -271,9 +271,21 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Article.Service.Contracts\Weave.Article.Service.Contracts.csproj">
+      <Project>{d727f239-ee96-4b05-8f17-65871b52b260}</Project>
+      <Name>Weave.Article.Service.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Article.Service.DTOs\Weave.Article.Service.DTOs.csproj">
+      <Project>{2b4d1af0-8c77-475d-8d14-db7b506f9450}</Project>
+      <Name>Weave.Article.Service.DTOs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.User.Service.Contracts\Weave.User.Service.Contracts.csproj">
       <Project>{02f3363f-7b0f-4c5f-9123-b388f2870c35}</Project>
       <Name>Weave.User.Service.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.User.Service.DTOs\Weave.User.Service.DTOs.csproj">
+      <Project>{75f2f4b1-beb2-4ac6-a935-5a795c5a79a0}</Project>
+      <Name>Weave.User.Service.DTOs</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.ViewModels.Repository\Weave.ViewModels.Repository.csproj">
       <Project>{d326f8c2-8dcf-43d4-9bad-bc07ca6d6cce}</Project>
@@ -294,6 +306,10 @@
     <ProjectReference Include="..\SelesGames.Rest\SelesGames.Rest.csproj">
       <Project>{b9cb0e64-278a-4cc3-add0-1651622d5209}</Project>
       <Name>SelesGames.Rest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weave.Article.Service.Client\Weave.Article.Service.Client.csproj">
+      <Project>{9b600d9e-ce49-4587-8b10-41abfb518cef}</Project>
+      <Name>Weave.Article.Service.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\Weave.Mobilizer.Client\Weave.Mobilizer.Client.csproj">
       <Project>{e69950f6-0a2e-4481-adcf-839301969b3e}</Project>
