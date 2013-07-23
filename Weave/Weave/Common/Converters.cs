@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Weave.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -86,5 +87,20 @@ namespace Weave.Common
             throw new NotImplementedException();
         }
     }
+
+    public class DisplayStateToOpacityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (Enum.Equals(value, NewsItem.ColoringDisplayState.Viewed)) return 0.3;
+            else return 1;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
 }

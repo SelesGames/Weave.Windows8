@@ -42,11 +42,11 @@ namespace Weave.ViewModels.StartHub
             int clusterFetchCount = StartClusterViewModel.BaseDisplayCount + StartClusterViewModel.ExtraRows + 1;
             if (!String.IsNullOrEmpty(Category))
             {
-                news = await UserHelper.Instance.GetCategoryNews(Category, 0, clusterFetchCount);
+                news = await UserHelper.Instance.GetCategoryNews(Category, 0, clusterFetchCount, EntryType.Peek);
             }
             else if (FeedId != null)
             {
-                news = await UserHelper.Instance.GetFeedNews(FeedId.Value, 0, clusterFetchCount);
+                news = await UserHelper.Instance.GetFeedNews(FeedId.Value, 0, clusterFetchCount, EntryType.Peek);
             }
 
             if (news != null)

@@ -9,7 +9,7 @@ namespace Weave.ViewModels.Browse
 {
     public class CategoryViewModel : BindableBase
     {
-        public enum CategoryType { Specific, Latest, Other };
+        public enum CategoryType { Specific, Latest, All, Favorites, Other };
 
         private CategoryType _type = CategoryType.Specific;
         public CategoryType Type

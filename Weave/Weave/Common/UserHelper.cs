@@ -82,7 +82,7 @@ namespace Weave.Common
                         Guid.Parse(_currentUserId), 
                         new Weave.User.Service.Client.Client(),
                         new Weave.Article.Service.Client.ServiceClient());
-                    _currentUser = await _repo.GetUserInfo(false);
+                    _currentUser = await _repo.GetUserInfo(true);
 
                     _loadingEvent.Set();
                     _loading = false;
@@ -103,14 +103,19 @@ namespace Weave.Common
             }
         }
 
-        public async Task<NewsList> GetCategoryNews(String category, int start, int count)
+        public async Task<NewsList> GetCategoryNews(String category, int start, int count, EntryType entry)
         {
-            return await _currentUser.GetNewsForCategory(category, EntryType.Peek, start, count);
+            return await _currentUser.GetNewsForCategory(category, entry, start, count);
         }
 
-        public async Task<NewsList> GetFeedNews(Guid feedId, int start, int count)
+        public async Task<NewsList> GetFeedNews(Guid feedId, int start, int count, EntryType entry)
         {
-            return await _currentUser.GetNewsForFeed(feedId, EntryType.Peek, start, count);
+            return await _currentUser.GetNewsForFeed(feedId, entry, start, count);
+        }
+
+        public async Task<List<NewsItem>> GetFavorites(int start, int count)
+        {
+            return await _currentUser.GetFavorites(start, count);
         }
 
         public List<NewsItem> GetLatestNews()
@@ -182,6 +187,22 @@ namespace Weave.Common
             {
                 if (_roamingSettings == null) _roamingSettings = ApplicationData.Current.RoamingSettings;
                 return _roamingSettings;
+            }
+        }
+
+        public async Task MarkAsRead(NewsItem item)
+        {
+            if (_currentUser != null)
+            {
+                await _currentUser.MarkArticleRead(item);
+            }
+        }
+
+        public async Task MarkSoftRead(List<NewsItem> items)
+        {
+            if (_currentUser != null)
+            {
+                await _currentUser.MarkArticlesSoftRead(items);
             }
         }
 

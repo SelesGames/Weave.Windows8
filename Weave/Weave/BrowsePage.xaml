@@ -18,6 +18,7 @@
         <common:UpperCaseConverter x:Key="UpperCaseConverter" />
         <common:NewCountConverter x:Key="NewCountConverter" />
         <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <common:DisplayStateToOpacityConverter x:Key="DisplayStateToOpacityConverter" />
 
         <Style x:Key="GridViewItemStyleArticle" TargetType="GridViewItem">
             <Setter Property="Padding" Value="16" />
@@ -257,7 +258,7 @@
         </Style>
 
         <DataTemplate x:Key="ArticleTextItemTemplate">
-            <Grid HorizontalAlignment="Left" Width="250" Height="250" Margin="0">
+            <Grid HorizontalAlignment="Left" Width="250" Height="250" Margin="0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
@@ -274,7 +275,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ArticleImageItemTemplate">
-            <Grid HorizontalAlignment="Left" Width="250" Height="250" Margin="0">
+            <Grid HorizontalAlignment="Left" Width="250" Height="250" Margin="0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="160" />
                     <RowDefinition Height="Auto" />
@@ -501,4 +502,21 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
+
+    <Page.BottomAppBar>
+        <AppBar Padding="10,0,10,0" Background="{StaticResource WeaveBrush}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel x:Name="LeftPanel" Orientation="Horizontal" Visibility="Collapsed" Grid.Column="0" HorizontalAlignment="Left">
+                </StackPanel>
+                <StackPanel x:Name="RightPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                    <Button x:Name="AppBarRefresh" Style="{StaticResource RefreshAppBarButtonStyle}" Click="AppBarRefresh_Click" />
+                </StackPanel>
+            </Grid>
+        </AppBar>
+    </Page.BottomAppBar>
+
 </common:LayoutAwarePage>

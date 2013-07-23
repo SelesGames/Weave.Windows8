@@ -49,11 +49,18 @@ namespace Weave
         private Guid? _initialSelectedItemId = null;
         private Guid? _initialSelectedSource = null;
 
+        private DispatcherTimer _readTimer;
+        private const double ReadInterval = 3;
+
         public BrowsePage()
         {
             this.InitializeComponent();
 
             _feed.FirstVideoLoaded += FirstVideoLoaded;
+
+            _readTimer = new DispatcherTimer();
+            _readTimer.Interval = TimeSpan.FromSeconds(ReadInterval);
+            _readTimer.Tick += ReadTimer_Tick;
         }
 
         /// <summary>
@@ -174,12 +181,17 @@ namespace Weave
         }
 
         public const int NavSpacerHeight = 20;
+        private const int DefaultInitialSelection = 2;
 
         private int InitNav()
         {
-            int initialSelection = 0;
+            int initialSelection = DefaultInitialSelection;
             ObservableCollection<object> items = _nav.Items;
+            items.Add(new CategoryViewModel() { DisplayName = "All News", Info = new CategoryInfo() { Category = "All News" }, Type = CategoryViewModel.CategoryType.All });
+            items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
             items.Add(new CategoryViewModel() { DisplayName = "Latest News", Type = CategoryViewModel.CategoryType.Latest });
+            items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
+            items.Add(new CategoryViewModel() { DisplayName = "Favorites", Type = CategoryViewModel.CategoryType.Favorites });
             items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
 
             String noCategoryKey = "";
@@ -192,15 +204,18 @@ namespace Weave
                     if (!String.Equals(category, noCategoryKey))
                     {
                         if (_initialSelectedCategory != null && String.Equals(_initialSelectedCategory, category, StringComparison.OrdinalIgnoreCase)) initialSelection = items.Count;
-
-                        items.Add(new CategoryViewModel() { DisplayName = category, Info = new CategoryInfo() { Category = category } });
+                        CategoryViewModel categoryVm = new CategoryViewModel() { DisplayName = category, Info = new CategoryInfo() { Category = category } };
+                        items.Add(categoryVm);
                         List<Feed> feeds = categoryFeeds[category];
                         feeds.Sort((a,b) => String.Compare(a.Name, b.Name));
+                        int newCount = 0;
                         foreach (Feed feed in feeds)
                         {
                             if (_initialSelectedSource != null && _initialSelectedSource.Value == feed.Id) initialSelection = items.Count;
                             items.Add(new FeedWithIcon(feed));
+                            newCount += feed.NewArticleCount;
                         }
+                        categoryVm.NewCount = newCount;
                         items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
                     }
                 }
@@ -212,7 +227,7 @@ namespace Weave
                     feeds.Sort((a, b) => String.Compare(a.Name, b.Name));
                     foreach (Feed feed in feeds)
                     {
-                        if (_initialSelectedSource != null && initialSelection == 0 &&  _initialSelectedSource.Value == feed.Id) initialSelection = items.Count;
+                        if (_initialSelectedSource != null && initialSelection == DefaultInitialSelection && _initialSelectedSource.Value == feed.Id) initialSelection = items.Count;
                         items.Add(new FeedWithIcon(feed));
                     }
                     items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
@@ -267,18 +282,7 @@ namespace Weave
         {
             if (_pageLoaded && e.AddedItems.Count > 0)
             {
-                if (MainScrollViewer != null) MainScrollViewer.ScrollToVerticalOffset(0);
-                itemGridView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                _feed.ClearData();
-                object selected = GrdVwNavigation.SelectedItem;
-                if (selected is Feed)
-                {
-                    await ProcessFeedSelection((Feed)selected);
-                }
-                else if (selected is CategoryViewModel)
-                {
-                    await ProcessCategorySelection((CategoryViewModel)selected);
-                }
+                await ProcessSelectedNav();
 
                 if (_initialSelectedItemId != null)
                 {
@@ -294,15 +298,32 @@ namespace Weave
             }
         }
 
-        private async Task ProcessFeedSelection(Feed feed)
+        private async Task ProcessSelectedNav(bool refresh = false)
+        {
+            if (MainScrollViewer != null) MainScrollViewer.ScrollToVerticalOffset(0);
+            itemGridView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            _feed.ClearData();
+            object selected = GrdVwNavigation.SelectedItem;
+            if (selected is Feed)
+            {
+                await ProcessFeedSelection((Feed)selected, refresh);
+            }
+            else if (selected is CategoryViewModel)
+            {
+                await ProcessCategorySelection((CategoryViewModel)selected, refresh);
+            }
+        }
+
+        private async Task ProcessFeedSelection(Feed feed, bool refresh = false)
         {
             _feed.FeedId = feed.Id;
-            await _feed.LoadInitialData();
+            await _feed.LoadInitialData(refresh ? EntryType.ExtendRefresh : EntryType.Mark);
             
         }
 
-        private async Task ProcessCategorySelection(CategoryViewModel category)
+        private async Task ProcessCategorySelection(CategoryViewModel category, bool refresh = false)
         {
+            EntryType entry = refresh ? EntryType.ExtendRefresh : EntryType.Mark;
             if (category.Type == CategoryViewModel.CategoryType.Latest)
             {
                 _feed.IsLoading = true;
@@ -312,13 +333,17 @@ namespace Weave
                 }
                 _feed.IsLoading = false;
             }
+            else if (category.Type == CategoryViewModel.CategoryType.Favorites)
+            {
+            }
             else if (category.Type == CategoryViewModel.CategoryType.Other)
             {
             }
             else
             {
                 _feed.CategoryName = category.Info.Category;
-                await _feed.LoadInitialData();
+                if (category.Type == CategoryViewModel.CategoryType.All) entry = EntryType.Peek;
+                await _feed.LoadInitialData(entry);
             }
         }
 
@@ -345,12 +370,7 @@ namespace Weave
 
         private void CloseArticle()
         {
-            //ScrlVwrArticle.DataContext = null;
-            //RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            //ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            //WebVwArticle.NavigateToString("");
-            //GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            //ScrlVwrArticle.Width = DefaultBrowserWidth;
+            _readTimer.Stop();
             SbArticleFlyOut.Begin();
         }
 
@@ -442,6 +462,7 @@ namespace Weave
                 TxtBxBrowserUrl.Text = "";
                 GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             }
+            _readTimer.Start();
         }
 
         private void TxtBxBrowserUrl_GotFocus(object sender, RoutedEventArgs e)
@@ -528,6 +549,27 @@ namespace Weave
         private void RectOverlay_Tapped(object sender, TappedRoutedEventArgs e)
         {
             CloseArticle();
+        }
+
+        private async void ReadTimer_Tick(object sender, object e)
+        {
+            _readTimer.Stop();
+            NewsItem item = itemGridView.SelectedItem as NewsItem;
+            if (item != null && !item.HasBeenViewed)
+            {
+                await UserHelper.Instance.MarkAsRead(item);
+            }
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            _readTimer.Stop();
+            base.OnNavigatingFrom(e);
+        }
+
+        private async void AppBarRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            await ProcessSelectedNav(true);
         }
 
     } // end of class

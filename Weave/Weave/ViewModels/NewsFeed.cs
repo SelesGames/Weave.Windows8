@@ -77,27 +77,28 @@ namespace Weave.ViewModels
             _idsAdded.Clear();
         }
 
-        public async Task LoadInitialData()
+        public async Task LoadInitialData(EntryType entry = EntryType.Peek)
         {
-            await LoadData(InitialFetchCount);
+            await LoadData(InitialFetchCount, entry);
         }
 
         public async void LoadNextPage()
         {
-            if (HasNextPage) await LoadData(NextPageCount);
+            if (HasNextPage) await LoadData(NextPageCount, EntryType.Peek);
         }
 
-        private async Task LoadData(int count)
+        private async Task LoadData(int count, EntryType entry)
         {
             IsLoading = true;
             NewsList list = null;
+
             if (FeedId != null)
             {
-                list = await UserHelper.Instance.GetFeedNews(FeedId.Value, _idsAdded.Count, count);
+                list = await UserHelper.Instance.GetFeedNews(FeedId.Value, _idsAdded.Count, count, entry);
             }
             else if (!String.IsNullOrEmpty(CategoryName))
             {
-                list = await UserHelper.Instance.GetCategoryNews(CategoryName, _idsAdded.Count, count);
+                list = await UserHelper.Instance.GetCategoryNews(CategoryName, _idsAdded.Count, count, entry);
             }
 
             if (list != null)
