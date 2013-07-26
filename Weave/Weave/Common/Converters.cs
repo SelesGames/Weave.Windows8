@@ -59,6 +59,19 @@ namespace Weave.Common
         }
     }
 
+    public sealed class VisibilityInverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return (value is Visibility && (Visibility)value == Visibility.Collapsed) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class UpperCaseConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -101,6 +114,21 @@ namespace Weave.Common
             throw new NotImplementedException();
         }
     }
+
+    public class FavoritedToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (Enum.Equals(value, NewsItem.ColoringDisplayState.Favorited)) return Visibility.Visible;
+            else return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
 
 }

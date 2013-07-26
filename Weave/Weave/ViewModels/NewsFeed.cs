@@ -15,6 +15,8 @@ namespace Weave.ViewModels
 
         public event Action<object> FirstVideoLoaded;
 
+        public enum FeedType { None, Feed, Category, Favorites };
+
         private HashSet<Guid> _idsAdded = new HashSet<Guid>();
         private int _total;
 
@@ -24,26 +26,19 @@ namespace Weave.ViewModels
             get { return _items; }
         }
 
-        private String _categoryName;
-        public String CategoryName
+        private FeedType _feedType = FeedType.None;
+
+        public FeedType CurrentFeedType
         {
-            private get { return _categoryName; }
-            set
-            {
-                SetProperty(ref _categoryName, value);
-                if (value != null && FeedId != null) FeedId = null;
-            }
+            get { return _feedType; }
         }
 
-        private Guid? _feedId;
-        public Guid? FeedId
+        private object _feedParam;
+
+        public void SetFeedParam(FeedType type, object feedParam)
         {
-            private get { return _feedId; }
-            set
-            {
-                SetProperty(ref _feedId, value);
-                if (value != null && CategoryName != null) CategoryName = null;
-            }
+            _feedType = type;
+            _feedParam = feedParam;
         }
 
         public bool AddItem(NewsItem item)
@@ -70,8 +65,8 @@ namespace Weave.ViewModels
 
         public void ClearData()
         {
-            FeedId = null;
-            CategoryName = null;
+            _feedType = FeedType.None;
+            _feedParam = null;
             _total = 0;
             Items.Clear();
             _idsAdded.Clear();
@@ -92,13 +87,20 @@ namespace Weave.ViewModels
             IsLoading = true;
             NewsList list = null;
 
-            if (FeedId != null)
+            switch (_feedType)
             {
-                list = await UserHelper.Instance.GetFeedNews(FeedId.Value, _idsAdded.Count, count, entry);
-            }
-            else if (!String.IsNullOrEmpty(CategoryName))
-            {
-                list = await UserHelper.Instance.GetCategoryNews(CategoryName, _idsAdded.Count, count, entry);
+                case FeedType.Feed:
+                    if (_feedParam is Guid) list = await UserHelper.Instance.GetFeedNews((Guid)_feedParam, _idsAdded.Count, count, entry);
+                    break;
+                case FeedType.Category:
+                    if (_feedParam is String) list = await UserHelper.Instance.GetCategoryNews((String)_feedParam, _idsAdded.Count, count, entry);
+                    break;
+                case FeedType.Favorites:
+                    list = new NewsList();
+                    list.News = await UserHelper.Instance.GetFavorites(_idsAdded.Count, count);
+                    break;
+                default:
+                    break;
             }
 
             if (list != null)

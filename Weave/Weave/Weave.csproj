@@ -175,6 +175,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Add.png" />
+    <Content Include="Assets\Buttons\FavAddButton.png" />
+    <Content Include="Assets\Buttons\FavAddButtonPressed.png" />
+    <Content Include="Assets\Buttons\FavRemoveButton.png" />
+    <Content Include="Assets\Buttons\FavRemoveButtonPressed.png" />
     <Content Include="Assets\LiveTile.png" />
     <Content Include="Assets\LiveTileWide.png" />
     <Content Include="Assets\Logo.png" />

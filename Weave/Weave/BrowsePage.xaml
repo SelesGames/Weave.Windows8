@@ -19,6 +19,9 @@
         <common:NewCountConverter x:Key="NewCountConverter" />
         <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <common:DisplayStateToOpacityConverter x:Key="DisplayStateToOpacityConverter" />
+        <common:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+        <common:VisibilityInverter x:Key="VisibilityInverter" />
+        <common:FavoritedToVisibilityConverter x:Key="FavoritedToVisibilityConverter" />
 
         <Style x:Key="GridViewItemStyleArticle" TargetType="GridViewItem">
             <Setter Property="Padding" Value="16" />
@@ -248,6 +251,24 @@
                                             </Grid>
                                         </Border>
                                         <TextBlock x:Name="MultiArrangeOverlayText" Foreground="{StaticResource ListViewItemDragForegroundThemeBrush}" FontSize="26.667" FontFamily="{StaticResource ContentControlThemeFontFamily}" IsHitTestVisible="False" Margin="18,9,0,0" Opacity="0" TextWrapping="Wrap" Text="{Binding TemplateSettings.DragItemsCount, RelativeSource={RelativeSource Mode=TemplatedParent}}" TextTrimming="WordEllipsis"/>
+
+                                        <Grid Grid.Column="1" Margin="0,0,0,0" Visibility="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}" Loaded="ButtonGrid_Loaded">
+                                            <Grid.Resources>
+                                                <Storyboard x:Name="SbShowAnimation">
+                                                    <PopInThemeAnimation TargetName="ButtonContainer" FromVerticalOffset="30" FromHorizontalOffset="0" />
+                                                </Storyboard>
+                                            </Grid.Resources>
+                                            <Rectangle Fill="#80000000" />
+                                            <Grid Name="ButtonContainer" Margin="20,0,20,0" VerticalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid>
+                                                    <Button Style="{StaticResource AddFavButtonStyle}" Content="Favorite" Visibility="{Binding ElementName=BtnUnfavorite, Path=Visibility, Converter={StaticResource VisibilityInverter}}" Click="BtnFavorite_Click" />
+                                                    <Button Name="BtnUnfavorite" Style="{StaticResource RemoveFavButtonStyle}" Content="Unfavourite" Visibility="{Binding DisplayState, Converter={StaticResource FavoritedToVisibilityConverter}}" Click="BtnUnfavorite_Click" />
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
                                     </Grid>
                                 </Border>
                             </Grid>

@@ -118,6 +118,16 @@ namespace Weave.Common
             return await _currentUser.GetFavorites(start, count);
         }
 
+        public async Task AddFavorite(NewsItem item)
+        {
+            await _currentUser.AddFavorite(item);
+        }
+
+        public async Task RemoveFavorite(NewsItem item)
+        {
+            await _currentUser.RemoveFavorite(item);
+        }
+
         public List<NewsItem> GetLatestNews()
         {
             return _currentUser.LatestNews;

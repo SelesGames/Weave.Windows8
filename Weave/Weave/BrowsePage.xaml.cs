@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -52,6 +53,8 @@ namespace Weave
         private DispatcherTimer _readTimer;
         private const double ReadInterval = 3;
 
+        private bool _navigatingAway = false;
+
         public BrowsePage()
         {
             this.InitializeComponent();
@@ -75,6 +78,8 @@ namespace Weave
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             this.DataContext = _feed;
+
+            _navigatingAway = false;
 
             if (navigationParameter != null && navigationParameter is Dictionary<String, object>)
             {
@@ -316,7 +321,7 @@ namespace Weave
 
         private async Task ProcessFeedSelection(Feed feed, bool refresh = false)
         {
-            _feed.FeedId = feed.Id;
+            _feed.SetFeedParam(NewsFeed.FeedType.Feed, feed.Id);
             await _feed.LoadInitialData(refresh ? EntryType.ExtendRefresh : EntryType.Mark);
             
         }
@@ -335,13 +340,15 @@ namespace Weave
             }
             else if (category.Type == CategoryViewModel.CategoryType.Favorites)
             {
+                _feed.SetFeedParam(NewsFeed.FeedType.Favorites, null);
+                await _feed.LoadInitialData(entry);
             }
             else if (category.Type == CategoryViewModel.CategoryType.Other)
             {
             }
             else
             {
-                _feed.CategoryName = category.Info.Category;
+                _feed.SetFeedParam(NewsFeed.FeedType.Category, category.Info.Category);
                 if (category.Type == CategoryViewModel.CategoryType.All) entry = EntryType.Peek;
                 await _feed.LoadInitialData(entry);
             }
@@ -563,6 +570,7 @@ namespace Weave
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
+            _navigatingAway = true;
             _readTimer.Stop();
             base.OnNavigatingFrom(e);
         }
@@ -571,6 +579,65 @@ namespace Weave
         {
             await ProcessSelectedNav(true);
         }
+
+        private void ButtonGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            Grid grid = sender as Grid;
+            if (grid != null && grid.Tag == null)
+            {
+                App.RegisterForNotification("Visibility", grid, Visibility.Collapsed, ButtonGrid_VisibilityChanged);
+                grid.Tag = true;
+            }
+        }
+
+        private void ButtonGrid_VisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (Visibility.Visible.Equals(e.NewValue))
+            {
+                Grid grid = d as Grid;
+                if (grid != null)
+                {
+                    try
+                    {
+                        Storyboard sb = grid.Resources["SbShowAnimation"] as Storyboard;
+                        sb.Begin();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+        }
+
+        private async void BtnFavorite_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null && button.DataContext is NewsItem)
+            {
+                NewsItem item = (NewsItem)button.DataContext;
+                button.IsEnabled = false;
+
+                await UserHelper.Instance.AddFavorite(item);
+
+                if (!_navigatingAway) button.IsEnabled = true;
+            }
+        }
+
+        private async void BtnUnfavorite_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null && button.DataContext is NewsItem)
+            {
+                NewsItem item = (NewsItem)button.DataContext;
+                button.IsEnabled = false;
+
+                await UserHelper.Instance.RemoveFavorite(item);
+                if (_feed != null && _feed.CurrentFeedType == NewsFeed.FeedType.Favorites) _feed.Items.Remove(item);
+                
+                if (!_navigatingAway) button.IsEnabled = true;
+            }
+        }
+
 
     } // end of class
 }
