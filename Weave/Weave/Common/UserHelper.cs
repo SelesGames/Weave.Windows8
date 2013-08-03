@@ -48,20 +48,23 @@ namespace Weave.Common
             {
                 if (_categoryFeedMap == null && _currentUser != null && _currentUser.Feeds != null)
                 {
-                    _categoryFeedMap = new Dictionary<string, List<Feed>>();
-                    String key;
-                    foreach (Feed feed in _currentUser.Feeds)
-                    {
-                        key = feed.Category == null ? "" : feed.Category;
-                        if (!_categoryFeedMap.ContainsKey(key))
-                        {
-                            _categoryFeedMap[key] = new List<Feed>();
-                        }
-                        _categoryFeedMap[key].Add(feed);
-                    }
+                    _categoryFeedMap = BuildCategoryCollection(_currentUser.Feeds);
                 }
                 return _categoryFeedMap;
             }
+        }
+
+        private Dictionary<String, List<Feed>> BuildCategoryCollection(IEnumerable<Feed> feeds)
+        {
+            Dictionary<String, List<Feed>> collection = new Dictionary<string, List<Feed>>();
+            String key;
+            foreach (Feed f in feeds)
+            {
+                key = f.Category == null ? "" : f.Category;
+                if (!collection.ContainsKey(key)) collection[key] = new List<Feed>();
+                collection[key].Add(f);
+            }
+            return collection;
         }
 
         public bool IsLoaded
@@ -164,6 +167,18 @@ namespace Weave.Common
                 }
             }
             return null;
+        }
+
+        public bool IsFeedAdded(String name)
+        {
+            foreach (Feed f in _currentUser.Feeds)
+            {
+                if (String.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>

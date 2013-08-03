@@ -114,8 +114,8 @@ namespace Weave.Common
     {
         public DataTemplate FeedTemplate { get; set; }
         public DataTemplate CategoryTemplate { get; set; }
-        public DataTemplate AddSTemplate { get; set; }
         public DataTemplate SpacerTemplate { get; set; }
+        public DataTemplate AddTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
@@ -123,8 +123,8 @@ namespace Weave.Common
             {
                 if (item is Feed) return FeedTemplate;
                 else if (item is CategoryViewModel) return CategoryTemplate;
-                else if (item is StartAddViewModel) return AddSTemplate;
                 else if (item is SpacerViewModel) return SpacerTemplate;
+                else if (item is FeedManagementViewModel) return AddTemplate;
             }
 
             return base.SelectTemplateCore(item, container);

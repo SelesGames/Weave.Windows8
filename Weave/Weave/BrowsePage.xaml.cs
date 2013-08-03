@@ -39,6 +39,7 @@ namespace Weave
 
         private NewsFeed _feed = new NewsFeed();
         private NavigationViewModel _nav = new NavigationViewModel();
+        private FeedManagementViewModel _feedManageVm = new FeedManagementViewModel();
 
         private int _initialFeedCount = 20;
 
@@ -64,6 +65,8 @@ namespace Weave
             _readTimer = new DispatcherTimer();
             _readTimer.Interval = TimeSpan.FromSeconds(ReadInterval);
             _readTimer.Tick += ReadTimer_Tick;
+
+            FeedManagementControl.DataContext = _feedManageVm;
         }
 
         /// <summary>
@@ -238,6 +241,7 @@ namespace Weave
                     items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
                 }
             }
+
             return initialSelection;
         }
 
@@ -635,6 +639,32 @@ namespace Weave
                 if (_feed != null && _feed.CurrentFeedType == NewsFeed.FeedType.Favorites) _feed.Items.Remove(item);
                 
                 if (!_navigatingAway) button.IsEnabled = true;
+            }
+        }
+
+        private Button _btnAddSources;
+
+        private void BtnAddSources_Loaded(object sender, RoutedEventArgs e)
+        {
+            _btnAddSources = sender as Button;
+        }
+
+        private void BtnAddSources_Click(object sender, RoutedEventArgs e)
+        {
+            PopupManageFeeds.IsOpen = true;
+        }
+
+        private void PopupManageFeeds_Closed(object sender, object e)
+        {
+            FeedManagementControl.ClearSelection();
+        }
+
+        private async void PopupManageFeeds_Opened(object sender, object e)
+        {
+            SbManageFeedsPopIn.Begin();
+            if (!_feedManageVm.IsInitialised)
+            {
+                await _feedManageVm.InitFeeds();
             }
         }
 
