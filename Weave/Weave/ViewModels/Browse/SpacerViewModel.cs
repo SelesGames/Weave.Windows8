@@ -10,7 +10,7 @@ namespace Weave.ViewModels.Browse
     public class SpacerViewModel : BindableBase
     {
         private int _height;
-        public int Height
+        public int SpacerHeight
         {
             get { return _height; }
             set { SetProperty(ref _height, value); }

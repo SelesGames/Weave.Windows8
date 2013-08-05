@@ -121,7 +121,7 @@ namespace Weave.Common
         {
             if (item != null)
             {
-                if (item is Feed) return FeedTemplate;
+                if (item is FeedItemViewModel) return FeedTemplate;
                 else if (item is CategoryViewModel) return CategoryTemplate;
                 else if (item is SpacerViewModel) return SpacerTemplate;
                 else if (item is FeedManagementViewModel) return AddTemplate;

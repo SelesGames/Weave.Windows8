@@ -21,7 +21,7 @@ namespace Weave.Common
         {
             if (item != null)
             {
-                if (item is Feed) return FeedStyle;
+                if (item is FeedItemViewModel) return FeedStyle;
                 else if (item is CategoryViewModel)
                 {
                     CategoryViewModel vm = (CategoryViewModel)item;

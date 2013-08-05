@@ -419,9 +419,9 @@ namespace Weave
                         feeds.Sort((a, b) => String.Compare(a.Name, b.Name));
                         foreach (Feed feed in feeds)
                         {
-                            categoryListings.Add(new FeedWithIcon(feed));
+                            categoryListings.Add(new FeedItemViewModel(feed));
                         }
-                        categoryListings.Add(new SpacerViewModel() { Height = BrowsePage.NavSpacerHeight });
+                        categoryListings.Add(new SpacerViewModel() { SpacerHeight = NavigationViewModel.NavSpacerHeight });
                     }
                 }
 
@@ -432,9 +432,9 @@ namespace Weave
                     feeds.Sort((a, b) => String.Compare(a.Name, b.Name));
                     foreach (Feed feed in feeds)
                     {
-                        categoryListings.Add(new FeedWithIcon(feed));
+                        categoryListings.Add(new FeedItemViewModel(feed));
                     }
-                    categoryListings.Add(new SpacerViewModel() { Height = BrowsePage.NavSpacerHeight });
+                    categoryListings.Add(new SpacerViewModel() { SpacerHeight = NavigationViewModel.NavSpacerHeight });
                 }
             }
 

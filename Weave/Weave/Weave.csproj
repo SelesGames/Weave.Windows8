@@ -127,10 +127,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\Browse\CategoryViewModel.cs" />
     <Compile Include="ViewModels\Browse\FeedManagementViewModel.cs" />
-    <Compile Include="ViewModels\Browse\ManagedFeedViewModel.cs" />
     <Compile Include="ViewModels\Browse\NavigationViewModel.cs" />
     <Compile Include="ViewModels\Browse\SpacerViewModel.cs" />
-    <Compile Include="ViewModels\FeedWithIcon.cs" />
+    <Compile Include="ViewModels\FeedItemViewModel.cs" />
     <Compile Include="ViewModels\IResizeable.cs" />
     <Compile Include="ViewModels\NewsFeed.cs" />
     <Compile Include="ViewModels\NewsItemIcon.cs" />

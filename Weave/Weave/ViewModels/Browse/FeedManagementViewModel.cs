@@ -14,9 +14,9 @@ namespace Weave.ViewModels.Browse
         private const String FeedsUrl = "http://weave.blob.core.windows.net/settings/masterfeeds.xml";
 
         private ExpandedLibrary _feedLibrary;
-        private Dictionary<String, List<ManagedFeedViewModel>> _categoryFeedMap;
+        private Dictionary<String, List<FeedItemViewModel>> _categoryFeedMap;
         private List<String> _categories;
-        private List<ManagedFeedViewModel> _categoryItems;
+        private List<FeedItemViewModel> _categoryItems;
 
         public FeedManagementViewModel()
         {
@@ -48,16 +48,15 @@ namespace Weave.ViewModels.Browse
             }
         }
 
-        public static Dictionary<String, List<ManagedFeedViewModel>> BuildCategoryCollection(IEnumerable<Feed> feeds)
+        public static Dictionary<String, List<FeedItemViewModel>> BuildCategoryCollection(IEnumerable<Feed> feeds)
         {
-            Dictionary<String, List<ManagedFeedViewModel>> collection = new Dictionary<string, List<ManagedFeedViewModel>>();
+            Dictionary<String, List<FeedItemViewModel>> collection = new Dictionary<string, List<FeedItemViewModel>>();
             String key;
             foreach (Feed f in feeds)
             {
                 key = f.Category == null ? "" : f.Category;
-                if (!collection.ContainsKey(key)) collection[key] = new List<ManagedFeedViewModel>();
-                ManagedFeedViewModel vm = new ManagedFeedViewModel();
-                vm.Feed = f;
+                if (!collection.ContainsKey(key)) collection[key] = new List<FeedItemViewModel>();
+                FeedItemViewModel vm = new FeedItemViewModel(f);
                 vm.IsAdded = UserHelper.Instance.IsFeedAdded(f.Name);
                 collection[key].Add(vm);
             }
@@ -86,7 +85,7 @@ namespace Weave.ViewModels.Browse
             get { return _categories; }
         }
 
-        public IEnumerable<ManagedFeedViewModel> CategoryItems
+        public IEnumerable<FeedItemViewModel> CategoryItems
         {
             get { return _categoryItems; }
         }

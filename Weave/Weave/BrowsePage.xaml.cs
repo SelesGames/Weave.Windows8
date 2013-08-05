@@ -47,9 +47,7 @@ namespace Weave
 
         private Stack<Uri> _browserBackStack = new Stack<Uri>();
 
-        private String _initialSelectedCategory;
         private Guid? _initialSelectedItemId = null;
-        private Guid? _initialSelectedSource = null;
 
         private DispatcherTimer _readTimer;
         private const double ReadInterval = 3;
@@ -87,9 +85,9 @@ namespace Weave
             if (navigationParameter != null && navigationParameter is Dictionary<String, object>)
             {
                 Dictionary<String, object> parameters = (Dictionary<String, object>)navigationParameter;
-                if (parameters.ContainsKey(NavParamSelectedCategoryKey)) _initialSelectedCategory = parameters[NavParamSelectedCategoryKey] as String;
+                if (parameters.ContainsKey(NavParamSelectedCategoryKey)) _nav.InitialSelectedCategory = parameters[NavParamSelectedCategoryKey] as String;
                 if (parameters.ContainsKey(NavParamSelectionKey)) _initialSelectedItemId = (Guid)parameters[NavParamSelectionKey];
-                if (parameters.ContainsKey(NavParamSelectedSourceKey)) _initialSelectedSource = (Guid)parameters[NavParamSelectedSourceKey];
+                if (parameters.ContainsKey(NavParamSelectedSourceKey)) _nav.InitialSelectedFeed = (Guid)parameters[NavParamSelectedSourceKey];
             }
 
             _feed.IsLoading = true;
@@ -183,66 +181,9 @@ namespace Weave
         private async void pageRoot_Loaded(object sender, RoutedEventArgs e)
         {
             _pageLoaded = true;
-            int initialSelection = InitNav();
+            int initialSelection = _nav.Initialise();
             GrdVwNavigation.DataContext = _nav;
             GrdVwNavigation.SelectedIndex = initialSelection;
-        }
-
-        public const int NavSpacerHeight = 20;
-        private const int DefaultInitialSelection = 2;
-
-        private int InitNav()
-        {
-            int initialSelection = DefaultInitialSelection;
-            ObservableCollection<object> items = _nav.Items;
-            items.Add(new CategoryViewModel() { DisplayName = "All News", Info = new CategoryInfo() { Category = "All News" }, Type = CategoryViewModel.CategoryType.All });
-            items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
-            items.Add(new CategoryViewModel() { DisplayName = "Latest News", Type = CategoryViewModel.CategoryType.Latest });
-            items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
-            items.Add(new CategoryViewModel() { DisplayName = "Favorites", Type = CategoryViewModel.CategoryType.Favorites });
-            items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
-
-            String noCategoryKey = "";
-            Dictionary<String, List<Feed>> categoryFeeds = UserHelper.Instance.CategoryFeeds;
-            if (categoryFeeds != null && categoryFeeds.Count > 0)
-            {
-                List<String> orderedKeys = new List<string>(categoryFeeds.Keys.OrderBy(s => s));
-                foreach (String category in orderedKeys)
-                {
-                    if (!String.Equals(category, noCategoryKey))
-                    {
-                        if (_initialSelectedCategory != null && String.Equals(_initialSelectedCategory, category, StringComparison.OrdinalIgnoreCase)) initialSelection = items.Count;
-                        CategoryViewModel categoryVm = new CategoryViewModel() { DisplayName = category, Info = new CategoryInfo() { Category = category } };
-                        items.Add(categoryVm);
-                        List<Feed> feeds = categoryFeeds[category];
-                        feeds.Sort((a,b) => String.Compare(a.Name, b.Name));
-                        int newCount = 0;
-                        foreach (Feed feed in feeds)
-                        {
-                            if (_initialSelectedSource != null && _initialSelectedSource.Value == feed.Id) initialSelection = items.Count;
-                            items.Add(new FeedWithIcon(feed));
-                            newCount += feed.NewArticleCount;
-                        }
-                        categoryVm.NewCount = newCount;
-                        items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
-                    }
-                }
-
-                if (categoryFeeds.ContainsKey(noCategoryKey))
-                {
-                    items.Add(new CategoryViewModel() { DisplayName = "Other", Type = CategoryViewModel.CategoryType.Other });
-                    List<Feed> feeds = categoryFeeds[noCategoryKey];
-                    feeds.Sort((a, b) => String.Compare(a.Name, b.Name));
-                    foreach (Feed feed in feeds)
-                    {
-                        if (_initialSelectedSource != null && initialSelection == DefaultInitialSelection && _initialSelectedSource.Value == feed.Id) initialSelection = items.Count;
-                        items.Add(new FeedWithIcon(feed));
-                    }
-                    items.Add(new SpacerViewModel() { Height = NavSpacerHeight });
-                }
-            }
-
-            return initialSelection;
         }
 
         private void UpdateMainScrollOrientation(ApplicationViewState viewState)
@@ -313,9 +254,9 @@ namespace Weave
             itemGridView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             _feed.ClearData();
             object selected = GrdVwNavigation.SelectedItem;
-            if (selected is Feed)
+            if (selected is FeedItemViewModel)
             {
-                await ProcessFeedSelection((Feed)selected, refresh);
+                await ProcessFeedSelection((FeedItemViewModel)selected, refresh);
             }
             else if (selected is CategoryViewModel)
             {
@@ -323,9 +264,10 @@ namespace Weave
             }
         }
 
-        private async Task ProcessFeedSelection(Feed feed, bool refresh = false)
+        private async Task ProcessFeedSelection(FeedItemViewModel feed, bool refresh = false)
         {
-            _feed.SetFeedParam(NewsFeed.FeedType.Feed, feed.Id);
+            _nav.ClearFeedNewCount(feed);
+            _feed.SetFeedParam(NewsFeed.FeedType.Feed, feed.Feed.Id);
             await _feed.LoadInitialData(refresh ? EntryType.ExtendRefresh : EntryType.Mark);
             
         }
@@ -352,6 +294,7 @@ namespace Weave
             }
             else
             {
+                _nav.ClearCategoryNewCount(category);
                 _feed.SetFeedParam(NewsFeed.FeedType.Category, category.Info.Category);
                 if (category.Type == CategoryViewModel.CategoryType.All) entry = EntryType.Peek;
                 await _feed.LoadInitialData(entry);
