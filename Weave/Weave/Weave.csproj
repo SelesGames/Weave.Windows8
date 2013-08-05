@@ -126,6 +126,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\Browse\CategoryViewModel.cs" />
+    <Compile Include="ViewModels\Browse\FeedManagementViewModel.cs" />
+    <Compile Include="ViewModels\Browse\ManagedFeedViewModel.cs" />
     <Compile Include="ViewModels\Browse\NavigationViewModel.cs" />
     <Compile Include="ViewModels\Browse\SpacerViewModel.cs" />
     <Compile Include="ViewModels\FeedWithIcon.cs" />
@@ -139,6 +141,9 @@
     <Compile Include="ViewModels\StartHub\StartLatestViewModel.cs" />
     <Compile Include="ViewModels\StartHub\StartNewsItem.cs" />
     <Compile Include="ViewModels\StartHub\StartSourcesViewModel.cs" />
+    <Compile Include="Views\Browse\FeedManagement.xaml.cs">
+      <DependentUpon>FeedManagement.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StartHub\AddView.xaml.cs">
       <DependentUpon>AddView.xaml</DependentUpon>
     </Compile>
@@ -237,6 +242,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Browse\FeedManagement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\StartHub\AddView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -314,6 +323,10 @@
     <ProjectReference Include="..\Weave.Article.Service.Client\Weave.Article.Service.Client.csproj">
       <Project>{9b600d9e-ce49-4587-8b10-41abfb518cef}</Project>
       <Name>Weave.Article.Service.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weave.FeedLibrary\Weave.FeedLibrary.csproj">
+      <Project>{d8af7f32-f682-4d59-9fd0-85ff1fde49f4}</Project>
+      <Name>Weave.FeedLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\Weave.Mobilizer.Client\Weave.Mobilizer.Client.csproj">
       <Project>{e69950f6-0a2e-4481-adcf-839301969b3e}</Project>

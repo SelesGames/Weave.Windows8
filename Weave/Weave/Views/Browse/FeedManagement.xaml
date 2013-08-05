@@ -1,0 +1,88 @@
+﻿<UserControl
+    x:Class="Weave.Views.Browse.FeedManagement"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Weave.Views.Browse"
+    xmlns:common="using:Weave.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Foreground="{StaticResource SubtleTextBrush}"
+    >
+    
+    <UserControl.Resources>
+
+        <common:UpperCaseConverter x:Key="UpperCaseConverter" />
+        <common:VisibilityInverter x:Key="VisibilityInverter" />
+        <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <common:FeedAddedToOpacityConverter x:Key="FeedAddedToOpacityConverter" />
+
+        <DataTemplate x:Key="CategoryTemplate">
+            <TextBlock Margin="40,0,0,0" Text="{Binding}" FontWeight="Bold" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
+        </DataTemplate>
+        
+        <DataTemplate x:Key="FeedTemplate">
+            <Grid Width="280" Margin="20,20,10,20" Opacity="{Binding IsAdded, Converter={StaticResource FeedAddedToOpacityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Height="90" Width="90">
+                    <Border Background="#A1A1A1">
+                        <Image Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Border>
+                    <Button Style="{StaticResource ButtonStyleBasic}" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=TxtBlkAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
+                        <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
+                            <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </Border>
+                    </Button>
+                    <TextBlock Name="TxtBlkAddedTick" Visibility="{Binding IsAdded, Converter={StaticResource BooleanToVisibilityConverter}}" Text="&#xE10B;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="5,5,0,0" />
+                </Grid>
+                <TextBlock Text="{Binding Feed.Name}" FontWeight="Bold" Grid.Column="1" Margin="10,5,0,0" TextWrapping="Wrap" Foreground="Black" FontSize="{StaticResource ControlContentThemeFontSize}" />
+            </Grid>
+        </DataTemplate>
+
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Background="#101010" Width="340">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Margin="40,80,20,0">
+                <TextBlock Margin="0,0,0,0" Text="ADD CONTENT" FontWeight="Bold" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Foreground="#A0A0A0" />
+                <TextBlock Margin="0,40,0,0" Text="Add new content" FontWeight="Normal" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
+                <TextBox Name="TxtBxInput" Margin="0,6,0,0" />
+                <Rectangle Height="1" Fill="#707070" Margin="0,30,0,30" />
+            </StackPanel>
+            <GridView Name="GrdVwCategories" ItemsSource="{Binding Categories}" Grid.Row="1" Width="340" Margin="0,0,0,0" SelectionChanged="GrdVwCategories_SelectionChanged" ItemContainerStyle="{StaticResource GridViewItemStyleBrowse}" ItemTemplate="{StaticResource CategoryTemplate}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" VerticalAlignment="Stretch" RenderTransformOrigin="0,0" HorizontalAlignment="Left">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </GridView>
+        </Grid>
+        <Grid Background="#D0D0D0" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Margin="60,80,0,0" Text="{Binding ElementName=GrdVwCategories, Path=SelectedItem, Converter={StaticResource UpperCaseConverter}}" Style="{StaticResource HeaderTextStyle}" Foreground="Black" />
+            <ScrollViewer Grid.Row="1" Margin="40,20,0,0" ZoomMode="Disabled" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled">
+                <ItemsControl ItemsSource="{Binding CategoryItems}" ItemTemplate="{StaticResource FeedTemplate}" Foreground="Black" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapGrid Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

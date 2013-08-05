@@ -36,6 +36,28 @@ namespace Weave.Common
             return navItems;
         }
 
+        public static List<String> GetCategoriesSample()
+        {
+            List<String> categories = new List<string>();
+            categories.Add("ANIMALS");
+            categories.Add("ART & PHOTOGRAPHY");
+            categories.Add("BUSINESS");
+            categories.Add("CARS");
+            categories.Add("CELEBRITY GOSSIP");
+            categories.Add("COLLEGE");
+            categories.Add("COMIC BOOKS");
+            categories.Add("DATING");
+            categories.Add("DEALS");
+            categories.Add("DESIGN");
+            categories.Add("FASHION");
+            categories.Add("FOOD AND WINE");
+            categories.Add("GAMING");
+            categories.Add("GARDENING");
+            categories.Add("HEALTH");
+
+            return categories;
+        }
+
         public static NewsItem GetHeroItemSample()
         {
             NewsItem item = new NewsItem();

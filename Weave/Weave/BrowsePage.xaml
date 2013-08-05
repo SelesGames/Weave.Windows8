@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Weave"
     xmlns:common="using:Weave.Common"
+    xmlns:browse="using:Weave.Views.Browse"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -22,6 +23,60 @@
         <common:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
         <common:VisibilityInverter x:Key="VisibilityInverter" />
         <common:FavoritedToVisibilityConverter x:Key="FavoritedToVisibilityConverter" />
+
+        <Style x:Key="GridViewStyleNav" TargetType="GridView">
+            <Setter Property="Padding" Value="0,0,0,10"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="TabNavigation" Value="Once"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled"/>
+            <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
+            <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
+            <Setter Property="IsSwipeEnabled" Value="True"/>
+            <Setter Property="ItemContainerTransitions">
+                <Setter.Value>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition/>
+                        <ContentThemeTransition/>
+                        <ReorderThemeTransition/>
+                        <EntranceThemeTransition IsStaggeringEnabled="False"/>
+                    </TransitionCollection>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <WrapGrid Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GridView">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <ScrollViewer x:Name="ScrollViewer" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}" IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
+                                <StackPanel>
+                                    <ItemsPresenter HeaderTemplate="{TemplateBinding HeaderTemplate}" Header="{TemplateBinding Header}" HeaderTransitions="{TemplateBinding HeaderTransitions}" Padding="{TemplateBinding Padding}"/>
+                                    <Button x:Name="BtnAddSources" Style="{StaticResource ButtonStyleBasic}" Margin="124,0,0,40" HorizontalAlignment="Left" Loaded="BtnAddSources_Loaded" Click="BtnAddSources_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
+                                                <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                            </Border>
+                                            <TextBlock Text="Add sources" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Margin="10,0,0,0" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <Style x:Key="GridViewItemStyleArticle" TargetType="GridViewItem">
             <Setter Property="Padding" Value="16" />
@@ -337,7 +392,7 @@
             <Setter Property="IsEnabled" Value="False" />
         </Style>
 
-        <common:NavigationItemStyleSelector x:Name="NavigationItemStyleSelector" CategoryStyle="{StaticResource CategoryContainerStyle}" FeedStyle="{StaticResource GridViewItemStyleBrowse}" SpacerStyle="{StaticResource SpacerContainerStyle}" />
+        <common:NavigationItemStyleSelector x:Name="NavigationItemStyleSelector" CategoryStyle="{StaticResource CategoryContainerStyle}" FeedStyle="{StaticResource GridViewItemStyleBrowse}" SpacerStyle="{StaticResource SpacerContainerStyle}" AddStyle="{StaticResource GridViewItemStyleBrowse}" />
 
         <DataTemplate x:Key="CategoryTemplate">
             <Grid Margin="0,0,0,0">
@@ -364,7 +419,16 @@
             <Rectangle Height="{Binding Height}" />
         </DataTemplate>
 
-        <common:NavigationItemSelector x:Name="NavigationItemSelector" CategoryTemplate="{StaticResource CategoryTemplate}" FeedTemplate="{StaticResource FeedTemplate}" SpacerTemplate="{StaticResource SpacerTemplate}" />
+        <DataTemplate x:Key="AddTemplate">
+            <StackPanel Margin="120,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
+                <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
+                    <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </Border>
+                <TextBlock Text="Add sources" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Margin="10,0,0,0" />
+            </StackPanel>
+        </DataTemplate>
+
+        <common:NavigationItemSelector x:Name="NavigationItemSelector" CategoryTemplate="{StaticResource CategoryTemplate}" FeedTemplate="{StaticResource FeedTemplate}" SpacerTemplate="{StaticResource SpacerTemplate}" AddTemplate="{StaticResource AddTemplate}" />
 
     </Page.Resources>
 
@@ -373,7 +437,7 @@
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
-    <Grid Style="{StaticResource LayoutRootStyle}" Background="{StaticResource WeavePageBackground}">
+    <Grid Name="GrdRoot" Style="{StaticResource LayoutRootStyle}" Background="{StaticResource WeavePageBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
@@ -388,7 +452,7 @@
 
         <Rectangle Name="RectNavBackground" Grid.RowSpan="2" Fill="#101010" Margin="0,0,80,0" RenderTransformOrigin="0,0" RenderTransform="{Binding ElementName=LstVwNavigation, Path=RenderTransform}" />
 
-        <GridView Name="GrdVwNavigation" Width="340" SelectionChanged="GrdVwNavigation_SelectionChanged" ItemContainerStyleSelector="{StaticResource NavigationItemStyleSelector}" ItemTemplateSelector="{StaticResource NavigationItemSelector}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" VerticalAlignment="Top" ItemsSource="{Binding Items}" Grid.Row="1" Margin="0,40,80,0" RenderTransformOrigin="0,0" HorizontalAlignment="Left">
+        <GridView Name="GrdVwNavigation" Style="{StaticResource GridViewStyleNav}" Width="340" SelectionChanged="GrdVwNavigation_SelectionChanged" ItemContainerStyleSelector="{StaticResource NavigationItemStyleSelector}" ItemTemplateSelector="{StaticResource NavigationItemSelector}" ItemsSource="{Binding Items}" Grid.Row="1" Margin="0,40,80,0" RenderTransformOrigin="0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <GridView.Resources>
                 <Storyboard x:Name="SbNavigationFlyIn">
                     <DoubleAnimation Storyboard.TargetName="TranslateNavigation" Storyboard.TargetProperty="X" From="280" To="70" Duration="0:0:0.1">
@@ -500,6 +564,17 @@
                 </RichTextBlock>
             </StackPanel>-->
         </ScrollViewer>
+
+        <Popup Name="PopupManageFeeds" Margin="0,0,0,0" HorizontalAlignment="Left" Grid.RowSpan="2" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Closed="PopupManageFeeds_Closed" Opened="PopupManageFeeds_Opened">
+            <Popup.Resources>
+                <Storyboard x:Name="SbManageFeedsPopIn">
+                    <PopInThemeAnimation TargetName="GrdFlyoutContent" FromVerticalOffset="0" FromHorizontalOffset="346" />
+                </Storyboard>
+            </Popup.Resources>
+            <Grid Name="GrdFlyoutContent" Height="{Binding ElementName=GrdRoot, Path=ActualHeight}">
+                <browse:FeedManagement x:Name="FeedManagementControl" Width="1030" />
+            </Grid>
+        </Popup>
 
         <VisualStateManager.VisualStateGroups>
 

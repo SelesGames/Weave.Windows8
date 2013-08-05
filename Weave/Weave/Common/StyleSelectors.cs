@@ -28,7 +28,7 @@ namespace Weave.Common
                     if (vm.Type == CategoryViewModel.CategoryType.Other) return SpacerStyle;
                     else return CategoryStyle;
                 }
-                else if (item is Weave.ViewModels.StartHub.StartAddViewModel) return AddStyle;
+                else if (item is FeedManagementViewModel) return AddStyle;
                 else if (item is SpacerViewModel) return SpacerStyle;
             }
             return base.SelectStyleCore(item, container);
