@@ -130,5 +130,20 @@ namespace Weave.Common
     }
 
 
+    public class NewStateToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (Enum.Equals(value, NewsItem.ColoringDisplayState.Normal)) return Visibility.Visible;
+            else return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
 
 }
