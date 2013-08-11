@@ -49,5 +49,12 @@ namespace Weave.ViewModels
                 this.IconUrl = Weave.Common.SourceIconHelper.GetIcon(feed.Uri);
             }
         }
+
+        private bool _requiresRefresh;
+        public bool RequiresRefresh
+        {
+            get { return _requiresRefresh; }
+            set { SetProperty(ref _requiresRefresh, value); }
+        }
     }
 }

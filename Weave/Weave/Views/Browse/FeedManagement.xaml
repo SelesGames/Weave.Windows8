@@ -31,7 +31,7 @@
                     <Border Background="#A1A1A1">
                         <Image Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     </Border>
-                    <Button Style="{StaticResource ButtonStyleBasic}" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=TxtBlkAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
+                    <Button Name="BtnAdd" Style="{StaticResource ButtonStyleBasic}" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=TxtBlkAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}" Click="BtnAdd_Click">
                         <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
                             <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </Border>
@@ -57,7 +57,10 @@
             <StackPanel Margin="40,80,20,0">
                 <TextBlock Margin="0,0,0,0" Text="ADD CONTENT" FontWeight="Bold" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Foreground="#A0A0A0" />
                 <TextBlock Margin="0,40,0,0" Text="Add new content" FontWeight="Normal" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
-                <TextBox Name="TxtBxInput" Margin="0,6,0,0" />
+                <Grid Margin="0,6,0,0">
+                    <TextBox Name="TxtBxInput" TextChanged="TxtBxInput_TextChanged" KeyDown="TxtBxInput_KeyDown" />
+                    <TextBlock Name="TxtBlkInputOverlay" Text="Topic, website or RSS URL" IsHitTestVisible="False" Opacity="0.5" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" Margin="10,0,0,0" />
+                </Grid>
                 <Rectangle Height="1" Fill="#707070" Margin="0,30,0,30" />
             </StackPanel>
             <GridView Name="GrdVwCategories" ItemsSource="{Binding Categories}" Grid.Row="1" Width="340" Margin="0,0,0,0" SelectionChanged="GrdVwCategories_SelectionChanged" ItemContainerStyle="{StaticResource GridViewItemStyleBrowse}" ItemTemplate="{StaticResource CategoryTemplate}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" VerticalAlignment="Stretch" RenderTransformOrigin="0,0" HorizontalAlignment="Left">
@@ -67,13 +70,14 @@
                     </ItemsPanelTemplate>
                 </GridView.ItemsPanel>
             </GridView>
+            <ProgressRing IsActive="{Binding IsLoadingCategories}" Style="{StaticResource LargeLoadingRingStyle}" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Margin="40,0,0,0" />
         </Grid>
         <Grid Background="#D0D0D0" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBlock Margin="60,80,0,0" Text="{Binding ElementName=GrdVwCategories, Path=SelectedItem, Converter={StaticResource UpperCaseConverter}}" Style="{StaticResource HeaderTextStyle}" Foreground="Black" />
+            <TextBlock Margin="60,80,0,0" Text="{Binding Header, Converter={StaticResource UpperCaseConverter}}" Style="{StaticResource HeaderTextStyle}" Foreground="Black" />
             <ScrollViewer Grid.Row="1" Margin="40,20,0,0" ZoomMode="Disabled" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled">
                 <ItemsControl ItemsSource="{Binding CategoryItems}" ItemTemplate="{StaticResource FeedTemplate}" Foreground="Black" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0,0">
                     <ItemsControl.ItemsPanel>
@@ -83,6 +87,45 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </ScrollViewer>
+            <ProgressRing IsActive="{Binding IsLoading}" Style="{StaticResource LargeLoadingRingStyle}" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Margin="60,40,0,0" />
         </Grid>
+
+        <Popup Name="PopupAddToCategory" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Closed="PopupAddToCategory_Closed" Opened="PopupAddToCategory_Opened">
+            <Popup.Resources>
+                <Storyboard x:Name="SbAddToCategoryPopIn">
+                    <PopInThemeAnimation TargetName="FlyoutContent" FromVerticalOffset="50" FromHorizontalOffset="0" />
+                </Storyboard>
+            </Popup.Resources>
+            <StackPanel Name="FlyoutContent" Background="White" Width="250" Loaded="FlyoutContent_Loaded">
+                <ListBox Name="LstBxAvailableCategories" Style="{StaticResource ListBoxStyleListSelector}" SelectionChanged="LstBxAvailableCategories_SelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Margin="10,0,10,0" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Rectangle Height="1" Fill="{StaticResource SubtleTextBrush}" Margin="5,10,5,10" />
+                <Grid Margin="10,0,10,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Name="TxtNewCategory" IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" Background="#E0E0E0" Margin="0,0,0,0" TextChanged="TxtNewCategory_TextChanged" VerticalContentAlignment="Center">
+                        <TextBox.InputScope>
+                            <InputScope>
+                                <InputScope.Names>
+                                    <InputScopeName NameValue="Default"/>
+                                </InputScope.Names>
+                            </InputScope>
+                        </TextBox.InputScope>
+                    </TextBox>
+                    <TextBlock Name="TxtBlkNewCategoryOverlay" Text="Add new category" IsHitTestVisible="False" Opacity="0.5" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    <Button Name="BtnAddNewCategory" Style="{StaticResource ButtonStyleBasic}" Width="28" Background="{StaticResource WeaveBrush}" Grid.Column="1" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5,3,0,3">
+                        <TextBlock Text="" FontFamily="Segoe UI Symbol" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </Popup>
+
     </Grid>
 </UserControl>

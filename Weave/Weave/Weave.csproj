@@ -110,6 +110,7 @@
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\ClusterHelper.cs" />
     <Compile Include="Common\Converters.cs" />
+    <Compile Include="Common\DisplayUtilities.cs" />
     <Compile Include="Common\HtmlToXaml.cs" />
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\MobilizerHelper.cs" />
@@ -326,6 +327,10 @@
     <ProjectReference Include="..\Weave.FeedLibrary\Weave.FeedLibrary.csproj">
       <Project>{d8af7f32-f682-4d59-9fd0-85ff1fde49f4}</Project>
       <Name>Weave.FeedLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weave.FeedSearchService\Weave.FeedSearchService.csproj">
+      <Project>{76361b4a-f393-409d-bdd8-3cda0cc5d118}</Project>
+      <Name>Weave.FeedSearchService</Name>
     </ProjectReference>
     <ProjectReference Include="..\Weave.Mobilizer.Client\Weave.Mobilizer.Client.csproj">
       <Project>{e69950f6-0a2e-4481-adcf-839301969b3e}</Project>

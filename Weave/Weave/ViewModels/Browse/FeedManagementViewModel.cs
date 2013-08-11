@@ -10,7 +10,7 @@ namespace Weave.ViewModels.Browse
 {
     public class FeedManagementViewModel : BindableBase
     {
-
+        public event Action<object, Feed> FeedAdded;
         private const String FeedsUrl = "http://weave.blob.core.windows.net/settings/masterfeeds.xml";
 
         private ExpandedLibrary _feedLibrary;
@@ -18,16 +18,19 @@ namespace Weave.ViewModels.Browse
         private List<String> _categories;
         private List<FeedItemViewModel> _categoryItems;
 
+        private FeedSearchService.FeedSearchService _searchService;
+
         public FeedManagementViewModel()
         {
             _feedLibrary = new ExpandedLibrary(FeedsUrl + "?xsf=" + (new Random()).Next(123, 978));
+            _searchService = new FeedSearchService.FeedSearchService();
         }
 
         public async Task InitFeeds()
         {
-            if (!IsLoading)
+            if (!IsLoadingCategories)
             {
-                IsLoading = true;
+                IsLoadingCategories = true;
                 try
                 {
                     List<Feed> feeds = await _feedLibrary.Feeds.Value;
@@ -44,8 +47,16 @@ namespace Weave.ViewModels.Browse
                 {
                     _categoryFeedMap = null;
                 }
-                IsLoading = false;
+                IsLoadingCategories = false;
             }
+        }
+
+        private void Reset()
+        {
+            _categories = null;
+            _categoryItems = null;
+            _categoryFeedMap.Clear();
+            IsInitialised = false;
         }
 
         public static Dictionary<String, List<FeedItemViewModel>> BuildCategoryCollection(IEnumerable<Feed> feeds)
@@ -69,14 +80,48 @@ namespace Weave.ViewModels.Browse
             {
                 if (!String.IsNullOrEmpty(category) && _categoryFeedMap.ContainsKey(category))
                 {
+                    Header = category;
                     _categoryItems = _categoryFeedMap[category];
                     OnPropertyChanged("CategoryItems");
                 }
                 else if (_categoryItems != null)
                 {
+                    Header = null;
                     _categoryItems = null;
                     OnPropertyChanged("CategoryItems");
                 }
+            }
+        }
+
+        public async Task Search(String query)
+        {
+            if (!String.IsNullOrEmpty(query))
+            {
+                if (_categoryItems != null)
+                {
+                    _categoryItems = null;
+                    OnPropertyChanged("CategoryItems");
+                }
+                Header = '"' + query + '"';
+                IsLoading = true;
+                FeedSearchService.FeedApiResult result = await _searchService.SearchForFeedsMatching(query, System.Threading.CancellationToken.None);
+                if (result.responseStatus == "200")
+                {
+                    List<FeedItemViewModel> resultsVm = new List<FeedItemViewModel>();
+                    Feed feed;
+                    foreach (FeedSearchService.Entry item in result.responseData.entries)
+                    {
+                        feed = new Feed();
+                        feed.ArticleViewingType = ArticleViewingType.Mobilizer;
+                        item.Sanitize();
+                        feed.Name = item.title;
+                        feed.Uri = item.url;
+                        resultsVm.Add(new FeedItemViewModel(feed));
+                    }
+                    _categoryItems = resultsVm;
+                    OnPropertyChanged("CategoryItems");
+                }
+                IsLoading = false;
             }
         }
 
@@ -88,6 +133,13 @@ namespace Weave.ViewModels.Browse
         public IEnumerable<FeedItemViewModel> CategoryItems
         {
             get { return _categoryItems; }
+        }
+        
+        private String _header;
+        public String Header
+        {
+            get { return _header; }
+            set { SetProperty(ref _header, value); }
         }
 
         private bool _isLoading = false;
@@ -102,6 +154,33 @@ namespace Weave.ViewModels.Browse
         {
             get { return _initialised; }
             set { SetProperty(ref _initialised, value); }
+        }
+
+        private bool _isLoadingCategories;
+        public bool IsLoadingCategories
+        {
+            get { return _isLoadingCategories; }
+            set { SetProperty(ref _isLoadingCategories, value); }
+        }
+
+        public async void AddFeedToCategory(String category, FeedItemViewModel feed)
+        {
+            if (!String.IsNullOrEmpty(category) && feed != null)
+            {
+                feed.Feed.Category = category;
+                Feed addedFeed = await UserHelper.Instance.AddFeed(feed.Feed);
+                if (FeedAdded != null) FeedAdded(this, addedFeed);
+                feed.IsAdded = true;
+            }
+        }
+
+        public async void RemoveFeed(FeedItemViewModel feed)
+        {
+            if (feed != null)
+            {
+                await UserHelper.Instance.RemoveFeed(feed.Feed);
+                Reset();
+            }
         }
 
     } // end of class

@@ -12,6 +12,7 @@ using Weave.ViewModels.Browse;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -43,7 +44,7 @@ namespace Weave
 
         private int _initialFeedCount = 20;
 
-        private const int DefaultBrowserWidth = 750;
+        private const int DefaultBrowserWidth = 975;
 
         private Stack<Uri> _browserBackStack = new Stack<Uri>();
 
@@ -53,6 +54,10 @@ namespace Weave
         private const double ReadInterval = 3;
 
         private bool _navigatingAway = false;
+
+        private WebViewBrush _browserBrush = new WebViewBrush();
+
+        private bool _showAppBarOnSelection = true;
 
         public BrowsePage()
         {
@@ -65,6 +70,9 @@ namespace Weave
             _readTimer.Tick += ReadTimer_Tick;
 
             FeedManagementControl.DataContext = _feedManageVm;
+            _feedManageVm.FeedAdded += FeedManageVm_FeedAdded;
+
+            _browserBrush.SourceName = "WebVwArticle";
         }
 
         /// <summary>
@@ -107,7 +115,9 @@ namespace Weave
         {
             if (e.ClickedItem != null)
             {
+                _showAppBarOnSelection = false;
                 itemGridView.SelectedItem = e.ClickedItem;
+                _showAppBarOnSelection = true;
                 ShowArticle(e.ClickedItem as NewsItem);
             }
         }
@@ -268,6 +278,11 @@ namespace Weave
         {
             _nav.ClearFeedNewCount(feed);
             _feed.SetFeedParam(NewsFeed.FeedType.Feed, feed.Feed.Id);
+            if (feed.RequiresRefresh)
+            {
+                refresh = true;
+                feed.RequiresRefresh = false;
+            }
             await _feed.LoadInitialData(refresh ? EntryType.ExtendRefresh : EntryType.Mark);
             
         }
@@ -556,32 +571,38 @@ namespace Weave
             }
         }
 
-        private async void BtnFavorite_Click(object sender, RoutedEventArgs e)
+        private async void AppBarFavorite_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            if (button != null && button.DataContext is NewsItem)
+            NewsItem item = itemGridView.SelectedItem as NewsItem;
+            if (item != null)
             {
-                NewsItem item = (NewsItem)button.DataContext;
-                button.IsEnabled = false;
+                AppBarFavorite.IsEnabled = false;
 
                 await UserHelper.Instance.AddFavorite(item);
 
-                if (!_navigatingAway) button.IsEnabled = true;
+                if (!_navigatingAway)
+                {
+                    AppBarFavorite.IsEnabled = true;
+                    AppBarFavorite.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                }
             }
         }
 
-        private async void BtnUnfavorite_Click(object sender, RoutedEventArgs e)
+        private async void AppBarUnfavorite_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            if (button != null && button.DataContext is NewsItem)
+            NewsItem item = itemGridView.SelectedItem as NewsItem;
+            if (item != null)
             {
-                NewsItem item = (NewsItem)button.DataContext;
-                button.IsEnabled = false;
+                AppBarUnfavorite.IsEnabled = false;
 
                 await UserHelper.Instance.RemoveFavorite(item);
                 if (_feed != null && _feed.CurrentFeedType == NewsFeed.FeedType.Favorites) _feed.Items.Remove(item);
-                
-                if (!_navigatingAway) button.IsEnabled = true;
+
+                if (!_navigatingAway)
+                {
+                    AppBarUnfavorite.IsEnabled = true;
+                    AppBarFavorite.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                }
             }
         }
 
@@ -599,7 +620,7 @@ namespace Weave
 
         private void PopupManageFeeds_Closed(object sender, object e)
         {
-            FeedManagementControl.ClearSelection();
+            FeedManagementControl.ClearData();
         }
 
         private async void PopupManageFeeds_Opened(object sender, object e)
@@ -608,6 +629,71 @@ namespace Weave
             if (!_feedManageVm.IsInitialised)
             {
                 await _feedManageVm.InitFeeds();
+            }
+        }
+
+        private void AppBar_Opened(object sender, object e)
+        {
+            if (ScrlVwrArticle.Visibility == Windows.UI.Xaml.Visibility.Visible)
+            {
+                WebVwArticle.Margin = new Thickness(0, 0, 0, 88);
+            }
+        }
+
+        private void AppBar_Closed(object sender, object e)
+        {
+            if (WebVwArticle.Margin.Bottom > 0)
+            {
+                WebVwArticle.Margin = new Thickness();
+            }
+        }
+
+        private void itemGridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            bool handled = false;
+
+            if (e.AddedItems.Count > 0)
+            {
+                NewsItem item = e.AddedItems[0] as NewsItem;
+                if (item != null)
+                {
+                    LeftPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    AppBarFavorite.Visibility = item.IsFavorite ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
+                    if (_showAppBarOnSelection) BottomAppBar.IsOpen = true;
+                    handled = true;
+                }
+            }
+
+            if (!handled)
+            {
+                LeftPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                AppBarFavorite.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            }
+        }
+
+        private void FeedManageVm_FeedAdded(object sender, Feed addedFeed)
+        {
+            FeedItemViewModel vm = _nav.InsertFeed(addedFeed);
+            if (vm != null) GrdVwNavigation.ScrollIntoView(vm);
+        }
+
+        private async void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null && button.DataContext is FeedItemViewModel)
+            {
+                FeedItemViewModel vm = (FeedItemViewModel)button.DataContext;
+                MessageDialog dialog = new MessageDialog("Are you sure you wish to remove this feed?", "Confirmation");
+                dialog.Commands.Add(new UICommand("Remove", null, "Remove"));
+                dialog.Commands.Add(new UICommand("Cancel", null, null));
+                dialog.CancelCommandIndex = 1;
+                IUICommand result = await dialog.ShowAsync();
+                if (result.Id != null)
+                {
+                    GrdVwNavigation.SelectedIndex = NavigationViewModel.DefaultInitialSelection;
+                    _nav.RemoveFeed(vm);
+                    _feedManageVm.RemoveFeed(vm);
+                }
             }
         }
 

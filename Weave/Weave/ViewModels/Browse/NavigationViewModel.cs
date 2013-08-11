@@ -22,7 +22,7 @@ namespace Weave.ViewModels.Browse
         private Dictionary<CategoryViewModel, List<FeedItemViewModel>> _cateogyrFeedsMap = new Dictionary<CategoryViewModel,List<FeedItemViewModel>>();
 
         public const int NavSpacerHeight = 40;
-        private const int DefaultInitialSelection = 2;
+        public const int DefaultInitialSelection = 2;
 
         public int Initialise()
         {
@@ -57,7 +57,7 @@ namespace Weave.ViewModels.Browse
                         foreach (Feed feed in feeds)
                         {
                             if (InitialSelectedFeed != null && InitialSelectedFeed.Value == feed.Id) initialSelection = _items.Count;
-                            feedVm = new FeedItemViewModel(feed) { ParentCategory = categoryVm };
+                            feedVm = new FeedItemViewModel(feed);
                             feedVm.ParentCategory = categoryVm;
                             _items.Add(feedVm);
                             mappedFeeds.Add(feedVm);
@@ -83,6 +83,58 @@ namespace Weave.ViewModels.Browse
             }
 
             return initialSelection;
+        }
+
+        public void RemoveFeed(FeedItemViewModel feed)
+        {
+            CategoryViewModel categoryVm = feed.ParentCategory;
+            if (categoryVm != null && _cateogyrFeedsMap.ContainsKey(categoryVm)) _cateogyrFeedsMap[categoryVm].Remove(feed);
+            _items.Remove(feed);
+        }
+
+        public FeedItemViewModel InsertFeed(Feed feed)
+        {
+            if (feed != null && !string.IsNullOrEmpty(feed.Category))
+            {
+                CategoryViewModel categoryVm = GetCategoryVm(feed.Category);
+                int categoryIndex = _items.IndexOf(categoryVm);
+                int feedIndex = FindFeedInsertIndex(_cateogyrFeedsMap[categoryVm], feed.Name);
+                if (categoryIndex > -1 && feedIndex > -1)
+                {
+                    FeedItemViewModel feedVm = new FeedItemViewModel(feed);
+                    feedVm.ParentCategory = categoryVm;
+                    feedVm.RequiresRefresh = true;
+                    _items.Insert(categoryIndex + 1 + feedIndex, feedVm);
+                    _cateogyrFeedsMap[categoryVm].Insert(feedIndex, feedVm);
+                    return feedVm;
+                }
+            }
+            return null;
+        }
+
+        private int FindFeedInsertIndex(IList<FeedItemViewModel> feeds, String name)
+        {
+            int index = 0;
+            if (feeds.Count > 0)
+            {
+                foreach (FeedItemViewModel f in feeds)
+                {
+                    if (String.CompareOrdinal(f.Feed.Name, name) > -1) break;
+                    index++;
+                }
+            }
+
+            if (index >= feeds.Count) return -1;
+            return index;
+        }
+
+        private CategoryViewModel GetCategoryVm(String category)
+        {
+            foreach (CategoryViewModel vm in _cateogyrFeedsMap.Keys)
+            {
+                if (String.Equals(vm.Info.Category, category)) return vm;
+            }
+            return null;
         }
 
         public void ClearFeedNewCount(FeedItemViewModel feed)

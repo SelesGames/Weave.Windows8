@@ -54,6 +54,14 @@ namespace Weave.Common
             }
         }
 
+        public List<String> GetAvailableCategories()
+        {
+            Dictionary<String, List<Feed>> categoryFeeds = CategoryFeeds;
+            List<String> categories = categoryFeeds.Keys.ToList();
+            categories.Sort();
+            return categories;
+        }
+
         private Dictionary<String, List<Feed>> BuildCategoryCollection(IEnumerable<Feed> feeds)
         {
             Dictionary<String, List<Feed>> collection = new Dictionary<string, List<Feed>>();
@@ -227,6 +235,31 @@ namespace Weave.Common
             if (_currentUser != null)
             {
                 await _currentUser.MarkArticlesSoftRead(items);
+            }
+        }
+
+        public async Task<Feed> AddFeed(Feed feed)
+        {
+            if (_currentUser != null)
+            {
+                await _currentUser.AddFeed(feed);
+                Feed addedFeed = _currentUser.Feeds[_currentUser.Feeds.Count - 1];
+                String category = addedFeed.Category;
+                if (category == null) category = "";
+                if (CategoryFeeds.ContainsKey(category)) CategoryFeeds[category].Add(addedFeed);
+                return addedFeed;
+            }
+            return null;
+        }
+
+        public async Task RemoveFeed(Feed feed)
+        {
+            if (_currentUser != null)
+            {
+                await _currentUser.RemoveFeed(feed);
+                String category = feed.Category;
+                if (category == null) category = "";
+                if (CategoryFeeds.ContainsKey(category)) CategoryFeeds[category].Remove(feed);
             }
         }
 
