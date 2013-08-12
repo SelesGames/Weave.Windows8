@@ -13,7 +13,7 @@ namespace Weave.Common
     {
         private static Formatter _formatter = new Formatter();
         private static Client _client = new Client();
-        private const int BaseArticleFontSize = 12;
+        private const int BaseArticleFontSize = 16;
 
         public static async Task<String> GetMobilizedHtml(NewsItem item)
         {
