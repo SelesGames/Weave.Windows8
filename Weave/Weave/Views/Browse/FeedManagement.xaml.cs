@@ -112,7 +112,7 @@ namespace Weave.Views.Browse
 
         private void TxtNewCategory_TextChanged(object sender, TextChangedEventArgs e)
         {
-            String text = TxtNewCategory.Text;
+            String text = TxtBxNewCategory.Text;
             if (String.IsNullOrEmpty(text))
             {
                 TxtBlkNewCategoryOverlay.Visibility = Windows.UI.Xaml.Visibility.Visible;
@@ -148,6 +148,19 @@ namespace Weave.Views.Browse
             {
                 PopupAddToCategory.VerticalOffset -= (bottom - Window.Current.Bounds.Bottom);
             }
+        }
+
+        private void BtnAddNewCategory_Click(object sender, RoutedEventArgs e)
+        {
+            FeedManagementViewModel vm = this.DataContext as FeedManagementViewModel;
+            String category = TxtBxNewCategory.Text;
+            if (vm != null && !String.IsNullOrEmpty(category))
+            {
+                vm.AddFeedToCategory(category, PopupAddToCategory.Tag as FeedItemViewModel);
+            }
+
+            LstBxAvailableCategories.SelectedItem = null;
+            PopupAddToCategory.IsOpen = false;
         }
 
     } // end of class

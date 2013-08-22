@@ -39,5 +39,12 @@ namespace Weave.ViewModels.Browse
             set { SetProperty(ref _displayName, value); }
         }
 
+        private bool _requiresRefresh;
+        public bool RequiresRefresh
+        {
+            get { return _requiresRefresh; }
+            set { SetProperty(ref _requiresRefresh, value); }
+        }
+
     } // end of class
 }

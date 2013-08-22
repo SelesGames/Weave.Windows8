@@ -638,7 +638,11 @@
             </Setter>
         </Style>
 
-        <Style x:Key="CategoryContainerStyle" TargetType="GridViewItem" BasedOn="{StaticResource GridViewItemStyleBrowse}">
+        <Style x:Key="CategoryContainerStyle" TargetType="GridViewItem" BasedOn="{StaticResource GridViewItemStyleFeed}">
+            <Setter Property="Padding" Value="0,0,0,0" />
+        </Style>
+
+        <Style x:Key="CoreCategoryContainerStyle" TargetType="GridViewItem" BasedOn="{StaticResource GridViewItemStyleBrowse}">
             <Setter Property="Padding" Value="0,0,0,0" />
         </Style>
 
@@ -646,7 +650,7 @@
             <Setter Property="IsEnabled" Value="False" />
         </Style>
 
-        <common:NavigationItemStyleSelector x:Name="NavigationItemStyleSelector" CategoryStyle="{StaticResource CategoryContainerStyle}" FeedStyle="{StaticResource GridViewItemStyleFeed}" SpacerStyle="{StaticResource SpacerContainerStyle}" AddStyle="{StaticResource GridViewItemStyleBrowse}" />
+        <common:NavigationItemStyleSelector x:Name="NavigationItemStyleSelector" CoreCategoryStyle="{StaticResource CoreCategoryContainerStyle}" CategoryStyle="{StaticResource CategoryContainerStyle}" FeedStyle="{StaticResource GridViewItemStyleFeed}" SpacerStyle="{StaticResource SpacerContainerStyle}" AddStyle="{StaticResource GridViewItemStyleBrowse}" />
 
         <DataTemplate x:Key="CategoryTemplate">
             <Grid Margin="0,0,0,0">
@@ -831,6 +835,17 @@
             </Grid>
         </Popup>
 
+        <Popup Name="PopupAppBarMenu" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.RowSpan="2" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupAppBarMenu_Opened" Closed="PopupAppBarMenu_Closed">
+            <Popup.Resources>
+                <Storyboard x:Name="SbAppBarMenuPopIn">
+                    <PopInThemeAnimation TargetName="GrdAppBarMenuContent" FromVerticalOffset="50" FromHorizontalOffset="0" />
+                </Storyboard>
+            </Popup.Resources>
+            <Grid Name="GrdAppBarMenuContent" Background="White">
+                <browse:FontSizeSelection x:Name="FontSizeControl" FontSizeChanged="FontSizeControl_FontSizeChanged" />
+            </Grid>
+        </Popup>
+
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
@@ -873,6 +888,7 @@
                     </Grid>
                 </StackPanel>
                 <StackPanel x:Name="RightPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                    <Button x:Name="AppBarFontSize" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Font size" Content="&#xE185;" Click="AppBarFontSize_Click" />
                     <Button x:Name="AppBarRefresh" Style="{StaticResource RefreshAppBarButtonStyle}" Click="AppBarRefresh_Click" />
                 </StackPanel>
             </Grid>

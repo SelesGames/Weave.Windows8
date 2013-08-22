@@ -246,7 +246,8 @@ namespace Weave.Common
                 Feed addedFeed = _currentUser.Feeds[_currentUser.Feeds.Count - 1];
                 String category = addedFeed.Category;
                 if (category == null) category = "";
-                if (CategoryFeeds.ContainsKey(category)) CategoryFeeds[category].Add(addedFeed);
+                if (!CategoryFeeds.ContainsKey(category)) CategoryFeeds[category] = new List<Feed>();
+                CategoryFeeds[category].Add(addedFeed);
                 return addedFeed;
             }
             return null;
@@ -260,6 +261,16 @@ namespace Weave.Common
                 String category = feed.Category;
                 if (category == null) category = "";
                 if (CategoryFeeds.ContainsKey(category)) CategoryFeeds[category].Remove(feed);
+            }
+        }
+
+        public async Task RemoveCategoryFeeds(String category, List<Feed> feeds)
+        {
+            if (_currentUser != null)
+            {
+                await _currentUser.BatchChange(null, feeds, null);
+                if (category == null) category = "";
+                if (CategoryFeeds.ContainsKey(category)) CategoryFeeds.Remove(category);
             }
         }
 

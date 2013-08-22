@@ -13,6 +13,7 @@ namespace Weave.Common
     public class NavigationItemStyleSelector : StyleSelector
     {
         public Style FeedStyle { get; set; }
+        public Style CoreCategoryStyle { get; set; }
         public Style CategoryStyle { get; set; }
         public Style AddStyle { get; set; }
         public Style SpacerStyle { get; set; }
@@ -26,7 +27,11 @@ namespace Weave.Common
                 {
                     CategoryViewModel vm = (CategoryViewModel)item;
                     if (vm.Type == CategoryViewModel.CategoryType.Other) return SpacerStyle;
-                    else return CategoryStyle;
+                    else
+                    {
+                        if (vm.Type == CategoryViewModel.CategoryType.Specific) return CategoryStyle;
+                        else return CoreCategoryStyle;
+                    }
                 }
                 else if (item is FeedManagementViewModel) return AddStyle;
                 else if (item is SpacerViewModel) return SpacerStyle;

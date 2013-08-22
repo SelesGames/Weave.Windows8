@@ -55,7 +55,11 @@ namespace Weave.ViewModels.Browse
         {
             _categories = null;
             _categoryItems = null;
-            _categoryFeedMap.Clear();
+            if (_categoryFeedMap != null)
+            {
+                _categoryFeedMap.Clear();
+                _categoryFeedMap = null;
+            }
             IsInitialised = false;
         }
 
@@ -179,6 +183,17 @@ namespace Weave.ViewModels.Browse
             if (feed != null)
             {
                 await UserHelper.Instance.RemoveFeed(feed.Feed);
+                Reset();
+            }
+        }
+
+        public async void RemoveCategory(CategoryViewModel category, List<FeedItemViewModel> feeds)
+        {
+            if (category != null)
+            {
+                List<Feed> remove = new List<Feed>();
+                foreach (FeedItemViewModel vm in feeds) remove.Add(vm.Feed);
+                await UserHelper.Instance.RemoveCategoryFeeds(category.Info.Category, remove);
                 Reset();
             }
         }

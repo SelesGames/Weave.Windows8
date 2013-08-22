@@ -122,6 +122,7 @@
     <Compile Include="Common\TestData.cs" />
     <Compile Include="Common\UserHelper.cs" />
     <Compile Include="Common\VariableGridView.cs" />
+    <Compile Include="Common\WeaveOptions.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -143,6 +144,9 @@
     <Compile Include="ViewModels\StartHub\StartSourcesViewModel.cs" />
     <Compile Include="Views\Browse\FeedManagement.xaml.cs">
       <DependentUpon>FeedManagement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Browse\FontSizeSelection.xaml.cs">
+      <DependentUpon>FontSizeSelection.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StartHub\AddView.xaml.cs">
       <DependentUpon>AddView.xaml</DependentUpon>
@@ -243,6 +247,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Browse\FeedManagement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Browse\FontSizeSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

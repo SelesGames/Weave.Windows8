@@ -13,7 +13,6 @@ namespace Weave.Common
     {
         private static Formatter _formatter = new Formatter();
         private static Client _client = new Client();
-        private const int BaseArticleFontSize = 16;
 
         public static async Task<String> GetMobilizedHtml(NewsItem item)
         {
@@ -56,7 +55,7 @@ namespace Weave.Common
                 else sourceIcon = SourceIconHelper.GetWebIcon(item.Feed.Uri);
 
                 double scale = Windows.Graphics.Display.DisplayProperties.LogicalDpi / 96;
-                int fontsize = (int)(BaseArticleFontSize * scale);
+                int fontsize = (int)((int)WeaveOptions.CurrentFontSize * scale);
 
                 result = await _formatter.CreateHtml(item.FormattedForMainPageSourceAndDate.Replace('•', '|'), item.Title, item.Link, sb.ToString(), "#333333", "#FFFFFF", "Cambria", fontsize + "pt", "#E96113", imageUrl, sourceIcon);
             }

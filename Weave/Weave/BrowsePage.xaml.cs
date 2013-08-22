@@ -312,6 +312,11 @@ namespace Weave
                 _nav.ClearCategoryNewCount(category);
                 _feed.SetFeedParam(NewsFeed.FeedType.Category, category.Info.Category);
                 if (category.Type == CategoryViewModel.CategoryType.All) entry = EntryType.Peek;
+                else if (category.RequiresRefresh)
+                {
+                    category.RequiresRefresh = false;
+                    entry = EntryType.ExtendRefresh;
+                }
                 await _feed.LoadInitialData(entry);
             }
         }
@@ -680,21 +685,82 @@ namespace Weave
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            if (button != null && button.DataContext is FeedItemViewModel)
+            if (button != null)
             {
-                FeedItemViewModel vm = (FeedItemViewModel)button.DataContext;
-                MessageDialog dialog = new MessageDialog("Are you sure you wish to remove this feed?", "Confirmation");
-                dialog.Commands.Add(new UICommand("Remove", null, "Remove"));
-                dialog.Commands.Add(new UICommand("Cancel", null, null));
-                dialog.CancelCommandIndex = 1;
-                IUICommand result = await dialog.ShowAsync();
-                if (result.Id != null)
+                if (button.DataContext is FeedItemViewModel)
                 {
-                    GrdVwNavigation.SelectedIndex = NavigationViewModel.DefaultInitialSelection;
-                    _nav.RemoveFeed(vm);
-                    _feedManageVm.RemoveFeed(vm);
+                    FeedItemViewModel vm = (FeedItemViewModel)button.DataContext;
+                    MessageDialog dialog = new MessageDialog("Are you sure you wish to remove this feed?", "Confirmation");
+                    dialog.Commands.Add(new UICommand("Remove", null, "Remove"));
+                    dialog.Commands.Add(new UICommand("Cancel", null, null));
+                    dialog.CancelCommandIndex = 1;
+                    IUICommand result = await dialog.ShowAsync();
+                    if (result.Id != null)
+                    {
+                        GrdVwNavigation.SelectedIndex = NavigationViewModel.DefaultInitialSelection;
+                        _nav.RemoveFeed(vm);
+                        _feedManageVm.RemoveFeed(vm);
+                    }
+                }
+                else if (button.DataContext is CategoryViewModel)
+                {
+                    CategoryViewModel vm = (CategoryViewModel)button.DataContext;
+                    MessageDialog dialog = new MessageDialog("This will remove all the feeds in this category. Are you sure?", "Confirmation");
+                    dialog.Commands.Add(new UICommand("Remove", null, "Remove"));
+                    dialog.Commands.Add(new UICommand("Cancel", null, null));
+                    dialog.CancelCommandIndex = 1;
+                    IUICommand result = await dialog.ShowAsync();
+                    if (result.Id != null)
+                    {
+                        GrdVwNavigation.SelectedIndex = NavigationViewModel.DefaultInitialSelection;
+                        List<FeedItemViewModel> feeds = _nav.GetCategoryFeeds(vm);
+                        _nav.RemoveCategory(vm);
+                        _feedManageVm.RemoveCategory(vm, feeds);
+                    }
                 }
             }
+        }
+
+        private void AppBarFontSize_Click(object sender, RoutedEventArgs e)
+        {
+            Rect rect = DisplayUtilities.GetPopupElementRect(sender as FrameworkElement);
+            PopupAppBarMenu.HorizontalOffset = rect.Left + 10;
+            PopupAppBarMenu.VerticalOffset = -212;
+            PopupAppBarMenu.IsOpen = true;
+            //PopupMenu menu = new PopupMenu();
+            //menu.Commands.Add(new UICommand("Small", null, WeaveOptions.FontSize.Small));
+            //menu.Commands.Add(new UICommand("Medium", null, WeaveOptions.FontSize.Medium));
+            //menu.Commands.Add(new UICommand("Large", null, WeaveOptions.FontSize.Large));
+            //IUICommand result = await menu.ShowForSelectionAsync(DisplayUtilities.GetPopupElementRect(sender as FrameworkElement), Placement.Above);
+            //if (result != null && result.Id is WeaveOptions.FontSize)
+            //{
+            //    WeaveOptions.CurrentFontSize = (WeaveOptions.FontSize)result.Id;
+            //    if (ScrlVwrArticle.Visibility == Windows.UI.Xaml.Visibility.Visible)
+            //    {
+            //        String[] parameters = { ((int)WeaveOptions.CurrentFontSize).ToString() + "pt" };
+            //        WebVwArticle.InvokeScript("setTextSize", parameters);
+            //    }
+            //}
+        }
+
+        private void PopupAppBarMenu_Opened(object sender, object e)
+        {
+            SbAppBarMenuPopIn.Begin();
+        }
+
+        private void PopupAppBarMenu_Closed(object sender, object e)
+        {
+
+        }
+
+        private void FontSizeControl_FontSizeChanged(object sender, WeaveOptions.FontSize newSize)
+        {
+            if (ScrlVwrArticle.Visibility == Windows.UI.Xaml.Visibility.Visible)
+            {
+                String[] parameters = { ((int)WeaveOptions.CurrentFontSize).ToString() + "pt" };
+                WebVwArticle.InvokeScript("setTextSize", parameters);
+            }
+            PopupAppBarMenu.IsOpen = false;
         }
 
 

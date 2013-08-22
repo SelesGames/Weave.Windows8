@@ -110,7 +110,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Name="TxtNewCategory" IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" Background="#E0E0E0" Margin="0,0,0,0" TextChanged="TxtNewCategory_TextChanged" VerticalContentAlignment="Center">
+                    <TextBox Name="TxtBxNewCategory" IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" Background="#E0E0E0" Margin="0,0,0,0" TextChanged="TxtNewCategory_TextChanged" VerticalContentAlignment="Center">
                         <TextBox.InputScope>
                             <InputScope>
                                 <InputScope.Names>
@@ -120,7 +120,7 @@
                         </TextBox.InputScope>
                     </TextBox>
                     <TextBlock Name="TxtBlkNewCategoryOverlay" Text="Add new category" IsHitTestVisible="False" Opacity="0.5" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" Margin="10,0,0,0" />
-                    <Button Name="BtnAddNewCategory" Style="{StaticResource ButtonStyleBasic}" Width="28" Background="{StaticResource WeaveBrush}" Grid.Column="1" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5,3,0,3">
+                    <Button Name="BtnAddNewCategory" Style="{StaticResource ButtonStyleBasic}" Width="28" Background="{StaticResource WeaveBrush}" Grid.Column="1" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5,3,0,3" Click="BtnAddNewCategory_Click">
                         <TextBlock Text="" FontFamily="Segoe UI Symbol" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
                 </Grid>
