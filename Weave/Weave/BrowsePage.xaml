@@ -886,9 +886,9 @@
                         <Button x:Name="AppBarFavorite" Style="{StaticResource FavoriteAppBarButtonStyle}" Click="AppBarFavorite_Click" />
                         <Button x:Name="AppBarUnfavorite" Style="{StaticResource UnfavoriteAppBarButtonStyle}" Click="AppBarUnfavorite_Click" Visibility="{Binding ElementName=AppBarFavorite, Path=Visibility, Converter={StaticResource VisibilityInverter}}" />
                     </Grid>
+                    <Button x:Name="AppBarFontSize" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Font size" Content="&#xE185;" Click="AppBarFontSize_Click" />
                 </StackPanel>
                 <StackPanel x:Name="RightPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-                    <Button x:Name="AppBarFontSize" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Font size" Content="&#xE185;" Click="AppBarFontSize_Click" />
                     <Button x:Name="AppBarRefresh" Style="{StaticResource RefreshAppBarButtonStyle}" Click="AppBarRefresh_Click" />
                 </StackPanel>
             </Grid>
