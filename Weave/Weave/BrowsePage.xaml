@@ -758,14 +758,14 @@
         <ScrollViewer Name="ScrlVwrArticle" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Width="975" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White">
             <ScrollViewer.Resources>
                 <Storyboard x:Name="SbArticleFlyIn">
-                    <DoubleAnimation Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="975" To="0" Duration="0:0:0.1">
+                    <DoubleAnimation x:Name="AnimArticleFlyIn" Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="975" To="0" Duration="0:0:0.1">
                         <DoubleAnimation.EasingFunction>
                             <QuadraticEase EasingMode="EaseIn"/>
                         </DoubleAnimation.EasingFunction>
                     </DoubleAnimation>
                 </Storyboard>
                 <Storyboard x:Name="SbArticleFlyOut" Completed="SbArticleFlyOut_Completed">
-                    <DoubleAnimation Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="0" To="975" Duration="0:0:0.2">
+                    <DoubleAnimation x:Name="AnimArticleFlyOut" Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="0" To="975" Duration="0:0:0.2">
                         <DoubleAnimation.EasingFunction>
                             <QuadraticEase EasingMode="EaseOut"/>
                         </DoubleAnimation.EasingFunction>

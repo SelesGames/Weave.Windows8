@@ -44,7 +44,8 @@ namespace Weave.Mobilizer.Client
             string fontSize, 
             string linkColor,
             string imageLink,
-            string sourceIconLink
+            string sourceIconLink,
+            int width
             )
         {
             if (!areTemplatesLoaded)
@@ -54,6 +55,9 @@ namespace Weave.Mobilizer.Client
             else sourceIconLink = "";
 
             var sb = new StringBuilder();
+
+            String widthStr = String.Format("{0}px", width);
+            String leftMargin = String.Format("-{0}px", width / 2);
                 
             sb
                 .AppendLine(htmlTemplate1)
@@ -67,9 +71,18 @@ namespace Weave.Mobilizer.Client
                         .Replace("[ACCENT]", linkColor)
                         .ToString())
 
-                .AppendLine(imageLink == null ? cssTextHeader : cssImageHeader.Replace("[IMAGE_URL]", imageLink))
+                .AppendLine(imageLink == null ? new StringBuilder(cssTextHeader)
+                                                .Replace("[WIDTH]", widthStr)
+                                                .Replace("[LEFT_MARGIN]", leftMargin)
+                                                .ToString()
+                                                :
+                                                new StringBuilder(cssImageHeader)
+                                                .Replace("[IMAGE_URL]", imageLink)
+                                                .Replace("[WIDTH]", widthStr)
+                                                .Replace("[LEFT_MARGIN]", leftMargin)
+                                                .ToString())
 
-                .AppendLine(htmlTemplate2)
+                .AppendLine(htmlTemplate2.Replace("[WIDTH]", widthStr))
 
                 //.AppendLine(imageLink == null ? "" : String.Format("<img src=\"{0}\" width=\"750px\" style=\"margin: 0\" />", imageLink))
 

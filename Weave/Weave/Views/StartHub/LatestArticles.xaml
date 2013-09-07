@@ -67,7 +67,24 @@
             </Grid>
         </DataTemplate>
 
-        <common:StartLatestItemSelector x:Key="StartLatestItemSelector" MainTemplate="{StaticResource MainTemplate}" LargeNoImageTemplate="{StaticResource LargeNoImageTemplate}" SmallTemplate="{StaticResource SmallTemplate}" />
+        <DataTemplate x:Key="SmallNoImageTemplate">
+            <Grid VariableSizedWrapGrid.ColumnSpan="{Binding WidthSpan}" VariableSizedWrapGrid.RowSpan="{Binding HeightSpan}" Margin="4" RightTapped="Grid_RightTapped">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Rectangle Grid.RowSpan="2" Fill="White" Opacity="0.05" />
+                <TextBlock Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" VerticalAlignment="Top" Foreground="White" FontWeight="Light" Margin="10,4,10,0" TextTrimming="None" />
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="10,0,10,10">
+                    <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" Width="20" Height="20" Margin="0,0,10,0" />
+                    <TextBlock Text="{Binding NewsItem.OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="80" VerticalAlignment="Center" />
+                    <TextBlock Text="|" Margin="5,-3,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding NewsItem.PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <common:StartLatestItemSelector x:Key="StartLatestItemSelector" MainTemplate="{StaticResource MainTemplate}" LargeNoImageTemplate="{StaticResource LargeNoImageTemplate}" SmallTemplate="{StaticResource SmallTemplate}" SmallNoImageTemplate="{StaticResource SmallNoImageTemplate}" />
 
     </UserControl.Resources>
 

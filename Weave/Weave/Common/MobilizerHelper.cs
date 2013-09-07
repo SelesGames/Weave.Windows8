@@ -14,7 +14,7 @@ namespace Weave.Common
         private static Formatter _formatter = new Formatter();
         private static Client _client = new Client();
 
-        public static async Task<String> GetMobilizedHtml(NewsItem item)
+        public static async Task<String> GetMobilizedHtml(NewsItem item, int fontSize, int articleWidth)
         {
             String result = null;
 
@@ -54,15 +54,12 @@ namespace Weave.Common
                 if (item.HasImage) imageUrl = item.ImageUrl;
                 else sourceIcon = SourceIconHelper.GetWebIcon(item.Feed.Uri);
 
-                double scale = Windows.Graphics.Display.DisplayProperties.LogicalDpi / 96;
-                int fontsize = (int)((int)WeaveOptions.CurrentFontSize * scale);
-
-                result = await _formatter.CreateHtml(item.FormattedForMainPageSourceAndDate.Replace('•', '|'), item.Title, item.Link, sb.ToString(), "#333333", "#FFFFFF", "Cambria", fontsize + "pt", "#E96113", imageUrl, sourceIcon);
+                result = await _formatter.CreateHtml(item.FormattedForMainPageSourceAndDate.Replace('•', '|'), item.Title, item.Link, sb.ToString(), "#333333", "#FFFFFF", "Cambria", fontSize + "pt", "#E96113", imageUrl, sourceIcon, articleWidth);
             }
             catch (Exception e)
             {
                 App.LogError("Error getting mobilized html", e);
-                result = null;
+                return null;
             }
 
             return result;

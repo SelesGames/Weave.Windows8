@@ -44,7 +44,8 @@ namespace Weave
 
         private int _initialFeedCount = 20;
 
-        private const int DefaultBrowserWidth = 975;
+        private const int DefaultBrowserWidth = 817;
+        private int _browserDisplayWidth = DefaultBrowserWidth;
 
         private Stack<Uri> _browserBackStack = new Stack<Uri>();
 
@@ -249,7 +250,9 @@ namespace Weave
                     NewsItem initialSelection = _feed.FindItemById(_initialSelectedItemId.Value);
                     if (initialSelection != null)
                     {
+                        _showAppBarOnSelection = false;
                         itemGridView.SelectedItem = initialSelection;
+                        _showAppBarOnSelection = true;
                         await Task.Delay(1); // allow rendering of page
                         ShowArticle(initialSelection, false);
                         _initialSelectedItemId = null;
@@ -326,19 +329,33 @@ namespace Weave
             itemGridView.Visibility = Windows.UI.Xaml.Visibility.Visible;
         }
 
+        public static int GetFontSize()
+        {
+            double scale = Windows.Graphics.Display.DisplayProperties.LogicalDpi / 96;
+            return (int)((int)WeaveOptions.CurrentFontSize * scale);
+        }
+
+        public static int GetArticleWidth(int fontSize)
+        {
+            return (int)(fontSize * 41);
+        }
+
         private void ShowArticle(NewsItem item, bool showLoading = true)
         {
             _browserBackStack.Clear();
             BtnBrowserBack.IsEnabled = false;
             if (item != null)
             {
+                int fontSize = GetFontSize();
+                int articleWidth = GetArticleWidth(fontSize);
+                AdjustArticleViewWidth(articleWidth + 160);
                 RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 ScrlVwrArticle.DataContext = item;
                 ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 PrgRngArticleLoading.IsActive = true;
                 if (showLoading) WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 SbArticleFlyIn.Begin();
-                ParseArticle(item);
+                ParseArticle(item, fontSize, articleWidth);
             }
         }
 
@@ -374,10 +391,10 @@ namespace Weave
             ScrlVwrArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             WebVwArticle.NavigateToString("");
             GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            ScrlVwrArticle.Width = DefaultBrowserWidth;
+            ScrlVwrArticle.Width = _browserDisplayWidth;
         }
 
-        private async void ParseArticle(NewsItem item)
+        private async void ParseArticle(NewsItem item, int fontSize, int articleWidth)
         {
             if (item != null)
             {
@@ -387,10 +404,10 @@ namespace Weave
                 if (item.Feed.ArticleViewingType == ArticleViewingType.Mobilizer)
                 {
                     loadWebBrowser = false;
-                    String content = await MobilizerHelper.GetMobilizedHtml(item);
-                    if (content != null)
+                    String result = await MobilizerHelper.GetMobilizedHtml(item, fontSize, articleWidth);
+                    if (result != null)
                     {
-                        WebVwArticle.NavigateToString(content);
+                        WebVwArticle.NavigateToString(result);
                     }
                     else
                     {
@@ -757,10 +774,25 @@ namespace Weave
         {
             if (ScrlVwrArticle.Visibility == Windows.UI.Xaml.Visibility.Visible)
             {
-                String[] parameters = { ((int)WeaveOptions.CurrentFontSize).ToString() + "pt" };
+                int fontSize = GetFontSize();
+                String[] parameters = { fontSize.ToString() };
                 WebVwArticle.InvokeScript("setTextSize", parameters);
+
+                int articleWidth = GetArticleWidth(fontSize);
+                AdjustArticleViewWidth(articleWidth + 160);
             }
             PopupAppBarMenu.IsOpen = false;
+        }
+
+        private void AdjustArticleViewWidth(int width)
+        {
+            if (_browserDisplayWidth != width)
+            {
+                _browserDisplayWidth = width;
+                ScrlVwrArticle.Width = width;
+                AnimArticleFlyIn.From = width;
+                AnimArticleFlyOut.To = width;
+            }
         }
 
 
