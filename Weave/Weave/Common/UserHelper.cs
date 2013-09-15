@@ -16,6 +16,8 @@ namespace Weave.Common
     {
         private const String CloudUrlPrefix = "http://weave-user.cloudapp.net/api/user/";
         private const String CurrentUserId = "b41e8972-60cd-43cb-9974-0ec028bedf68";
+        private const String DefaultUserIdKey = "DefaultUserId";
+        private const String LoggedInUserIdKey = "LoggedInUser";
         private const String UserInfoUrlFormat = CloudUrlPrefix + "info?userId={0}";
 
         private String _currentUserId = CurrentUserId;
@@ -186,6 +188,23 @@ namespace Weave.Common
                 }
             }
             return false;
+        }
+
+        private bool _isNewUser = false;
+
+        public String GetCurrentUser()
+        {
+            String id = null;
+            ApplicationDataContainer settingsContainer = RoamingSettings;
+            if (settingsContainer.Values.ContainsKey(LoggedInUserIdKey)) id = settingsContainer.Values[LoggedInUserIdKey] as String;
+            else if (settingsContainer.Values.ContainsKey(DefaultUserIdKey)) id = settingsContainer.Values[DefaultUserIdKey] as String;
+            else
+            {
+                // first start, generate and store new id and create user on cloud
+                _isNewUser = true;
+            }
+
+            return id;
         }
 
         /// <summary>

@@ -157,6 +157,9 @@
     <Compile Include="Views\StartHub\ClusterView.xaml.cs">
       <DependentUpon>ClusterView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\StartHub\FirstLaunchView.xaml.cs">
+      <DependentUpon>FirstLaunchView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StartHub\HeroArticleView.xaml.cs">
       <DependentUpon>HeroArticleView.xaml</DependentUpon>
     </Compile>
@@ -188,6 +191,22 @@
     <Content Include="Assets\Buttons\FavAddButtonPressed.png" />
     <Content Include="Assets\Buttons\FavRemoveButton.png" />
     <Content Include="Assets\Buttons\FavRemoveButtonPressed.png" />
+    <Content Include="Assets\FirstLaunch\Business.png" />
+    <Content Include="Assets\FirstLaunch\Business_Selected.png" />
+    <Content Include="Assets\FirstLaunch\Gaming.png" />
+    <Content Include="Assets\FirstLaunch\Gaming_Selected.png" />
+    <Content Include="Assets\FirstLaunch\Microsoft.png" />
+    <Content Include="Assets\FirstLaunch\Microsoft_Selected.png" />
+    <Content Include="Assets\FirstLaunch\ScienceAndAstronomy.png" />
+    <Content Include="Assets\FirstLaunch\ScienceAndAstronomy_Selected.png" />
+    <Content Include="Assets\FirstLaunch\Sports.png" />
+    <Content Include="Assets\FirstLaunch\Sports_Selected.png" />
+    <Content Include="Assets\FirstLaunch\Technology.png" />
+    <Content Include="Assets\FirstLaunch\Technology_Selected.png" />
+    <Content Include="Assets\FirstLaunch\USNews.png" />
+    <Content Include="Assets\FirstLaunch\USNews_Selected.png" />
+    <Content Include="Assets\FirstLaunch\WorldNews.png" />
+    <Content Include="Assets\FirstLaunch\WorldNews_Selected.png" />
     <Content Include="Assets\LiveTile.png" />
     <Content Include="Assets\LiveTileWide.png" />
     <Content Include="Assets\Logo.png" />
@@ -263,6 +282,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\StartHub\ClusterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\StartHub\FirstLaunchView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

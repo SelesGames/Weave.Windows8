@@ -767,7 +767,6 @@ namespace Weave
 
         private void PopupAppBarMenu_Closed(object sender, object e)
         {
-
         }
 
         private void FontSizeControl_FontSizeChanged(object sender, WeaveOptions.FontSize newSize)

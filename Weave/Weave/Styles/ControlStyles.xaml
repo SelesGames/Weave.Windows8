@@ -536,7 +536,7 @@
                                     </Border>
                                     <Rectangle x:Name="PointerOverBorder" Fill="#1B1B1B" IsHitTestVisible="False" Margin="1" Opacity="0"/>
                                     <Rectangle x:Name="FocusVisual" IsHitTestVisible="False" Opacity="0" Stroke="{StaticResource ListViewItemFocusBorderThemeBrush}" StrokeThickness="2"/>
-                                    <Rectangle x:Name="SelectionBackground" Fill="{StaticResource WeaveBrush}" Margin="4" Opacity="0"/>
+                                    <Rectangle x:Name="SelectionBackground" Fill="{StaticResource WeaveBrush}" Margin="4" Opacity="0" Visibility="Collapsed"/>
                                     <Border x:Name="ContentBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Margin="4">
                                         <Grid>
                                             <ContentPresenter x:Name="contentPresenter" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
@@ -546,7 +546,7 @@
                                             <Rectangle x:Name="MultiArrangeOverlayBackground" Fill="{StaticResource ListViewItemDragBackgroundThemeBrush}" IsHitTestVisible="False" Opacity="0"/>
                                         </Grid>
                                     </Border>
-                                    <Border x:Name="SelectedCheckMarkOuter" HorizontalAlignment="Right" IsHitTestVisible="False" Margin="4,10,10,4" Padding="{TemplateBinding BorderThickness}" VerticalAlignment="Top">
+                                    <Border x:Name="SelectedCheckMarkOuter" HorizontalAlignment="Right" IsHitTestVisible="False" Margin="4,5,5,4" Padding="{TemplateBinding BorderThickness}" VerticalAlignment="Top">
                                         <Grid x:Name="SelectedCheckMark" Height="40" Opacity="0" Width="40">
                                             <Path x:Name="SelectedEarmark" Data="M0,0 L40,0 L40,40 z" Fill="{StaticResource WeaveBrush}" Stretch="Fill"/>
                                             <Path Data="F1 M133.1,17.9 L137.2,13.2 L144.6,19.6 L156.4,5.8 L161.2,9.9 L145.6,28.4 z" Fill="{StaticResource ListViewItemCheckThemeBrush}" FlowDirection="LeftToRight" HorizontalAlignment="Right" Height="13" Margin="0,5.5,5.5,0" Stretch="Fill" VerticalAlignment="Top" Width="15"/>

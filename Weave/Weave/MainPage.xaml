@@ -286,6 +286,10 @@
             <Image Name="ImgLogo" Source="/Assets/Logo.png" Grid.Column="1" Stretch="None" HorizontalAlignment="Left" Margin="-5,0,0,0" />
         </Grid>-->
 
+        <Grid Name="GrdFirstLaunch" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" Grid.RowSpan="2">
+            <views:FirstLaunchView x:Name="FirstLaunchControl" Margin="120,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        </Grid>
+
         <Popup Name="PopupListSelector" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupListSelector_Opened">
             <Popup.Resources>
                 <Storyboard x:Name="SbListSelectorPopIn">

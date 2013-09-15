@@ -60,6 +60,8 @@ namespace Weave
 
                 _defaultStartItemCount = _startItems.Count - 1;
             }
+
+            FirstLaunchControl.Completed += FirstLaunchControl_Completed;
         }
 
         protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
@@ -607,6 +609,11 @@ namespace Weave
                 ApplicationDataContainer settings = UserHelper.Instance.GetUserContainer(false);
                 settings.Values[CustomHeroIdKey] = id;
             }
+        }
+
+        private void FirstLaunchControl_Completed(object obj)
+        {
+            GrdFirstLaunch.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
         }
 
     } // end of class
