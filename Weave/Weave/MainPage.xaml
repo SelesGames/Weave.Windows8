@@ -267,7 +267,7 @@
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
 
-        <Grid Name="GrdMainLogo" Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" IsHitTestVisible="False" RenderTransformOrigin="0,0">
+        <Grid Name="GrdMainLogo" Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False" RenderTransformOrigin="0,0">
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="TranslateLogo" />
             </Grid.RenderTransform>
@@ -286,8 +286,8 @@
             <Image Name="ImgLogo" Source="/Assets/Logo.png" Grid.Column="1" Stretch="None" HorizontalAlignment="Left" Margin="-5,0,0,0" />
         </Grid>-->
 
-        <Grid Name="GrdFirstLaunch" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" Grid.RowSpan="2">
-            <views:FirstLaunchView x:Name="FirstLaunchControl" Margin="120,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Grid Name="GrdFirstLaunch" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" Grid.RowSpan="2" Visibility="Collapsed">
+            <views:FirstLaunchView x:Name="FirstLaunchControl" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
 
         <Popup Name="PopupListSelector" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupListSelector_Opened">

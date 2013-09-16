@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Weave.Common;
+using Weave.FeedLibrary;
+using Weave.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -64,83 +67,56 @@ namespace Weave.Views.StartHub
 
         public event Action<object> Completed;
 
+        private ExpandedLibrary _feedLibrary;
+        private Dictionary<String, List<Feed>> _categoryFeedMap = new Dictionary<string,List<Feed>>();
+
         public FirstLaunchView()
         {
             this.InitializeComponent();
+        }
 
-            InitCategories();
+        private void AddCategoryModel(String imageName, String categoryName)
+        {
+            CategoryModel model = new CategoryModel();
+            model.Name = categoryName;
+            if (_categoryFeedMap.ContainsKey(categoryName)) model.SourceCount = _categoryFeedMap[categoryName].Count;
+            model.UnselectedImage = String.Format(ImagePathFormat, imageName); ;
+            model.SelectedImage = String.Format(ImagePathFormat, imageName + "_Selected");
+            _items.Add(model);
+        }
+
+        private async void InitCategories()
+        {
+            PrgRngLoading.IsActive = true;
+            _feedLibrary = new ExpandedLibrary(ViewModels.Browse.FeedManagementViewModel.FeedsUrl + "?xsf=" + (new Random()).Next(123, 978));
+            List<Feed> feeds = await _feedLibrary.Feeds.Value;
+            String key;
+            if (feeds != null)
+            {
+                foreach (Feed f in feeds)
+                {
+                    key = f.Category == null ? "" : f.Category;
+                    if (!_categoryFeedMap.ContainsKey(key)) _categoryFeedMap[key] = new List<Feed>();
+                    _categoryFeedMap[key].Add(f);
+                }
+            }
+
+            AddCategoryModel("Business", "Business");
+            AddCategoryModel("Gaming", "Gaming");
+            AddCategoryModel("Microsoft", "Microsoft");
+            AddCategoryModel("ScienceAndAstronomy", "Science & Astronomy");
+            AddCategoryModel("Sports", "Sports");
+            AddCategoryModel("Technology", "Technology");
+            AddCategoryModel("USNews", "U.S. News");
+            AddCategoryModel("WorldNews", "World News");
+
+            PrgRngLoading.IsActive = false;
+
             GrdVwCategories.ItemsSource = _items;
 
             GrdVwCategories.SelectedItems.Add(_items[2]);
             GrdVwCategories.SelectedItems.Add(_items[5]);
             GrdVwCategories.SelectedItems.Add(_items[7]);
-        }
-
-        private void InitCategories()
-        {
-            CategoryModel model = new CategoryModel();
-            String imageName = "Business";
-            model.Name = "Business";
-            model.SourceCount = 12;
-            model.UnselectedImage = String.Format(ImagePathFormat, imageName); ;
-            model.SelectedImage = String.Format(ImagePathFormat, imageName + "_Selected");
-            _items.Add(model);
-
-            model = new CategoryModel();
-            imageName = "Gaming";
-            model.Name = "Gaming";
-            model.SourceCount = 6;
-            model.UnselectedImage = String.Format(ImagePathFormat, imageName); ;
-            model.SelectedImage = String.Format(ImagePathFormat, imageName + "_Selected");
-            _items.Add(model);
-
-            model = new CategoryModel();
-            imageName = "Microsoft";
-            model.Name = "Microsoft";
-            model.SourceCount = 7;
-            model.UnselectedImage = String.Format(ImagePathFormat, imageName); ;
-            model.SelectedImage = String.Format(ImagePathFormat, imageName + "_Selected");
-            _items.Add(model);
-
-            model = new CategoryModel();
-            imageName = "ScienceAndAstronomy";
-            model.Name = "Science & Astronomy";
-            model.SourceCount = 4;
-            model.UnselectedImage = String.Format(ImagePathFormat, imageName); ;
-            model.SelectedImage = String.Format(ImagePathFormat, imageName + "_Selected");
-            _items.Add(model);
-
-            model = new CategoryModel();
-            imageName = "Sports";
-            model.Name = "Sports";
-            model.SourceCount = 9;
-            model.UnselectedImage = String.Format(ImagePathFormat, imageName); ;
-            model.SelectedImage = String.Format(ImagePathFormat, imageName + "_Selected");
-            _items.Add(model);
-
-            model = new CategoryModel();
-            imageName = "Technology";
-            model.Name = "Technology";
-            model.SourceCount = 14;
-            model.UnselectedImage = String.Format(ImagePathFormat, imageName); ;
-            model.SelectedImage = String.Format(ImagePathFormat, imageName + "_Selected");
-            _items.Add(model);
-
-            model = new CategoryModel();
-            imageName = "USNews";
-            model.Name = "U.S. News";
-            model.SourceCount = 6;
-            model.UnselectedImage = String.Format(ImagePathFormat, imageName); ;
-            model.SelectedImage = String.Format(ImagePathFormat, imageName + "_Selected");
-            _items.Add(model);
-
-            model = new CategoryModel();
-            imageName = "WorldNews";
-            model.Name = "World News";
-            model.SourceCount = 19;
-            model.UnselectedImage = String.Format(ImagePathFormat, imageName); ;
-            model.SelectedImage = String.Format(ImagePathFormat, imageName + "_Selected");
-            _items.Add(model);
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
@@ -179,6 +155,11 @@ namespace Weave.Views.StartHub
             {
                 GrdVwCategories.SelectedItems.Add(e.ClickedItem);
             }
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (_items.Count == 0) InitCategories();
         }
     }
 }

@@ -66,7 +66,6 @@ namespace Weave
 
         protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
         {
-            PrgRngLoadingMain.IsActive = true;
             ClusterHelper.ClusterRemoved += ClusterHelper_ClusterRemoved;
             Weave.Views.StartHub.LatestArticles.HeroSelected += LatestArticles_HeroSelected;
         }
@@ -157,6 +156,15 @@ namespace Weave
 
         private async void pageRoot_Loaded(object sender, RoutedEventArgs e)
         {
+            GrdMainLogo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            GrdFirstLaunch.Visibility = Windows.UI.Xaml.Visibility.Visible;
+        }
+
+        private async Task InitMainPage()
+        {
+            GrdMainLogo.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            PrgRngLoadingMain.IsActive = true;
+
             if (!_mainScrollNotificationBound)
             {
                 App.RegisterForNotification("HorizontalOffset", MainScrollViewer, 0, MainScrollChanged);
@@ -614,6 +622,7 @@ namespace Weave
         private void FirstLaunchControl_Completed(object obj)
         {
             GrdFirstLaunch.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            InitMainPage();
         }
 
     } // end of class

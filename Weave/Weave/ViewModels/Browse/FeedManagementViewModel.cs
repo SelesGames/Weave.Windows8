@@ -11,7 +11,7 @@ namespace Weave.ViewModels.Browse
     public class FeedManagementViewModel : BindableBase
     {
         public event Action<object, Feed> FeedAdded;
-        private const String FeedsUrl = "http://weave.blob.core.windows.net/settings/masterfeeds.xml";
+        public const String FeedsUrl = "http://weave.blob.core.windows.net/settings/masterfeeds.xml";
 
         private ExpandedLibrary _feedLibrary;
         private Dictionary<String, List<FeedItemViewModel>> _categoryFeedMap;
