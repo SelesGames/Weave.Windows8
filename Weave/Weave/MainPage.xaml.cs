@@ -156,8 +156,16 @@ namespace Weave
 
         private async void pageRoot_Loaded(object sender, RoutedEventArgs e)
         {
-            GrdMainLogo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            GrdFirstLaunch.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            PrgRngLoadingMain.IsActive = true;
+            if (UserHelper.Instance.IsNewUser)
+            {
+                GrdMainLogo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                GrdFirstLaunch.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            }
+            else
+            {
+                await InitMainPage();
+            }
         }
 
         private async Task InitMainPage()
@@ -622,6 +630,7 @@ namespace Weave
         private void FirstLaunchControl_Completed(object obj)
         {
             GrdFirstLaunch.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            UserHelper.Instance.IsNewUser = false;
             InitMainPage();
         }
 

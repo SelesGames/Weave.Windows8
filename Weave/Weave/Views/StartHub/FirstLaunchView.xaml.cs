@@ -67,7 +67,7 @@ namespace Weave.Views.StartHub
 
         public event Action<object> Completed;
 
-        private ExpandedLibrary _feedLibrary;
+        private BundledLibrary _feedLibrary;
         private Dictionary<String, List<Feed>> _categoryFeedMap = new Dictionary<string,List<Feed>>();
 
         public FirstLaunchView()
@@ -85,19 +85,21 @@ namespace Weave.Views.StartHub
             _items.Add(model);
         }
 
-        private async void InitCategories()
+        private void InitCategories()
         {
-            PrgRngLoading.IsActive = true;
-            _feedLibrary = new ExpandedLibrary(ViewModels.Browse.FeedManagementViewModel.FeedsUrl + "?xsf=" + (new Random()).Next(123, 978));
-            List<Feed> feeds = await _feedLibrary.Feeds.Value;
-            String key;
-            if (feeds != null)
+            using (System.Xml.XmlReader reader = System.Xml.XmlReader.Create("Assets/FirstLaunch/FirstLaunchFeeds.xml"))
             {
-                foreach (Feed f in feeds)
+                _feedLibrary = new BundledLibrary(reader);
+                List<Feed> feeds = _feedLibrary.Feeds.Value;
+                String key;
+                if (feeds != null)
                 {
-                    key = f.Category == null ? "" : f.Category;
-                    if (!_categoryFeedMap.ContainsKey(key)) _categoryFeedMap[key] = new List<Feed>();
-                    _categoryFeedMap[key].Add(f);
+                    foreach (Feed f in feeds)
+                    {
+                        key = f.Category == null ? "" : f.Category;
+                        if (!_categoryFeedMap.ContainsKey(key)) _categoryFeedMap[key] = new List<Feed>();
+                        _categoryFeedMap[key].Add(f);
+                    }
                 }
             }
 
@@ -109,8 +111,6 @@ namespace Weave.Views.StartHub
             AddCategoryModel("Technology", "Technology");
             AddCategoryModel("USNews", "U.S. News");
             AddCategoryModel("WorldNews", "World News");
-
-            PrgRngLoading.IsActive = false;
 
             GrdVwCategories.ItemsSource = _items;
 

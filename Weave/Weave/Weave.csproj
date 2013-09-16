@@ -193,6 +193,7 @@
     <Content Include="Assets\Buttons\FavRemoveButtonPressed.png" />
     <Content Include="Assets\FirstLaunch\Business.png" />
     <Content Include="Assets\FirstLaunch\Business_Selected.png" />
+    <Content Include="Assets\FirstLaunch\FirstLaunchFeeds.xml" />
     <Content Include="Assets\FirstLaunch\Gaming.png" />
     <Content Include="Assets\FirstLaunch\Gaming_Selected.png" />
     <Content Include="Assets\FirstLaunch\Microsoft.png" />
@@ -323,6 +324,14 @@
       <Project>{2b4d1af0-8c77-475d-8d14-db7b506f9450}</Project>
       <Name>Weave.Article.Service.DTOs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Identity.Service.Contracts\Weave.Identity.Service.Contracts.csproj">
+      <Project>{cce98720-6054-4ef8-ba8c-14821b35ec1d}</Project>
+      <Name>Weave.Identity.Service.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Identity.Service.DTOs\Weave.Identity.Service.DTOs.csproj">
+      <Project>{6fa5ac47-653a-4634-8bca-cf68ba33f884}</Project>
+      <Name>Weave.Identity.Service.DTOs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.User.Service.Contracts\Weave.User.Service.Contracts.csproj">
       <Project>{02f3363f-7b0f-4c5f-9123-b388f2870c35}</Project>
       <Name>Weave.User.Service.Contracts</Name>
@@ -362,6 +371,10 @@
     <ProjectReference Include="..\Weave.FeedSearchService\Weave.FeedSearchService.csproj">
       <Project>{76361b4a-f393-409d-bdd8-3cda0cc5d118}</Project>
       <Name>Weave.FeedSearchService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weave.Identity.Service.Client\Weave.Identity.Service.Client.csproj">
+      <Project>{ea654d32-eb8d-4ea6-a4c7-c4cb6f48a443}</Project>
+      <Name>Weave.Identity.Service.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\Weave.Mobilizer.Client\Weave.Mobilizer.Client.csproj">
       <Project>{e69950f6-0a2e-4481-adcf-839301969b3e}</Project>

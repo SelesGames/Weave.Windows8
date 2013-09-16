@@ -6,11 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D8AF7F32-F682-4D59-9FD0-85FF1FDE49F4}</ProjectGuid>
+    <ProjectGuid>{EA654D32-EB8D-4EA6-A4C7-C4CB6F48A443}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Weave.FeedLibrary</RootNamespace>
-    <AssemblyName>Weave.FeedLibrary</AssemblyName>
+    <RootNamespace>Weave.Identity.Service.Client</RootNamespace>
+    <AssemblyName>Weave.Identity.Service.Client</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -100,9 +100,17 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.ViewModels\Weave.ViewModels.csproj">
-      <Project>{0f188fc9-d10c-48db-917a-ff1cb9c8e795}</Project>
-      <Name>Weave.ViewModels</Name>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Identity.Service.Contracts\Weave.Identity.Service.Contracts.csproj">
+      <Project>{cce98720-6054-4ef8-ba8c-14821b35ec1d}</Project>
+      <Name>Weave.Identity.Service.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Identity.Service.DTOs\Weave.Identity.Service.DTOs.csproj">
+      <Project>{6fa5ac47-653a-4634-8bca-cf68ba33f884}</Project>
+      <Name>Weave.Identity.Service.DTOs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SelesGames.Rest.JsonDotNet\SelesGames.Rest.JsonDotNet.csproj">
+      <Project>{467aacf0-a84b-46bd-9fe4-1ad6849f4e72}</Project>
+      <Name>SelesGames.Rest.JsonDotNet</Name>
     </ProjectReference>
     <ProjectReference Include="..\SelesGames.Rest\SelesGames.Rest.csproj">
       <Project>{b9cb0e64-278a-4cc3-add0-1651622d5209}</Project>
@@ -110,9 +118,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BundledLibrary.cs" />
-    <Compile Include="ExpandedLibrary.cs" />
-    <Compile Include="LinqToXmlExtensions.cs" />
+    <Compile Include="ServiceClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

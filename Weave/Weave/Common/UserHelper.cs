@@ -15,15 +15,18 @@ namespace Weave.Common
     public class UserHelper
     {
         private const String CloudUrlPrefix = "http://weave-user.cloudapp.net/api/user/";
-        private const String CurrentUserId = "b41e8972-60cd-43cb-9974-0ec028bedf68";
+        //private const String CurrentUserId = "b41e8972-60cd-43cb-9974-0ec028bedf68"; // test user
         private const String DefaultUserIdKey = "DefaultUserId";
         private const String LoggedInUserIdKey = "LoggedInUser";
         private const String UserInfoUrlFormat = CloudUrlPrefix + "info?userId={0}";
 
-        private String _currentUserId = CurrentUserId;
+        private String _currentUserId = null;
 
         private UserInfo _currentUser;
         private Weave.ViewModels.Contracts.Client.IViewModelRepository _repo;
+
+        private Weave.ViewModels.Identity.IdentityInfo _identityInfo;
+
         private bool _isLoaded;
         private bool _loading;
         private ManualResetEvent _loadingEvent = new ManualResetEvent(true);
@@ -42,6 +45,7 @@ namespace Weave.Common
 
         private UserHelper()
         {
+            _currentUserId = GetCurrentUser();
         }
 
         public Dictionary<String, List<Feed>> CategoryFeeds
@@ -90,6 +94,16 @@ namespace Weave.Common
                 {
                     _loading = true;
                     _loadingEvent.Reset();
+
+                    //_identityInfo = new ViewModels.Identity.IdentityInfo(new Weave.Identity.Service.Client.ServiceClient());
+                    //_identityInfo.UserId = Guid.Parse("b41e8972-60cd-43cb-9974-0ec028bedf68");
+                    //try
+                    //{
+                    //    await _identityInfo.LoadFromUserId();
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //}
 
                     _repo = new ViewModels.Repository.StandardRepository(
                         new Weave.User.Service.Client.Client(),
@@ -202,9 +216,16 @@ namespace Weave.Common
             {
                 // first start, generate and store new id and create user on cloud
                 _isNewUser = true;
+                id = "b41e8972-60cd-43cb-9974-0ec028bedf68";
             }
 
             return id;
+        }
+
+        public bool IsNewUser
+        {
+            get { return _isNewUser; }
+            set { _isNewUser = value; }
         }
 
         /// <summary>

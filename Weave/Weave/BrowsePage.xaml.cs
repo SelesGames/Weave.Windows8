@@ -236,6 +236,21 @@ namespace Weave
                 {
                     UpdateMainScrollOrientation(state);
                 }
+
+                UpdateTemplateSelector();
+            }
+        }
+
+        private void UpdateTemplateSelector()
+        {
+            switch (WeaveOptions.CurrentFontSize)
+            {
+                //case WeaveOptions.FontSize.Large:
+                //    itemGridView.ItemTemplateSelector = this.Resources["ArticleSelectorLarge"] as DataTemplateSelector;
+                //    break;
+                default:
+                    itemGridView.ItemTemplateSelector = this.Resources["ArticleSelector"] as DataTemplateSelector;
+                    break;
             }
         }
 
@@ -780,6 +795,7 @@ namespace Weave
                 int articleWidth = GetArticleWidth(fontSize);
                 AdjustArticleViewWidth(articleWidth + 160);
             }
+            UpdateTemplateSelector();
             PopupAppBarMenu.IsOpen = false;
         }
 

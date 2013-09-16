@@ -625,10 +625,32 @@
             </Grid>
         </DataTemplate>
 
+        <DataTemplate x:Key="ArticleImageItemTemplateLarge">
+            <Grid HorizontalAlignment="Left" Width="350" Height="350" Margin="0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="160" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Height="200" Background="{StaticResource ImagePlaceholderBrush}">
+                    <Image Source="{Binding ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </Border>
+                <TextBlock Grid.Row="1" Text="{Binding Title}" FontSize="15" Foreground="White" FontWeight="SemiBold" Margin="0,20,0,0" MaxHeight="40" TextTrimming="None" TextWrapping="Wrap" />
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,3,0,0">
+                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="200" />
+                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="New!" FontSize="12" Foreground="{StaticResource WeaveBrush}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
         <common:BrowseArticleSelector x:Name="ArticleSelector" ImageTemplate="{StaticResource ArticleImageItemTemplate}" TextTemplate="{StaticResource ArticleTextItemTemplate}" />
 
+        <common:BrowseArticleSelector x:Name="ArticleSelectorLarge" ImageTemplate="{StaticResource ArticleImageItemTemplateLarge}" TextTemplate="{StaticResource ArticleTextItemTemplate}" />
+
         <Style x:Key="GridViewStyleLandscape" TargetType="GridView">
-            <Setter Property="ItemTemplateSelector" Value="{StaticResource ArticleSelector}" />
+            <!--<Setter Property="ItemTemplateSelector" Value="{StaticResource ArticleSelector}" />-->
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
