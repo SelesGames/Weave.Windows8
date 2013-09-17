@@ -10,6 +10,7 @@ namespace Weave.ViewModels.Browse
 {
     public class FeedManagementViewModel : BindableBase
     {
+        public event Action<object> CategoriesLoaded;
         public event Action<object, Feed> FeedAdded;
         public const String FeedsUrl = "http://weave.blob.core.windows.net/settings/masterfeeds.xml";
 
@@ -41,6 +42,7 @@ namespace Weave.ViewModels.Browse
                         _categories.Sort();
                         OnPropertyChanged("Categories");
                         IsInitialised = true;
+                        if (CategoriesLoaded != null) CategoriesLoaded(this);
                     }
                 }
                 catch (Exception)

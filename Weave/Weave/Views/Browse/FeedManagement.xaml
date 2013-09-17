@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Foreground="{StaticResource SubtleTextBrush}"
+    Loaded="UserControl_Loaded"
     >
     
     <UserControl.Resources>
@@ -31,7 +32,7 @@
                     <Border Background="#A1A1A1">
                         <Image Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     </Border>
-                    <Button Name="BtnAdd" Style="{StaticResource ButtonStyleBasic}" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=TxtBlkAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}" Click="BtnAdd_Click">
+                    <Button Name="BtnAdd" Style="{StaticResource ButtonStyleBasic}" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=TxtBlkAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}" Click="BtnAdd_Click" Padding="15" Margin="-15">
                         <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
                             <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </Border>
@@ -66,7 +67,7 @@
             <GridView Name="GrdVwCategories" ItemsSource="{Binding Categories}" Grid.Row="1" Width="340" Margin="0,0,0,0" SelectionChanged="GrdVwCategories_SelectionChanged" ItemContainerStyle="{StaticResource GridViewItemStyleBrowse}" ItemTemplate="{StaticResource CategoryTemplate}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" VerticalAlignment="Stretch" RenderTransformOrigin="0,0" HorizontalAlignment="Left">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel />
+                        <StackPanel SizeChanged="StackPanel_SizeChanged" />
                     </ItemsPanelTemplate>
                 </GridView.ItemsPanel>
             </GridView>

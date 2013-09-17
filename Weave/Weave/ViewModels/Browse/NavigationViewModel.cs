@@ -142,7 +142,7 @@ namespace Weave.ViewModels.Browse
                 {
                     FeedItemViewModel feedVm = new FeedItemViewModel(feed);
                     feedVm.ParentCategory = categoryVm;
-                    feedVm.RequiresRefresh = true;
+                    //feedVm.RequiresRefresh = true;
                     _items.Insert(categoryIndex + 1 + feedIndex, feedVm);
                     _cateogyrFeedsMap[categoryVm].Insert(feedIndex, feedVm);
                     return feedVm;
@@ -163,7 +163,7 @@ namespace Weave.ViewModels.Browse
                 }
             }
 
-            if (index >= feeds.Count) return -1;
+            if (index > feeds.Count) return -1;
             return index;
         }
 

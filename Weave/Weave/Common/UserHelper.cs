@@ -132,12 +132,26 @@ namespace Weave.Common
 
         public async Task<NewsList> GetCategoryNews(String category, int start, int count, EntryType entry)
         {
-            return await _currentUser.GetNewsForCategory(category, entry, start, count);
+            try
+            {
+                return await _currentUser.GetNewsForCategory(category, entry, start, count);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<NewsList> GetFeedNews(Guid feedId, int start, int count, EntryType entry)
         {
-            return await _currentUser.GetNewsForFeed(feedId, entry, start, count);
+            try
+            {
+                return await _currentUser.GetNewsForFeed(feedId, entry, start, count);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<List<NewsItem>> GetFavorites(int start, int count)
@@ -285,6 +299,7 @@ namespace Weave.Common
             {
                 await _currentUser.AddFeed(feed);
                 Feed addedFeed = _currentUser.Feeds[_currentUser.Feeds.Count - 1];
+                _currentUser.GetNewsForFeed(addedFeed.Id, EntryType.ExtendRefresh, 0, 0);
                 String category = addedFeed.Category;
                 if (category == null) category = "";
                 if (!CategoryFeeds.ContainsKey(category)) CategoryFeeds[category] = new List<Feed>();

@@ -59,8 +59,8 @@ namespace Weave.Views.Browse
             if (button != null)
             {
                 Rect bounds = DisplayUtilities.GetPopupElementRect(button);
-                PopupAddToCategory.HorizontalOffset = bounds.Left;
-                PopupAddToCategory.VerticalOffset = bounds.Top + bounds.Height;
+                PopupAddToCategory.HorizontalOffset = bounds.Left + button.Padding.Left;
+                PopupAddToCategory.VerticalOffset = bounds.Top + bounds.Height - button.Padding.Top;
                 List<String> availableCategories = UserHelper.Instance.GetAvailableCategories();
                 LstBxAvailableCategories.ItemsSource = availableCategories;
                 PopupAddToCategory.Tag = button.DataContext;
@@ -156,11 +156,22 @@ namespace Weave.Views.Browse
             String category = TxtBxNewCategory.Text;
             if (vm != null && !String.IsNullOrEmpty(category))
             {
+                TxtBxNewCategory.Text = "";
                 vm.AddFeedToCategory(category, PopupAddToCategory.Tag as FeedItemViewModel);
             }
 
             LstBxAvailableCategories.SelectedItem = null;
             PopupAddToCategory.IsOpen = false;
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void StackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (GrdVwCategories.Items.Count > 0) GrdVwCategories.SelectedIndex = 0;
         }
 
     } // end of class

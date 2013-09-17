@@ -13,7 +13,7 @@ namespace Weave.Common
 
         private static Dictionary<String, String> _mapping = new Dictionary<string, string>()
         {
-            {"http://feeds.guardian.co.uk/theguardian/world/rss", "TheGuardian.png"},
+            {"http://feeds.guardian.co.uk/theguardian/sport/rss", "TheGuardian.png"},
             {"http://rss.cnn.com/rss/cnn_world.rss", "CNN.png"},
             {"http://www.huffingtonpost.com/feeds/android/world_pulse.xml", "HuffingtonPost.png"},
             {"http://www.telegraph.co.uk/news/worldnews/rss", "TheTelegraph.png"},
@@ -38,7 +38,7 @@ namespace Weave.Common
             {"http://www.polygon.com/rss/index.xml", "Polygon.png"},
             {"http://www.joystiq.com/rss.xml", "Joystiq.png"},
             {"http://feeds.ign.com/ign/games-articles", "IGN.png"},
-            {"http://feeds.gawker.com/kotaku/full", "Kotaku.png"},
+            {"http://feeds.gawker.com/kotaku/vip", "Kotaku.png"},
             {"http://feeds.bbci.co.uk/sport/0/rss.xml", "BBCSports.png"}
         };
 

@@ -427,7 +427,13 @@
                                     <VisualState x:Name="Selecting">
                                         <Storyboard>
                                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectionBackground"/>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BtnDelete"/>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="Visibility" Storyboard.TargetName="BtnDelete">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
                                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
                                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectingGlyph"/>
                                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="HintGlyphBorder"/>
@@ -436,7 +442,13 @@
                                     <VisualState x:Name="Selected">
                                         <Storyboard>
                                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectionBackground"/>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BtnDelete"/>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="Visibility" Storyboard.TargetName="BtnDelete">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
                                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="contentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="#FFFFFF"/>
@@ -446,7 +458,13 @@
                                     <VisualState x:Name="SelectedSwiping">
                                         <Storyboard>
                                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectionBackground"/>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BtnDelete"/>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="Visibility" Storyboard.TargetName="BtnDelete">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
                                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
                                         </Storyboard>
                                     </VisualState>
@@ -463,7 +481,13 @@
                                     <VisualState x:Name="SelectedUnfocused">
                                         <Storyboard>
                                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectionBackground"/>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BtnDelete"/>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="Visibility" Storyboard.TargetName="BtnDelete">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
                                             <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="contentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="#FFFFFF"/>
@@ -574,8 +598,8 @@
                                                 <Rectangle x:Name="MultiArrangeOverlayBackground" Fill="{StaticResource ListViewItemDragBackgroundThemeBrush}" IsHitTestVisible="False" Opacity="0"/>
                                             </Grid>
                                         </Border>
-                                        <Button Name="BtnDelete" Style="{StaticResource ButtonStyleBasic}" HorizontalAlignment="Right" Margin="0,0,20,0" Opacity="0" Click="BtnDelete_Click">
-                                            <TextBlock Text="&#xE106;" FontFamily="Segoe UI Symbol" VerticalAlignment="Center" Foreground="{StaticResource SubtleTextBrush}" />
+                                        <Button Name="BtnDelete" Style="{StaticResource ButtonStyleBasic}" HorizontalAlignment="Right" Margin="0,0,20,0" Visibility="Collapsed" Click="BtnDelete_Click" Background="{StaticResource BrowseSelectionBrush}">
+                                            <TextBlock Text="&#xE115;" FontFamily="Segoe UI Symbol" VerticalAlignment="Center" Foreground="{StaticResource SubtleTextBrush}" />
                                         </Button>
                                         <TextBlock x:Name="MultiArrangeOverlayText" Foreground="{StaticResource ListViewItemDragForegroundThemeBrush}" FontSize="26.667" FontFamily="{StaticResource ContentControlThemeFontFamily}" IsHitTestVisible="False" Margin="18,9,0,0" Opacity="0" TextWrapping="Wrap" Text="{Binding TemplateSettings.DragItemsCount, RelativeSource={RelativeSource Mode=TemplatedParent}}" TextTrimming="WordEllipsis"/>
                                     </Grid>
@@ -846,14 +870,14 @@
             </StackPanel>-->
         </ScrollViewer>
 
-        <Popup Name="PopupManageFeeds" Margin="0,0,0,0" HorizontalAlignment="Left" Grid.RowSpan="2" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Closed="PopupManageFeeds_Closed" Opened="PopupManageFeeds_Opened">
+        <Popup Name="PopupManageFeeds" Margin="0,0,0,0" Grid.RowSpan="2" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Closed="PopupManageFeeds_Closed" Opened="PopupManageFeeds_Opened">
             <Popup.Resources>
                 <Storyboard x:Name="SbManageFeedsPopIn">
-                    <PopInThemeAnimation TargetName="GrdFlyoutContent" FromVerticalOffset="0" FromHorizontalOffset="346" />
+                    <PopInThemeAnimation TargetName="GrdFlyoutContent" FromVerticalOffset="0" FromHorizontalOffset="-346" />
                 </Storyboard>
             </Popup.Resources>
             <Grid Name="GrdFlyoutContent" Height="{Binding ElementName=GrdRoot, Path=ActualHeight}">
-                <browse:FeedManagement x:Name="FeedManagementControl" Width="1030" />
+                <browse:FeedManagement x:Name="FeedManagementControl" Width="1030" HorizontalAlignment="Left" />
             </Grid>
         </Popup>
 

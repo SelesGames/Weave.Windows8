@@ -296,11 +296,11 @@ namespace Weave
         {
             _nav.ClearFeedNewCount(feed);
             _feed.SetFeedParam(NewsFeed.FeedType.Feed, feed.Feed.Id);
-            if (feed.RequiresRefresh)
-            {
-                refresh = true;
-                feed.RequiresRefresh = false;
-            }
+            //if (feed.RequiresRefresh)
+            //{
+            //    refresh = true;
+            //    feed.RequiresRefresh = false;
+            //}
             await _feed.LoadInitialData(refresh ? EntryType.ExtendRefresh : EntryType.Mark);
             
         }
@@ -554,7 +554,7 @@ namespace Weave
 
         private void RectOverlay_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            CloseArticle();
+            if (ScrlVwrArticle.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
         }
 
         private async void ReadTimer_Tick(object sender, object e)
@@ -657,11 +657,13 @@ namespace Weave
 
         private void PopupManageFeeds_Closed(object sender, object e)
         {
+            RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             FeedManagementControl.ClearData();
         }
 
         private async void PopupManageFeeds_Opened(object sender, object e)
         {
+            RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Visible;
             SbManageFeedsPopIn.Begin();
             if (!_feedManageVm.IsInitialised)
             {
@@ -719,31 +721,26 @@ namespace Weave
             Button button = sender as Button;
             if (button != null)
             {
-                if (button.DataContext is FeedItemViewModel)
+                PopupMenu menu = new PopupMenu();
+                //if (button.DataContext is CategoryViewModel)
+                //{
+                //    menu.Commands.Add(new UICommand("Add source...", null, "Add"));
+                //    menu.Commands.Add(new UICommandSeparator());
+                //}
+                menu.Commands.Add(new UICommand("Delete"));
+                IUICommand result = await menu.ShowForSelectionAsync(DisplayUtilities.GetPopupElementRect(button), Placement.Below);
+                if (result != null)
                 {
-                    FeedItemViewModel vm = (FeedItemViewModel)button.DataContext;
-                    MessageDialog dialog = new MessageDialog("Are you sure you wish to remove this feed?", "Confirmation");
-                    dialog.Commands.Add(new UICommand("Remove", null, "Remove"));
-                    dialog.Commands.Add(new UICommand("Cancel", null, null));
-                    dialog.CancelCommandIndex = 1;
-                    IUICommand result = await dialog.ShowAsync();
-                    if (result.Id != null)
+                    if (button.DataContext is FeedItemViewModel)
                     {
+                        FeedItemViewModel vm = (FeedItemViewModel)button.DataContext;
                         GrdVwNavigation.SelectedIndex = NavigationViewModel.DefaultInitialSelection;
                         _nav.RemoveFeed(vm);
                         _feedManageVm.RemoveFeed(vm);
                     }
-                }
-                else if (button.DataContext is CategoryViewModel)
-                {
-                    CategoryViewModel vm = (CategoryViewModel)button.DataContext;
-                    MessageDialog dialog = new MessageDialog("This will remove all the feeds in this category. Are you sure?", "Confirmation");
-                    dialog.Commands.Add(new UICommand("Remove", null, "Remove"));
-                    dialog.Commands.Add(new UICommand("Cancel", null, null));
-                    dialog.CancelCommandIndex = 1;
-                    IUICommand result = await dialog.ShowAsync();
-                    if (result.Id != null)
+                    else if (button.DataContext is CategoryViewModel)
                     {
+                        CategoryViewModel vm = (CategoryViewModel)button.DataContext;
                         GrdVwNavigation.SelectedIndex = NavigationViewModel.DefaultInitialSelection;
                         List<FeedItemViewModel> feeds = _nav.GetCategoryFeeds(vm);
                         _nav.RemoveCategory(vm);

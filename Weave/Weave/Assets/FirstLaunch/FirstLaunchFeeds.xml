@@ -5,18 +5,10 @@
     <Feed Name="Business Insider">http://feeds2.feedburner.com/businessinsider</Feed>
     <Feed Name="Fast Company">http://feeds.feedburner.com/fastcompany/headlines</Feed>
     <Feed Name="Forbes">http://www.forbes.com/business/index.xml</Feed>
-    <Feed Name="Reuters">http://feeds.reuters.com/reuters/businessNews</Feed>
-    <Feed Name="Signal vs. Noise">http://feeds.feedburner.com/37signals/beMH</Feed>
-    <Feed Name="The Guardian">http://www.guardian.co.uk/business/rss</Feed>
-    <Feed Name="The Telegraph">http://www.telegraph.co.uk/finance/rss</Feed>
-    <Feed Name="The Wall Street Journal">http://feeds.marketwatch.com/marketwatch/topstories/</Feed>
   </Category>
 
 
   <Category Type="Gaming">
-    <Feed Name="Ars Technica">http://feeds.arstechnica.com/arstechnica/gaming</Feed>
-    <Feed Name="G4">http://g4tv.com/rss/news/all</Feed>
-    <Feed Name="Gamasutra">http://feeds.feedburner.com/GamasutraNews</Feed>
     <Feed Name="IGN.com">http://feeds.ign.com/ign/games-articles</Feed>
     <Feed Name="Joystiq.com">http://www.joystiq.com/rss.xml</Feed>
     <Feed Name="Kotaku" in="mu">http://feeds.gawker.com/kotaku/vip</Feed>
@@ -35,59 +27,42 @@
 
 
   <Category Type="Science &amp; Astronomy">
-    <Feed Name="Astronomy.com">http://www.astronomy.com/rss/news</Feed>
-    <Feed Name="Disover Magazine">http://feeds.feedburner.com/DiscoverMag</Feed>
+    <Feed Name="Earth Techling">http://www.earthtechling.com/customfeed/</Feed>
     <Feed Name="io9">http://feeds.gawker.com/io9/vip</Feed>
-    <Feed Name="NASA Watch">http://feeds.feedburner.com/nasawatch/Aekt</Feed>
+    <Feed Name="KQED Quest">http://www.kqed.org/quest/blog/feed/</Feed>
     <Feed Name="Popular Science">http://www.popsci.com/rss.xml</Feed>
-    <Feed Name="Scientific American">http://rss.sciam.com/ScientificAmerican-Global</Feed>
+    <Feed Name="Smithsonian Science">http://smithsonianscience.org/feed/</Feed>
     <Feed Name="Wired Science" ViewType="ie">http://www.wired.com/wiredscience/feed/</Feed>
+    <Feed Name="Universe Today">http://feeds.feedburner.com/universetoday/pYdq</Feed>
   </Category>
 
 
   <Category Type="Sports">
-    <Feed Name="Bleacher Report">http://bleacherreport.com/articles;feed</Feed>
     <Feed Name="Deadspin">http://feeds.gawker.com/deadspin/vip</Feed>
-    <Feed Name="ESPN" ViewType="ie">http://sports.espn.go.com/espn/rss/news</Feed>
-    <Feed Name="L.A. Times">http://feeds.latimes.com/latimes/sports</Feed>
     <Feed Name="SI.com" ViewType="ie">http://rss.cnn.com/rss/si_topstories.rss</Feed>
-    <Feed Name="The Guardian">http://feeds.guardian.co.uk/theguardian/sport/rss</Feed>
-    <Feed Name="Yahoo! Sports">http://sports.yahoo.com/top/rss.xml</Feed>
   </Category>
 
 
   <Category Type="Technology">
     <Feed Name="All Things Digital">http://allthingsd.com/category/news/feed</Feed>
-    <Feed Name="AnandTech">http://www.anandtech.com/rss/</Feed>
     <Feed Name="CNET">http://feeds.feedburner.com/cnet/NnTv?tag=contentBody.1</Feed>
     <Feed Name="TechCrunch">http://feeds.feedburner.com/Techcrunch</Feed>
     <Feed Name="The Next Web">http://feeds2.feedburner.com/thenextweb</Feed>
     <Feed Name="The Verge">http://www.theverge.com/rss/index.xml</Feed>
-    <Feed Name="ZDNet">http://www.zdnet.com/search?t=1&amp;mode=rss</Feed>
   </Category>
   
 
   <Category Type="U.S. News">
-    <Feed Name="CNN">http://rss.cnn.com/rss/cnn_us.rss</Feed>
-    <Feed Name="L.A. Times">http://feeds.latimes.com/latimes/news/nationworld/nation</Feed>
     <Feed Name="MSNBC" ViewType="ie">http://rss.msnbc.msn.com/id/3032524/device/rss/rss.xml</Feed>
     <Feed Name="The Atlantic Wire">http://feeds.feedburner.com/TheAtlanticWire</Feed>
     <Feed Name="The New Yorker">http://pipes.yahoo.com/pipes/pipe.run?_id=d0f11f71c7db0ddb409f24431f767024&amp;_render=rss</Feed>
-    <Feed Name="United Press International">http://rss.upi.com/pulse/top_news.rss</Feed>
-    <Feed Name="USA Today" ViewType="ie">http://api.usatoday.com/articles/rss-full/topnews?api_key=pulsereader</Feed>
-    <Feed Name="U.S. News &amp; World Report">http://www.usnews.com/topics/series/pulse/rss_full</Feed>
   </Category>
   
   
   <Category Type="World News">
-    <Feed Name="Chicago Tribune">http://feeds.chicagotribune.com/chicagotribune/news/nationworld/</Feed>
-    <Feed Name="CNN">http://rss.cnn.com/rss/cnn_world.rss</Feed>
-    <Feed Name="Huffington Post">http://www.huffingtonpost.com/feeds/android/World_pulse.xml</Feed>
-    <Feed Name="L.A. Times">http://feeds.latimes.com/latimes/news/nationworld/world</Feed>
-    <Feed Name="MSNBC">http://rss.msnbc.msn.com/id/3032506/device/rss/rss.xml</Feed>
-    <Feed Name="The Guardian">http://feeds.guardian.co.uk/theguardian/world/rss</Feed>
     <Feed Name="The Telegraph">http://www.telegraph.co.uk/news/worldnews/rss</Feed>
-    <Feed Name="Worldcrunch">http://www.worldcrunch.com/feed</Feed>
+    <Feed Name="The Guardian">http://feeds.guardian.co.uk/theguardian/world/rss</Feed>
+    <Feed Name="Huffington Post">http://www.huffingtonpost.com/feeds/android/World_pulse.xml</Feed>
   </Category>
   
 </Feeds>
