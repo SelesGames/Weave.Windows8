@@ -50,7 +50,7 @@
             <TextBlock Text="NEWS READER" Foreground="{StaticResource SubtleTextBrush}" />
         </StackPanel>
         <TextBlock Margin="0,40,0,0" Grid.Row="1" Text="Choose a couple of categories..." Style="{StaticResource SubheaderTextStyle}" />
-        <GridView Name="GrdVwCategories" Grid.Row="2" Margin="-5,15,-5,-5" Width="1050" SelectionMode="Extended" IsItemClickEnabled="True" ItemContainerStyle="{StaticResource GridViewItemStyleWeave}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" VerticalAlignment="Stretch" RenderTransformOrigin="0,0" HorizontalAlignment="Stretch" ItemTemplate="{StaticResource CategoryTemplate}" SelectionChanged="GrdVwCategories_SelectionChanged" ItemClick="GrdVwCategories_ItemClick">
+        <GridView Name="GrdVwCategories" Grid.Row="2" Margin="-5,15,-5,-5" Width="1050" SelectionMode="Extended" IsItemClickEnabled="True" ItemContainerStyle="{StaticResource GridViewItemStyleWeave}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" VerticalAlignment="Stretch" RenderTransformOrigin="0,0" HorizontalAlignment="Stretch" ItemTemplate="{StaticResource CategoryTemplate}" SelectionChanged="GrdVwCategories_SelectionChanged" ItemClick="GrdVwCategories_ItemClick">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapGrid Orientation="Horizontal" />

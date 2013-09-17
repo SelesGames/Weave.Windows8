@@ -25,7 +25,8 @@ namespace Weave.Common
         private UserInfo _currentUser;
         private Weave.ViewModels.Contracts.Client.IViewModelRepository _repo;
 
-        private Weave.ViewModels.Identity.IdentityInfo _identityInfo;
+        //private Weave.Identity.Service.Client.ServiceClient _identityService;
+        //private Weave.ViewModels.Identity.IdentityInfo _identityInfo;
 
         private bool _isLoaded;
         private bool _loading;
@@ -45,6 +46,10 @@ namespace Weave.Common
 
         private UserHelper()
         {
+            _repo = new ViewModels.Repository.StandardRepository(
+                        new Weave.User.Service.Client.Client(),
+                        new Weave.Article.Service.Client.ServiceClient());
+
             _currentUserId = GetCurrentUser();
         }
 
@@ -86,8 +91,9 @@ namespace Weave.Common
             get { return _isLoaded; }
         }
 
-        public async Task LoadUser()
+        public async Task<bool> LoadUser()
         {
+            bool success = true;
             if (!_isLoaded && !_loading)
             {
                 if (!_loading)
@@ -95,20 +101,14 @@ namespace Weave.Common
                     _loading = true;
                     _loadingEvent.Reset();
 
-                    //_identityInfo = new ViewModels.Identity.IdentityInfo(new Weave.Identity.Service.Client.ServiceClient());
-                    //_identityInfo.UserId = Guid.Parse("b41e8972-60cd-43cb-9974-0ec028bedf68");
-                    //try
-                    //{
-                    //    await _identityInfo.LoadFromUserId();
-                    //}
-                    //catch (Exception e)
-                    //{
-                    //}
+                    //_identityService = new Weave.Identity.Service.Client.ServiceClient();
+                    //_identityInfo = new ViewModels.Identity.IdentityInfo(_identityService);
 
-                    _repo = new ViewModels.Repository.StandardRepository(
-                        new Weave.User.Service.Client.Client(),
-                        new Weave.Article.Service.Client.ServiceClient());
-                    _currentUser = await _repo.GetUserInfo(Guid.Parse(_currentUserId), true);
+                    if (_currentUserId != null)
+                    {
+                        _currentUser = await _repo.GetUserInfo(Guid.Parse(_currentUserId), true);
+                    }
+                    else success = false;
 
                     _loadingEvent.Set();
                     _loading = false;
@@ -127,6 +127,7 @@ namespace Weave.Common
                 //feed.Category = "Business";
                 //await _currentUser.AddFeed(feed);
             }
+            return success;
         }
 
         public async Task<NewsList> GetCategoryNews(String category, int start, int count, EntryType entry)
@@ -216,7 +217,7 @@ namespace Weave.Common
             {
                 // first start, generate and store new id and create user on cloud
                 _isNewUser = true;
-                id = "b41e8972-60cd-43cb-9974-0ec028bedf68";
+                //id = "b41e8972-60cd-43cb-9974-0ec028bedf68";
             }
 
             return id;
@@ -225,7 +226,7 @@ namespace Weave.Common
         public bool IsNewUser
         {
             get { return _isNewUser; }
-            set { _isNewUser = value; }
+            private set { _isNewUser = value; }
         }
 
         /// <summary>
@@ -311,6 +312,21 @@ namespace Weave.Common
                 await _currentUser.BatchChange(null, feeds, null);
                 if (category == null) category = "";
                 if (CategoryFeeds.ContainsKey(category)) CategoryFeeds.Remove(category);
+            }
+        }
+
+        public async Task InitUserWithFeeds(List<Feed> feeds)
+        {
+            if (feeds != null && feeds.Count > 0)
+            {
+                ApplicationDataContainer settingsContainer = RoamingSettings;
+                UserInfo newUserInfo = new UserInfo(_repo);
+                foreach (Feed f in feeds) newUserInfo.Feeds.Add(f);
+                newUserInfo.Id = Guid.NewGuid();
+                await newUserInfo.Save();
+                _currentUserId = newUserInfo.Id.ToString();
+                settingsContainer.Values[DefaultUserIdKey] = _currentUserId;
+                IsNewUser = false;
             }
         }
 

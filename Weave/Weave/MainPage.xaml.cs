@@ -23,6 +23,8 @@ using System.Runtime.Serialization.Json;
 using Weave.ViewModels;
 using Weave.ViewModels.Browse;
 using Windows.Storage;
+using Windows.UI.Popups;
+using Weave.Views.StartHub;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -60,8 +62,6 @@ namespace Weave
 
                 _defaultStartItemCount = _startItems.Count - 1;
             }
-
-            FirstLaunchControl.Completed += FirstLaunchControl_Completed;
         }
 
         protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
@@ -159,6 +159,13 @@ namespace Weave
             PrgRngLoadingMain.IsActive = true;
             if (UserHelper.Instance.IsNewUser)
             {
+                FirstLaunchView control = new FirstLaunchView();
+                control.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
+                control.VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center;
+                control.Completed += FirstLaunchControl_Completed;
+                GrdFirstLaunch.Children.Clear();
+                GrdFirstLaunch.Children.Add(control);
+
                 GrdMainLogo.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 GrdFirstLaunch.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
@@ -181,8 +188,15 @@ namespace Weave
 
             if (_latestArticlesVm.Items.Count == 0)
             {
-                await UserHelper.Instance.LoadUser();
-                await LoadViewModels();
+                bool success = await UserHelper.Instance.LoadUser();
+                if (success) await LoadViewModels();
+                else
+                {
+                    MessageDialog dialog = new MessageDialog("There was a problem connecting to Weave servers. Please restart the app and try again", "Oops!");
+                    dialog.Commands.Add(new UICommand("Ok", null, null));
+                    dialog.ShowAsync();
+                    _startItems.Clear();
+                }
             }
             LstVwMain.ItemsSource = _startItems;
             PrgRngLoadingMain.IsActive = false;
@@ -492,9 +506,9 @@ namespace Weave
                         AddCategoryCluster(category.DisplayName, category.Info.Category);
                     }
                 }
-                else if (element.DataContext is Feed)
+                else if (element.DataContext is FeedItemViewModel)
                 {
-                    Feed feed = (Feed)element.DataContext;
+                    Feed feed = ((FeedItemViewModel)element.DataContext).Feed;
                     if (PopupListSelector != null)
                     {
                         PopupListSelector.IsOpen = false;
@@ -627,11 +641,16 @@ namespace Weave
             }
         }
 
-        private void FirstLaunchControl_Completed(object obj)
+        private async void FirstLaunchControl_Completed(object obj)
         {
-            GrdFirstLaunch.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            UserHelper.Instance.IsNewUser = false;
-            InitMainPage();
+            FirstLaunchView control = obj as FirstLaunchView;
+            if (control != null)
+            {
+                GrdMainLogo.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                GrdFirstLaunch.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                await control.InitialiseUserSelectedFeeds();
+                await InitMainPage();
+            }
         }
 
     } // end of class

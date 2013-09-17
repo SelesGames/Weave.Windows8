@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Weave.Common;
 using Weave.FeedLibrary;
 using Weave.ViewModels;
@@ -122,6 +123,23 @@ namespace Weave.Views.StartHub
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             if (Completed != null) Completed(this);
+        }
+
+        public async Task InitialiseUserSelectedFeeds()
+        {
+            List<Feed> toAdd = new List<Feed>();
+            foreach (CategoryModel category in GrdVwCategories.SelectedItems)
+            {
+                String name = category.Name;
+                if (_categoryFeedMap.ContainsKey(name))
+                {
+                    foreach (Feed f in _categoryFeedMap[name])
+                    {
+                        toAdd.Add(f);
+                    }
+                }
+            }
+            await UserHelper.Instance.InitUserWithFeeds(toAdd);
         }
 
         private void GrdVwCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)

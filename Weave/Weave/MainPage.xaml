@@ -287,7 +287,7 @@
         </Grid>-->
 
         <Grid Name="GrdFirstLaunch" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" Grid.RowSpan="2" Visibility="Collapsed">
-            <views:FirstLaunchView x:Name="FirstLaunchControl" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <!--<views:FirstLaunchView x:Name="FirstLaunchControl" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />-->
         </Grid>
 
         <Popup Name="PopupListSelector" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupListSelector_Opened">
