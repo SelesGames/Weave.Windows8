@@ -193,7 +193,9 @@
     <Content Include="Assets\Buttons\FavRemoveButtonPressed.png" />
     <Content Include="Assets\FirstLaunch\Business.png" />
     <Content Include="Assets\FirstLaunch\Business_Selected.png" />
-    <Content Include="Assets\FirstLaunch\FirstLaunchFeeds.xml" />
+    <Content Include="Assets\FirstLaunch\FirstLaunchFeeds.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Assets\FirstLaunch\Gaming.png" />
     <Content Include="Assets\FirstLaunch\Gaming_Selected.png" />
     <Content Include="Assets\FirstLaunch\Microsoft.png" />

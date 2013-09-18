@@ -68,12 +68,14 @@ namespace Weave
         {
             ClusterHelper.ClusterRemoved += ClusterHelper_ClusterRemoved;
             Weave.Views.StartHub.LatestArticles.HeroSelected += LatestArticles_HeroSelected;
+            Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView().DataRequested += ShareHandler;
         }
 
         protected override void SaveState(Dictionary<string, object> pageState)
         {
             ClusterHelper.ClusterRemoved -= ClusterHelper_ClusterRemoved;
             Weave.Views.StartHub.LatestArticles.HeroSelected -= LatestArticles_HeroSelected;
+            Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView().DataRequested -= ShareHandler;
 
             ApplicationViewState viewState = ApplicationView.Value;
             if (viewState == ApplicationViewState.FullScreenPortrait || viewState == ApplicationViewState.Snapped)
@@ -651,6 +653,11 @@ namespace Weave
                 await control.InitialiseUserSelectedFeeds();
                 await InitMainPage();
             }
+        }
+
+        private void ShareHandler(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs e)
+        {
+            e.Request.FailWithDisplayText("Go to an article you'd like to share and try again.");
         }
 
     } // end of class
