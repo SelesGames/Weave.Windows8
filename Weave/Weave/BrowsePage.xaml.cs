@@ -841,7 +841,7 @@ namespace Weave
                 NewsItem item = (NewsItem)itemGridView.SelectedItem;
                 Windows.ApplicationModel.DataTransfer.DataRequest request = e.Request;
                 request.Data.Properties.Title = item.Title;
-                request.Data.SetUri(new Uri(item.OriginalFeedUri));
+                request.Data.SetUri(new Uri(item.Link));
             }
             else e.Request.FailWithDisplayText("Select an article you'd like to share and try again.");
         }
