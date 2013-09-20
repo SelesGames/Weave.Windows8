@@ -200,6 +200,14 @@ namespace Weave
                     _startItems.Clear();
                 }
             }
+            else // check if anything requires refreshing
+            {
+                if (RequireCategoryRefresh)
+                {
+                    RequireCategoryRefresh = false;
+                    _sourcesVm.InitSources();
+                }
+            }
             LstVwMain.ItemsSource = _startItems;
             PrgRngLoadingMain.IsActive = false;
 
@@ -658,6 +666,19 @@ namespace Weave
         private void ShareHandler(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs e)
         {
             e.Request.FailWithDisplayText("Go to an article you'd like to share and try again.");
+        }
+
+        private static bool _requireCategoryRefresh;
+        public static bool RequireCategoryRefresh
+        {
+            get { return _requireCategoryRefresh; }
+            set { _requireCategoryRefresh = value; }
+        }
+
+        private async void AppBarRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            PrgRngLoadingMain.IsActive = true;
+            await LoadViewModels();
         }
 
     } // end of class

@@ -15,7 +15,7 @@ namespace Weave.ViewModels
 
         public event Action<object> FirstVideoLoaded;
 
-        public enum FeedType { None, Feed, Category, Favorites };
+        public enum FeedType { None, Feed, Category, Favorites, PreviousRead };
 
         private HashSet<Guid> _idsAdded = new HashSet<Guid>();
         private int _total;
@@ -98,6 +98,10 @@ namespace Weave.ViewModels
                 case FeedType.Favorites:
                     list = new NewsList();
                     list.News = await UserHelper.Instance.GetFavorites(_idsAdded.Count, count);
+                    break;
+                case FeedType.PreviousRead:
+                    list = new NewsList();
+                    list.News = await UserHelper.Instance.GetRead(_idsAdded.Count, count);
                     break;
                 default:
                     break;

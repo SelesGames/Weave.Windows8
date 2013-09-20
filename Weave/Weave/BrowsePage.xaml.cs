@@ -37,6 +37,7 @@ namespace Weave
         public const String NavParamSelectionKey = "Selection";
         public const String NavParamSelectedCategoryKey = "Category";
         public const String NavParamSelectedSourceKey = "Source";
+        public const String NavParamSelectedSpecialKey = "Special";
 
         private NewsFeed _feed = new NewsFeed();
         private NavigationViewModel _nav = new NavigationViewModel();
@@ -100,6 +101,7 @@ namespace Weave
                 if (parameters.ContainsKey(NavParamSelectedCategoryKey)) _nav.InitialSelectedCategory = parameters[NavParamSelectedCategoryKey] as String;
                 if (parameters.ContainsKey(NavParamSelectionKey)) _initialSelectedItemId = (Guid)parameters[NavParamSelectionKey];
                 if (parameters.ContainsKey(NavParamSelectedSourceKey)) _nav.InitialSelectedFeed = (Guid)parameters[NavParamSelectedSourceKey];
+                if (parameters.ContainsKey(NavParamSelectedSpecialKey)) _nav.InitialSelectedSpecial = (CategoryViewModel.CategoryType)parameters[NavParamSelectedSpecialKey];
             }
 
             _feed.IsLoading = true;
@@ -228,6 +230,13 @@ namespace Weave
 
         private void pageRoot_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            if (e.NewSize.Height > 0)
+            {
+                double navTop = GrdVwNavigation.TransformToVisual(this).TransformPoint(new Point()).Y;
+                double maxHeight = this.ActualHeight - (navTop + BtnAddSources.ActualHeight + BtnAddSources.Margin.Top + BtnAddSources.Margin.Bottom);
+                GrdVwNavigation.MaxHeight = maxHeight;
+            }
+
             ApplicationViewState state = ApplicationView.Value;
             UpdateItemGridView(state);
         }
@@ -326,6 +335,11 @@ namespace Weave
                 _feed.SetFeedParam(NewsFeed.FeedType.Favorites, null);
                 await _feed.LoadInitialData(entry);
             }
+            else if (category.Type == CategoryViewModel.CategoryType.PreviousRead)
+            {
+                _feed.SetFeedParam(NewsFeed.FeedType.PreviousRead, null);
+                await _feed.LoadInitialData(entry);
+            }
             else if (category.Type == CategoryViewModel.CategoryType.Other)
             {
             }
@@ -365,6 +379,7 @@ namespace Weave
             BtnBrowserBack.IsEnabled = false;
             if (item != null)
             {
+                if (item.IsNew) item.IsNew = false;
                 int fontSize = GetFontSize();
                 int articleWidth = GetArticleWidth(fontSize);
                 AdjustArticleViewWidth(articleWidth + 160);
@@ -472,7 +487,7 @@ namespace Weave
                 TxtBxBrowserUrl.Text = "";
                 GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             }
-            _readTimer.Start();
+            if (_feed != null && _feed.CurrentFeedType != NewsFeed.FeedType.PreviousRead) _readTimer.Start();
         }
 
         private void TxtBxBrowserUrl_GotFocus(object sender, RoutedEventArgs e)
@@ -544,6 +559,8 @@ namespace Weave
         {
             if (e.NewSize.Height > 1 && GrdVwNavigation.SelectedIndex > 0)
             {
+                UpdateAddSourceMargin();
+
                 GrdVwNavigation.ScrollIntoView(GrdVwNavigation.Items[GrdVwNavigation.SelectedIndex]);
             }
         }
@@ -581,6 +598,7 @@ namespace Weave
 
         private async void AppBarRefresh_Click(object sender, RoutedEventArgs e)
         {
+            if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
             await ProcessSelectedNav(true);
         }
 
@@ -648,13 +666,6 @@ namespace Weave
             }
         }
 
-        private Button _btnAddSources;
-
-        private void BtnAddSources_Loaded(object sender, RoutedEventArgs e)
-        {
-            _btnAddSources = sender as Button;
-        }
-
         private void BtnAddSources_Click(object sender, RoutedEventArgs e)
         {
             PopupManageFeeds.IsOpen = true;
@@ -719,6 +730,7 @@ namespace Weave
         {
             FeedItemViewModel vm = _nav.InsertFeed(addedFeed);
             if (vm != null) GrdVwNavigation.ScrollIntoView(vm);
+            UpdateAddSourceMargin();
         }
 
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
@@ -750,7 +762,10 @@ namespace Weave
                         List<FeedItemViewModel> feeds = _nav.GetCategoryFeeds(vm);
                         _nav.RemoveCategory(vm);
                         _feedManageVm.RemoveCategory(vm, feeds);
+                        MainPage.RequireCategoryRefresh = true;
                     }
+
+                    UpdateAddSourceMargin();
                 }
             }
         }
@@ -834,6 +849,27 @@ namespace Weave
         private void AppBarShare_Click(object sender, RoutedEventArgs e)
         {
             Windows.ApplicationModel.DataTransfer.DataTransferManager.ShowShareUI();
+        }
+
+        private void UpdateAddSourceMargin()
+        {
+            return;
+            double navBottom = GrdVwNavigation.TransformToVisual(this).TransformPoint(new Point()).Y + GrdVwNavigation.ActualHeight;
+            double addSourcesTop = BtnAddSources.TransformToVisual(this).TransformPoint(new Point()).Y;
+            double spaceBetween = addSourcesTop - navBottom - 20;
+
+            if (spaceBetween > 0)
+            {
+                Thickness storeMargin = BtnAddSources.Margin;
+                BtnAddSources.Tag = storeMargin;
+
+                BtnAddSources.Margin = new Thickness(storeMargin.Left, -(spaceBetween + NavigationViewModel.NavSpacerHeight + 40), storeMargin.Right, storeMargin.Bottom);
+            }
+            else if (BtnAddSources.Tag is Thickness)
+            {
+                BtnAddSources.Margin = (Thickness)BtnAddSources.Tag;
+                BtnAddSources.Tag = null;
+            }
         }
 
 

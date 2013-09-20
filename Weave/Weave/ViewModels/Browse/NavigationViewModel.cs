@@ -18,6 +18,7 @@ namespace Weave.ViewModels.Browse
 
         public String InitialSelectedCategory { get; set; }
         public Guid? InitialSelectedFeed { get; set; }
+        public CategoryViewModel.CategoryType? InitialSelectedSpecial { get; set; }
 
         private Dictionary<CategoryViewModel, List<FeedItemViewModel>> _cateogyrFeedsMap = new Dictionary<CategoryViewModel,List<FeedItemViewModel>>();
 
@@ -28,10 +29,13 @@ namespace Weave.ViewModels.Browse
         {
             int initialSelection = DefaultInitialSelection;
             _items.Add(new CategoryViewModel() { DisplayName = "All News", Info = new CategoryInfo() { Category = "All News" }, Type = CategoryViewModel.CategoryType.All });
-            _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 2) });
+            _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 3) });
             _items.Add(new CategoryViewModel() { DisplayName = "Latest News", Type = CategoryViewModel.CategoryType.Latest });
-            _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 2) });
+            _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 3) });
+            if (InitialSelectedSpecial != null && InitialSelectedSpecial.Value == CategoryViewModel.CategoryType.Favorites) initialSelection = _items.Count;
             _items.Add(new CategoryViewModel() { DisplayName = "Favorites", Type = CategoryViewModel.CategoryType.Favorites });
+            _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 3) });
+            _items.Add(new CategoryViewModel() { DisplayName = "Previously Read", Type = CategoryViewModel.CategoryType.PreviousRead });
             _items.Add(new SpacerViewModel() { SpacerHeight = NavSpacerHeight });
 
             String noCategoryKey = "";
@@ -131,6 +135,7 @@ namespace Weave.ViewModels.Browse
                     _cateogyrFeedsMap[categoryVm] = new List<FeedItemViewModel>();
 
                     _items.Insert(categoryIndex + 1, new SpacerViewModel() { SpacerHeight = NavSpacerHeight });
+                    MainPage.RequireCategoryRefresh = true;
                 }
                 else
                 {

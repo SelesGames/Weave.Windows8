@@ -16,6 +16,7 @@ namespace Weave.ViewModels.StartHub
         {
             public String Display { get; set; }
             public String Key { get; set; }
+            public ViewModels.Browse.CategoryViewModel.CategoryType Type { get; set; }
         }
 
         private ObservableCollection<SourceListing> _items = new ObservableCollection<SourceListing>();
@@ -34,16 +35,32 @@ namespace Weave.ViewModels.StartHub
         public override void OnItemClick(object item)
         {
             Dictionary<String, object> parameters = new Dictionary<string, object>();
-            if (item is SourceListing) parameters[BrowsePage.NavParamSelectedCategoryKey] = ((SourceListing)item).Key;
+            if (item is SourceListing)
+            {
+                SourceListing listing = (SourceListing)item;
+                switch (listing.Type)
+                {
+                    case Browse.CategoryViewModel.CategoryType.Specific:
+                        parameters[BrowsePage.NavParamSelectedCategoryKey] = listing.Key;
+                        break;
+                    case Browse.CategoryViewModel.CategoryType.Favorites:
+                        parameters[BrowsePage.NavParamSelectedSpecialKey] = Browse.CategoryViewModel.CategoryType.Favorites;
+                        break;
+                    default:
+                        break;
+                }
+            }
             App.Navigate(typeof(BrowsePage), parameters);
         }
 
         public void InitSources()
         {
+            Items.Clear();
             Dictionary<String, List<Feed>> categoryFeeds = UserHelper.Instance.CategoryFeeds;
             if (categoryFeeds != null)
             {
                 int displayCount = BaseDisplayCount + ExtraRows;
+                Items.Add(new SourceListing() { Display = "Favorites", Type = Browse.CategoryViewModel.CategoryType.Favorites });
                 String category;
                 List<String> orderedKeys = new List<string>(categoryFeeds.Keys.OrderBy(s => s));
                 for (int i = 0; i < orderedKeys.Count && i <= displayCount; i++)

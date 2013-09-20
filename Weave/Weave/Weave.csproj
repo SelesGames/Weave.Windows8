@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>Weave_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -224,6 +224,7 @@
     <Content Include="Assets\SourceIcons\CNBC.png" />
     <Content Include="Assets\SourceIcons\Cnet.png" />
     <Content Include="Assets\SourceIcons\CNN.png" />
+    <Content Include="Assets\SourceIcons\Default.png" />
     <Content Include="Assets\SourceIcons\ESPN.png" />
     <Content Include="Assets\SourceIcons\FastCompany.png" />
     <Content Include="Assets\SourceIcons\HuffingtonPost.png" />

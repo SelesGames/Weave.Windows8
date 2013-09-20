@@ -159,6 +159,11 @@ namespace Weave.Common
             return await _currentUser.GetFavorites(start, count);
         }
 
+        public async Task<List<NewsItem>> GetRead(int start, int count)
+        {
+            return await _currentUser.GetRead(start, count);
+        }
+
         public async Task AddFavorite(NewsItem item)
         {
             await _currentUser.AddFavorite(item);
