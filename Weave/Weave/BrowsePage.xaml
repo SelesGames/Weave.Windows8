@@ -544,7 +544,7 @@
                                                 <Rectangle x:Name="MultiArrangeOverlayBackground" Fill="{StaticResource ListViewItemDragBackgroundThemeBrush}" IsHitTestVisible="False" Opacity="0"/>
                                             </Grid>
                                         </Border>
-                                        <Button Name="BtnDelete" Style="{StaticResource ButtonStyleBasic}" HorizontalAlignment="Right" Margin="0,0,20,0" Visibility="Collapsed" Click="BtnDelete_Click" Background="{StaticResource BrowseSelectionBrush}">
+                                        <Button Name="BtnDelete" Style="{StaticResource ButtonStyleBasic}" HorizontalAlignment="Right" Margin="0,0,0,0" Padding="0,0,20,0" Visibility="Collapsed" Click="BtnDelete_Click" Background="{StaticResource BrowseSelectionBrush}">
                                             <TextBlock Text="&#xE115;" FontFamily="Segoe UI Symbol" VerticalAlignment="Center" Foreground="{StaticResource SubtleTextBrush}" />
                                         </Button>
                                         <TextBlock x:Name="MultiArrangeOverlayText" Foreground="{StaticResource ListViewItemDragForegroundThemeBrush}" FontSize="26.667" FontFamily="{StaticResource ContentControlThemeFontFamily}" IsHitTestVisible="False" Margin="18,9,0,0" Opacity="0" TextWrapping="Wrap" Text="{Binding TemplateSettings.DragItemsCount, RelativeSource={RelativeSource Mode=TemplatedParent}}" TextTrimming="WordEllipsis"/>
@@ -592,7 +592,7 @@
                 </Border>
                 <TextBlock Grid.Row="1" Text="{Binding Title}" FontSize="15" Foreground="White" FontWeight="SemiBold" Margin="0,20,0,0" MaxHeight="40" TextTrimming="None" TextWrapping="Wrap" />
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,3,0,0">
-                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="200" />
+                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="175" />
                     <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
                     <Grid Margin="5,0,0,0">

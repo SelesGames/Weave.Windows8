@@ -10,7 +10,7 @@
     HorizontalAlignment="Left"
     >
 
-    <StackPanel Width="270" HorizontalAlignment="Left" VerticalAlignment="Top">
+    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
         <TextBlock Text=" " Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,20" />
         <Grid Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Button Name="BtnAdd" Style="{StaticResource ButtonStyleBasic}" ToolTipService.ToolTip="Add custom column">

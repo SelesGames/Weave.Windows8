@@ -140,6 +140,7 @@
     <Compile Include="ViewModels\StartHub\StartHeroArticle.cs" />
     <Compile Include="ViewModels\StartHub\StartItemBase.cs" />
     <Compile Include="ViewModels\StartHub\StartLatestViewModel.cs" />
+    <Compile Include="ViewModels\StartHub\StartLoginViewModel.cs" />
     <Compile Include="ViewModels\StartHub\StartNewsItem.cs" />
     <Compile Include="ViewModels\StartHub\StartSourcesViewModel.cs" />
     <Compile Include="Views\Browse\FeedManagement.xaml.cs">
@@ -171,6 +172,9 @@
     </Compile>
     <Compile Include="Views\StartHub\LatestArticleZoomedView.xaml.cs">
       <DependentUpon>LatestArticleZoomedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StartHub\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StartHub\SourcesView.xaml.cs">
       <DependentUpon>SourcesView.xaml</DependentUpon>
@@ -306,6 +310,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\StartHub\LatestArticleZoomedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StartHub\LoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

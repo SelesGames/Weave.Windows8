@@ -153,14 +153,18 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ClusterTemplate">
-            <views:ClusterView Margin="0,140,80,0" MinWidth="250" />
+            <views:ClusterView Margin="0,140,70,0" MinWidth="250" />
         </DataTemplate>
 
         <DataTemplate x:Key="AddTemplate">
-            <views:AddView Margin="5,140,120,0" Loaded="AddView_Loaded" />
+            <views:AddView Margin="0,140,80,0" Loaded="AddView_Loaded" />
         </DataTemplate>
 
-        <common:StartItemSelector x:Name="StartItemSelector" HeroTemplate="{StaticResource HeroTemplate}" LatestTemplate="{StaticResource LatestArticlesTemplate}" SourcesTemplate="{StaticResource SourcesTemplate}" ClusterTemplate="{StaticResource ClusterTemplate}"  AddTemplate="{StaticResource AddTemplate}" />
+        <DataTemplate x:Key="LoginTemplate">
+            <views:LoginView Margin="0,140,120,0" />
+        </DataTemplate>
+
+        <common:StartItemSelector x:Name="StartItemSelector" HeroTemplate="{StaticResource HeroTemplate}" LatestTemplate="{StaticResource LatestArticlesTemplate}" SourcesTemplate="{StaticResource SourcesTemplate}" ClusterTemplate="{StaticResource ClusterTemplate}"  AddTemplate="{StaticResource AddTemplate}" LoginTemplate="{StaticResource LoginTemplate}" />
         
         <DataTemplate x:Key="HeroTemplateZoomed">
             <views:HeroArticleZoomedView Margin="0,0,80,0" Tapped="ZoomedOutItem_Tapped" />

@@ -656,7 +656,11 @@ namespace Weave
                 AppBarUnfavorite.IsEnabled = false;
 
                 await UserHelper.Instance.RemoveFavorite(item);
-                if (_feed != null && _feed.CurrentFeedType == NewsFeed.FeedType.Favorites) _feed.Items.Remove(item);
+                if (_feed != null && _feed.CurrentFeedType == NewsFeed.FeedType.Favorites)
+                {
+                    _feed.Items.Remove(item);
+                    BottomAppBar.IsOpen = false;
+                }
 
                 if (!_navigatingAway)
                 {
