@@ -36,6 +36,7 @@ namespace Weave.FeedLibrary
                         Category = feed.Parent.Attribute("Type").ValueOrDefault(),
                         Name = feed.Attribute("Name").ValueOrDefault(),
                         Uri = feed.ValueOrDefault(),
+                        IconUrl = feed.Attribute("IconUrl").ValueOrDefault(),
                         ArticleViewingType = ParseArticleViewingType(feed),
                     })
                 .ToList();
