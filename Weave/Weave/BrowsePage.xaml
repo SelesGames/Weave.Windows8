@@ -24,60 +24,6 @@
         <common:VisibilityInverter x:Key="VisibilityInverter" />
         <common:FavoritedToVisibilityConverter x:Key="FavoritedToVisibilityConverter" />
 
-        <Style x:Key="GridViewStyleNav" TargetType="GridView">
-            <Setter Property="Padding" Value="0,0,0,10"/>
-            <Setter Property="IsTabStop" Value="False"/>
-            <Setter Property="TabNavigation" Value="Once"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
-            <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False"/>
-            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled"/>
-            <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="False"/>
-            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
-            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
-            <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
-            <Setter Property="IsSwipeEnabled" Value="True"/>
-            <Setter Property="ItemContainerTransitions">
-                <Setter.Value>
-                    <TransitionCollection>
-                        <AddDeleteThemeTransition/>
-                        <ContentThemeTransition/>
-                        <ReorderThemeTransition/>
-                        <EntranceThemeTransition IsStaggeringEnabled="False"/>
-                    </TransitionCollection>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="ItemsPanel">
-                <Setter.Value>
-                    <ItemsPanelTemplate>
-                        <WrapGrid Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="GridView">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
-                            <ScrollViewer x:Name="ScrollViewer" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}" IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
-                                <StackPanel>
-                                    <ItemsPresenter HeaderTemplate="{TemplateBinding HeaderTemplate}" Header="{TemplateBinding Header}" HeaderTransitions="{TemplateBinding HeaderTransitions}" Padding="{TemplateBinding Padding}"/>
-                                    <Button x:Name="BtnAddSources" Style="{StaticResource ButtonStyleBasic}" Margin="124,0,0,40" HorizontalAlignment="Left" Loaded="BtnAddSources_Loaded" Click="BtnAddSources_Click">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
-                                                <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                            </Border>
-                                            <TextBlock Text="Add sources" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Margin="10,0,0,0" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
-                                        </StackPanel>
-                                    </Button>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <Style x:Key="GridViewItemStyleArticle" TargetType="GridViewItem">
             <Setter Property="Padding" Value="16" />
             <Setter Property="Margin" Value="0,0,0,0" />
@@ -598,7 +544,7 @@
                                                 <Rectangle x:Name="MultiArrangeOverlayBackground" Fill="{StaticResource ListViewItemDragBackgroundThemeBrush}" IsHitTestVisible="False" Opacity="0"/>
                                             </Grid>
                                         </Border>
-                                        <Button Name="BtnDelete" Style="{StaticResource ButtonStyleBasic}" HorizontalAlignment="Right" Margin="0,0,20,0" Visibility="Collapsed" Click="BtnDelete_Click" Background="{StaticResource BrowseSelectionBrush}">
+                                        <Button Name="BtnDelete" Style="{StaticResource ButtonStyleBasic}" HorizontalAlignment="Right" Margin="0,0,0,0" Padding="0,0,20,0" Visibility="Collapsed" Click="BtnDelete_Click" Background="{StaticResource BrowseSelectionBrush}">
                                             <TextBlock Text="&#xE115;" FontFamily="Segoe UI Symbol" VerticalAlignment="Center" Foreground="{StaticResource SubtleTextBrush}" />
                                         </Button>
                                         <TextBlock x:Name="MultiArrangeOverlayText" Foreground="{StaticResource ListViewItemDragForegroundThemeBrush}" FontSize="26.667" FontFamily="{StaticResource ContentControlThemeFontFamily}" IsHitTestVisible="False" Margin="18,9,0,0" Opacity="0" TextWrapping="Wrap" Text="{Binding TemplateSettings.DragItemsCount, RelativeSource={RelativeSource Mode=TemplatedParent}}" TextTrimming="WordEllipsis"/>
@@ -624,7 +570,12 @@
                     <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="110" VerticalAlignment="Center" />
                     <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
                     <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
-                    <TextBlock Text="New!" FontSize="12" Foreground="{StaticResource WeaveBrush}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                    <Grid Margin="5,0,0,0">
+                        <Border Visibility="{Binding ElementName=FavouriteIcon, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
+                            <TextBlock Text="New!" FontSize="12" Foreground="{StaticResource WeaveBrush}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Name="FavouriteIcon" Text="&#xE113;" FontFamily="Segoe UI Symbol" Foreground="{StaticResource WeaveBrush}" FontSize="15" VerticalAlignment="Center" Visibility="{Binding DisplayState, Converter={StaticResource FavoritedToVisibilityConverter}}" Margin="0,-5,0,-5" />
+                    </Grid>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -641,10 +592,15 @@
                 </Border>
                 <TextBlock Grid.Row="1" Text="{Binding Title}" FontSize="15" Foreground="White" FontWeight="SemiBold" Margin="0,20,0,0" MaxHeight="40" TextTrimming="None" TextWrapping="Wrap" />
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,3,0,0">
-                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="200" />
+                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="175" />
                     <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="New!" FontSize="12" Foreground="{StaticResource WeaveBrush}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                    <Grid Margin="5,0,0,0">
+                        <Border Visibility="{Binding ElementName=FavouriteIcon, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
+                            <TextBlock Text="New!" FontSize="12" Foreground="{StaticResource WeaveBrush}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Name="FavouriteIcon" Text="&#xE113;" FontFamily="Segoe UI Symbol" Foreground="{StaticResource WeaveBrush}" FontSize="15" VerticalAlignment="Center" Visibility="{Binding DisplayState, Converter={StaticResource FavoritedToVisibilityConverter}}" Margin="0,-5,0,-5" />
+                    </Grid>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -664,7 +620,12 @@
                     <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="200" />
                     <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="New!" FontSize="12" Foreground="{StaticResource WeaveBrush}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                    <Grid Margin="5,0,0,0">
+                        <Border Visibility="{Binding ElementName=FavouriteIcon, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
+                            <TextBlock Text="New!" FontSize="12" Foreground="{StaticResource WeaveBrush}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Name="FavouriteIcon" Text="&#xE113;" FontFamily="Segoe UI Symbol" Foreground="{StaticResource WeaveBrush}" FontSize="15" VerticalAlignment="Center" Visibility="{Binding DisplayState, Converter={StaticResource FavoritedToVisibilityConverter}}" Margin="0,-5,0,-5" />
+                    </Grid>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -756,32 +717,42 @@
 
         <Rectangle Name="RectNavBackground" Grid.RowSpan="2" Fill="#101010" Margin="0,0,80,0" RenderTransformOrigin="0,0" RenderTransform="{Binding ElementName=LstVwNavigation, Path=RenderTransform}" />
 
-        <GridView Name="GrdVwNavigation" Style="{StaticResource GridViewStyleNav}" Width="340" SelectionChanged="GrdVwNavigation_SelectionChanged" ItemContainerStyleSelector="{StaticResource NavigationItemStyleSelector}" ItemTemplateSelector="{StaticResource NavigationItemSelector}" ItemsSource="{Binding Items}" Grid.Row="1" Margin="0,40,80,0" RenderTransformOrigin="0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <GridView.Resources>
-                <Storyboard x:Name="SbNavigationFlyIn">
-                    <DoubleAnimation Storyboard.TargetName="TranslateNavigation" Storyboard.TargetProperty="X" From="280" To="70" Duration="0:0:0.1">
-                        <DoubleAnimation.EasingFunction>
-                            <QuadraticEase EasingMode="EaseIn"/>
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-                <Storyboard x:Name="SbNavigationFlyOut">
-                    <DoubleAnimation Storyboard.TargetName="TranslateNavigation" Storyboard.TargetProperty="X" From="70" To="280" Duration="0:0:0.1">
-                        <DoubleAnimation.EasingFunction>
-                            <QuadraticEase EasingMode="EaseOut"/>
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-            </GridView.Resources>
+        <StackPanel Grid.Row="1">
+            <GridView Name="GrdVwNavigation" Width="340" SelectionChanged="GrdVwNavigation_SelectionChanged" ItemContainerStyleSelector="{StaticResource NavigationItemStyleSelector}" ItemTemplateSelector="{StaticResource NavigationItemSelector}" ItemsSource="{Binding Items}" RenderTransformOrigin="0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,40,80,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled">
+                <GridView.Resources>
+                    <Storyboard x:Name="SbNavigationFlyIn">
+                        <DoubleAnimation Storyboard.TargetName="TranslateNavigation" Storyboard.TargetProperty="X" From="280" To="70" Duration="0:0:0.1">
+                            <DoubleAnimation.EasingFunction>
+                                <QuadraticEase EasingMode="EaseIn"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                    <Storyboard x:Name="SbNavigationFlyOut">
+                        <DoubleAnimation Storyboard.TargetName="TranslateNavigation" Storyboard.TargetProperty="X" From="70" To="280" Duration="0:0:0.1">
+                            <DoubleAnimation.EasingFunction>
+                                <QuadraticEase EasingMode="EaseOut"/>
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </GridView.Resources>
                 <GridView.RenderTransform>
-                <TranslateTransform x:Name="TranslateNavigation" />
-            </GridView.RenderTransform>
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel SizeChanged="NavigationPanel_SizeChanged" />
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
-        </GridView>
+                    <TranslateTransform x:Name="TranslateNavigation" />
+                </GridView.RenderTransform>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel SizeChanged="NavigationPanel_SizeChanged" />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </GridView>
+            <Button Name="BtnAddSources" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{StaticResource ButtonStyleBasic}" Margin="124,20,0,40" Click="BtnAddSources_Click">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
+                        <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="Add sources" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Foreground="{StaticResource SubtleTextBrush}" Margin="10,0,0,0" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
 
         <!-- Back button and page title -->
         <Grid Grid.ColumnSpan="2">
@@ -801,8 +772,8 @@
         
         <Rectangle Name="RectOverlay" Visibility="Collapsed" Tapped="RectOverlay_Tapped" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="Black" Opacity="0.75" />
 
-        <ScrollViewer Name="ScrlVwrArticle" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" Width="975" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White">
-            <ScrollViewer.Resources>
+        <Grid Name="ArticleContainer" Visibility="Collapsed" Width="975" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White">
+            <Grid.Resources>
                 <Storyboard x:Name="SbArticleFlyIn">
                     <DoubleAnimation x:Name="AnimArticleFlyIn" Storyboard.TargetName="TranslateArticle" Storyboard.TargetProperty="X" From="975" To="0" Duration="0:0:0.1">
                         <DoubleAnimation.EasingFunction>
@@ -817,17 +788,17 @@
                         </DoubleAnimation.EasingFunction>
                     </DoubleAnimation>
                 </Storyboard>
-            </ScrollViewer.Resources>
-            <ScrollViewer.RenderTransform>
+            </Grid.Resources>
+            <Grid.RenderTransform>
                 <TranslateTransform x:Name="TranslateArticle" />
-            </ScrollViewer.RenderTransform>
+            </Grid.RenderTransform>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <WebView Name="WebVwArticle" LoadCompleted="WebVwArticle_LoadCompleted" Margin="0" ScriptNotify="WebVwArticle_ScriptNotify" />
-                <Rectangle Name="RectArticleSnapshot" />
+                <Rectangle Name="RectArticleSnapshot" Visibility="Collapsed" Margin="{Binding ElementName=WebVwArticle, Path=Margin}" />
                 <ProgressRing Name="PrgRngArticleLoading" Style="{StaticResource LargeLoadingRingStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
                 <Grid Name="GrdBrowserControls" Grid.Row="1" Background="#343434" Visibility="Collapsed">
                     <Grid.ColumnDefinitions>
@@ -868,7 +839,7 @@
                     
                 </RichTextBlock>
             </StackPanel>-->
-        </ScrollViewer>
+        </Grid>
 
         <Popup Name="PopupManageFeeds" Margin="0,0,0,0" Grid.RowSpan="2" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Closed="PopupManageFeeds_Closed" Opened="PopupManageFeeds_Opened">
             <Popup.Resources>
@@ -933,6 +904,7 @@
                         <Button x:Name="AppBarUnfavorite" Style="{StaticResource UnfavoriteAppBarButtonStyle}" Click="AppBarUnfavorite_Click" Visibility="{Binding ElementName=AppBarFavorite, Path=Visibility, Converter={StaticResource VisibilityInverter}}" />
                     </Grid>
                     <Button x:Name="AppBarFontSize" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Font size" Content="&#xE185;" Click="AppBarFontSize_Click" />
+                    <Button x:Name="AppBarShare" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Share" Content="&#xE1D7;" Click="AppBarShare_Click" FontSize="14" />
                 </StackPanel>
                 <StackPanel x:Name="RightPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
                     <Button x:Name="AppBarRefresh" Style="{StaticResource RefreshAppBarButtonStyle}" Click="AppBarRefresh_Click" />

@@ -18,6 +18,7 @@ namespace Weave.Common
         public DataTemplate SourcesTemplate { get; set; }
         public DataTemplate ClusterTemplate { get; set; }
         public DataTemplate AddTemplate { get; set; }
+        public DataTemplate LoginTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
@@ -30,6 +31,7 @@ namespace Weave.Common
                 else if (item is StartSourcesViewModel) return SourcesTemplate;
                 else if (item is StartAddViewModel) return AddTemplate;
                 else if (item is StartHeroArticle) return HeroTemplate;
+                else if (item is StartLoginViewModel) return LoginTemplate;
             }
 
             return base.SelectTemplateCore(item, container);

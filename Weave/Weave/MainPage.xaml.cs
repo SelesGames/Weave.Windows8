@@ -39,11 +39,13 @@ namespace Weave
         private static StartLatestViewModel _latestArticlesVm = new StartLatestViewModel();
         private static StartSourcesViewModel _sourcesVm = new StartSourcesViewModel();
         private static StartAddViewModel _addVm = new StartAddViewModel();
+        private static StartLoginViewModel _loginVm = new StartLoginViewModel();
 
         private const double BaseSectionHeight = 450; // base height of each major section (profile, timeline, photos, etc)
         private static double _savedScrollPosition = 0;
 
         private static int _defaultStartItemCount; // default item count excluding clusters
+        private const int AppendixItemCount = 2;
 
         private static ObservableCollection<StartItemBase> _startItems = new ObservableCollection<StartItemBase>();
 
@@ -59,8 +61,9 @@ namespace Weave
                 _startItems.Add(_latestArticlesVm);
                 _startItems.Add(_sourcesVm);
                 _startItems.Add(_addVm);
+                _startItems.Add(_loginVm);
 
-                _defaultStartItemCount = _startItems.Count - 1;
+                _defaultStartItemCount = _startItems.Count - AppendixItemCount;
             }
         }
 
@@ -68,12 +71,14 @@ namespace Weave
         {
             ClusterHelper.ClusterRemoved += ClusterHelper_ClusterRemoved;
             Weave.Views.StartHub.LatestArticles.HeroSelected += LatestArticles_HeroSelected;
+            Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView().DataRequested += ShareHandler;
         }
 
         protected override void SaveState(Dictionary<string, object> pageState)
         {
             ClusterHelper.ClusterRemoved -= ClusterHelper_ClusterRemoved;
             Weave.Views.StartHub.LatestArticles.HeroSelected -= LatestArticles_HeroSelected;
+            Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView().DataRequested -= ShareHandler;
 
             ApplicationViewState viewState = ApplicationView.Value;
             if (viewState == ApplicationViewState.FullScreenPortrait || viewState == ApplicationViewState.Snapped)
@@ -196,6 +201,14 @@ namespace Weave
                     dialog.Commands.Add(new UICommand("Ok", null, null));
                     dialog.ShowAsync();
                     _startItems.Clear();
+                }
+            }
+            else // check if anything requires refreshing
+            {
+                if (RequireCategoryRefresh)
+                {
+                    RequireCategoryRefresh = false;
+                    _sourcesVm.InitSources();
                 }
             }
             LstVwMain.ItemsSource = _startItems;
@@ -535,12 +548,12 @@ namespace Weave
 
         private async Task InitClusters()
         {
-            if (_startItems.Count == _defaultStartItemCount + 1) // no clusters present
+            if (_startItems.Count == _defaultStartItemCount + AppendixItemCount) // no clusters present
             {
                 List<StartClusterViewModel> storedClusters = await ClusterHelper.GetStoredClusters();
                 foreach (StartClusterViewModel cluster in storedClusters)
                 {
-                    _startItems.Insert(_startItems.Count - 1, cluster);
+                    _startItems.Insert(_startItems.Count - AppendixItemCount, cluster);
                     cluster.IsLoading = true;
                 }
             }
@@ -549,7 +562,7 @@ namespace Weave
         private async void RefreshClusters()
         {
             StartClusterViewModel cluster;
-            for (int i = _defaultStartItemCount; i < _startItems.Count - 1; i++)
+            for (int i = _defaultStartItemCount; i < _startItems.Count - AppendixItemCount; i++)
             {
                 cluster = _startItems[i] as StartClusterViewModel;
                 if (cluster != null) await cluster.InitCluster();
@@ -558,7 +571,7 @@ namespace Weave
 
         private void ClearClusters()
         {
-            int totalStartCount = _defaultStartItemCount + 1;
+            int totalStartCount = _defaultStartItemCount + AppendixItemCount;
             while (_startItems.Count > totalStartCount) _startItems.RemoveAt(_defaultStartItemCount);
         }
 
@@ -591,7 +604,7 @@ namespace Weave
         {
             List<String> clusterOrder = new List<string>();
             StartClusterViewModel cluster;
-            for (int i = _defaultStartItemCount; i < _startItems.Count - 1; i++)
+            for (int i = _defaultStartItemCount; i < _startItems.Count - AppendixItemCount; i++)
             {
                 cluster = _startItems[i] as StartClusterViewModel;
                 if (!String.IsNullOrEmpty(cluster.Category)) clusterOrder.Add(cluster.Category);
@@ -651,6 +664,24 @@ namespace Weave
                 await control.InitialiseUserSelectedFeeds();
                 await InitMainPage();
             }
+        }
+
+        private void ShareHandler(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs e)
+        {
+            e.Request.FailWithDisplayText("Go to an article you'd like to share and try again.");
+        }
+
+        private static bool _requireCategoryRefresh;
+        public static bool RequireCategoryRefresh
+        {
+            get { return _requireCategoryRefresh; }
+            set { _requireCategoryRefresh = value; }
+        }
+
+        private async void AppBarRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            PrgRngLoadingMain.IsActive = true;
+            await LoadViewModels();
         }
 
     } // end of class
