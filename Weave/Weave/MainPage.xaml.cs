@@ -45,7 +45,7 @@ namespace Weave
         private static double _savedScrollPosition = 0;
 
         private static int _defaultStartItemCount; // default item count excluding clusters
-        private const int AppendixItemCount = 2;
+        private const int AppendixItemCount = 1;
 
         private static ObservableCollection<StartItemBase> _startItems = new ObservableCollection<StartItemBase>();
 
@@ -61,7 +61,7 @@ namespace Weave
                 _startItems.Add(_latestArticlesVm);
                 _startItems.Add(_sourcesVm);
                 _startItems.Add(_addVm);
-                _startItems.Add(_loginVm);
+                //_startItems.Add(_loginVm);
 
                 _defaultStartItemCount = _startItems.Count - AppendixItemCount;
             }

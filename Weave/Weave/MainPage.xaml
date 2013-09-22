@@ -157,7 +157,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="AddTemplate">
-            <views:AddView Margin="0,140,80,0" Loaded="AddView_Loaded" />
+            <views:AddView Margin="0,140,320,0" Loaded="AddView_Loaded" />
         </DataTemplate>
 
         <DataTemplate x:Key="LoginTemplate">

@@ -46,7 +46,7 @@ namespace Weave.ViewModels
             if (feed != null)
             {
                 this.NewCount = feed.NewArticleCount;
-                this.IconUrl = Weave.Common.SourceIconHelper.GetIcon(feed.Uri);
+                this.IconUrl = String.IsNullOrEmpty(feed.IconUrl) ? Weave.Common.SourceIconHelper.GetIcon(feed.Uri) : feed.IconUrl;
             }
         }
 

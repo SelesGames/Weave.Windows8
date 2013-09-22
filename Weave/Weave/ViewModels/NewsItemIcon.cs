@@ -22,7 +22,7 @@ namespace Weave.ViewModels
             this.Link = item.Link;
             this.OriginalDownloadDateTime = item.OriginalDownloadDateTime;
             this.PodcastUri = item.PodcastUri;
-            this.SourceIconUrl = Weave.Common.SourceIconHelper.GetIcon(item.OriginalFeedUri);
+            this.SourceIconUrl = String.IsNullOrEmpty(item.Feed.IconUrl) ? Weave.Common.SourceIconHelper.GetIcon(item.OriginalFeedUri) : item.Feed.IconUrl;
             this.Title = item.Title;
             this.UtcPublishDateTime = item.UtcPublishDateTime;
             this.VideoUri = item.VideoUri;

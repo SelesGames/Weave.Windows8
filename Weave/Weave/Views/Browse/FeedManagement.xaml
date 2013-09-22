@@ -30,9 +30,10 @@
                 </Grid.ColumnDefinitions>
                 <Grid Height="90" Width="90">
                     <Border Background="#A1A1A1">
-                        <Image Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <Image Source="{Binding Feed.IconUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     </Border>
-                    <Button Name="BtnAdd" Style="{StaticResource ButtonStyleBasic}" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=TxtBlkAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}" Click="BtnAdd_Click" Padding="15" Margin="-15">
+                    <Rectangle Fill="{StaticResource WeaveBrush}" Width="30" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                    <Button Name="BtnAdd" Style="{StaticResource ButtonStyleBasicNoDisable}" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=TxtBlkAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}" Click="BtnAdd_Click" Padding="15" Margin="-15">
                         <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
                             <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </Border>
