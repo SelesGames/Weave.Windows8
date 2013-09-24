@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Weave.ViewModels.StartHub;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -21,6 +22,17 @@ namespace Weave.Views.StartHub
         public LoginView()
         {
             this.InitializeComponent();
+        }
+
+        private async void Account_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (this.DataContext is StartLoginViewModel && button != null && button.DataContext is StartLoginViewModel.LoginInfo)
+            {
+                StartLoginViewModel vm = (StartLoginViewModel)this.DataContext;
+                StartLoginViewModel.LoginInfo info = (StartLoginViewModel.LoginInfo)button.DataContext;
+                await vm.Login(info);
+            }
         }
     }
 }

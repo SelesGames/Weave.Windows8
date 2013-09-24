@@ -35,5 +35,30 @@ namespace Weave.Common
             }
         }
 
+        public enum LayoutSize { Normal, Large };
+
+        private const String LayoutSizeKey = "LayoutSize";
+        private static LayoutSize? _layoutSize = null;
+        public static LayoutSize CurrentLayoutSize
+        {
+            get
+            {
+                if (_layoutSize == null)
+                {
+                    ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
+                    LayoutSize layoutSize;
+                    if (container.Values.ContainsKey(LayoutSizeKey) && Enum.TryParse<LayoutSize>((String)container.Values[LayoutSizeKey], out layoutSize)) _layoutSize = layoutSize;
+                    else layoutSize = LayoutSize.Normal;
+                }
+                return _layoutSize == null ? LayoutSize.Normal : _layoutSize.Value;
+            }
+            set
+            {
+                _layoutSize = value;
+                ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
+                container.Values[LayoutSizeKey] = value.ToString();
+            }
+        }
+
     }
 }

@@ -17,32 +17,66 @@
         <common:VisibilityInverter x:Key="VisibilityInverter" />
         <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <common:FeedAddedToOpacityConverter x:Key="FeedAddedToOpacityConverter" />
+        <common:BooleanNegationConverter x:Key="BooleanNegationConverter" />
+        <common:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter" />
 
         <DataTemplate x:Key="CategoryTemplate">
             <TextBlock Margin="40,0,0,0" Text="{Binding}" FontWeight="Bold" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
         </DataTemplate>
         
         <DataTemplate x:Key="FeedTemplate">
-            <Grid Width="280" Margin="20,20,10,20" Opacity="{Binding IsAdded, Converter={StaticResource FeedAddedToOpacityConverter}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid Height="90" Width="90">
-                    <Border Background="#A1A1A1">
-                        <Image Source="{Binding Feed.IconUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    </Border>
-                    <Rectangle Fill="{StaticResource WeaveBrush}" Width="30" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" />
-                    <Button Name="BtnAdd" Style="{StaticResource ButtonStyleBasicNoDisable}" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=TxtBlkAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}" Click="BtnAdd_Click" Padding="15" Margin="-15">
-                        <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
+            <Button Style="{StaticResource ButtonStyleBasic}" Width="280" Margin="20,20,10,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Click="BtnAdd_Click" IsEnabled="{Binding IsAdded, Converter={StaticResource BooleanNegationConverter}}">
+                <Grid Opacity="{Binding IsAdded, Converter={StaticResource FeedAddedToOpacityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Height="90" Width="90">
+                        <Border Background="#A1A1A1">
+                            <Image Source="{Binding Feed.IconUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </Border>
+                        <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=BdrAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
                             <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </Border>
-                    </Button>
-                    <TextBlock Name="TxtBlkAddedTick" Visibility="{Binding IsAdded, Converter={StaticResource BooleanToVisibilityConverter}}" Text="&#xE10B;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="5,5,0,0" />
+                        <Border Name="BdrAddedTick" Background="#7F7F7F" Width="30" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding IsAdded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="&#xE10B;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="5,5,0,0" />
+                        </Border>
+                    </Grid>
+                    <TextBlock Text="{Binding Feed.Name}" FontWeight="Bold" Grid.Column="1" Margin="10,5,0,0" TextWrapping="Wrap" Foreground="Black" FontSize="{StaticResource ControlContentThemeFontSize}" />
                 </Grid>
-                <TextBlock Text="{Binding Feed.Name}" FontWeight="Bold" Grid.Column="1" Margin="10,5,0,0" TextWrapping="Wrap" Foreground="Black" FontSize="{StaticResource ControlContentThemeFontSize}" />
-            </Grid>
+            </Button>
         </DataTemplate>
+
+        <DataTemplate x:Key="SearchFeedTemplate">
+            <Button Style="{StaticResource ButtonStyleBasic}" Width="265" Height="90" Margin="20,20,20,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Click="BtnAdd_Click" IsEnabled="{Binding IsAdded, Converter={StaticResource BooleanNegationConverter}}">
+                <Grid Opacity="{Binding IsAdded, Converter={StaticResource FeedAddedToOpacityConverter}}" Background="#A1A1A1">
+                    <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=BdrAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
+                        <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Border>
+                    <Border Name="BdrAddedTick" Background="#7F7F7F" Width="30" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding IsAdded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock Text="&#xE10B;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="5,5,0,0" />
+                    </Border>
+                    <TextBlock Text="{Binding Feed.Name}" FontWeight="Bold" Grid.Column="1" Margin="50,20,20,20" MaxHeight="40" TextWrapping="Wrap" Foreground="Black" FontSize="{StaticResource ControlContentThemeFontSize}" />
+                </Grid>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CategoryTextTemplate">
+            <TextBlock Text="{Binding}" Margin="10,0,10,0" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="CategorySeparatorTemplate">
+            <Rectangle Height="1" Fill="{StaticResource SubtleTextBrush}" Margin="5,0,5,0" VerticalAlignment="Center" />
+        </DataTemplate>
+
+        <common:TextSeparatorSelector x:Key="AvailableCategoriesSelector" SeparatorTemplate="{StaticResource CategorySeparatorTemplate}" TextTemplate="{StaticResource CategoryTextTemplate}" />
+        
+        <Style TargetType="ListBoxItem" x:Key="CategorySeparatorStyle">
+            <Setter Property="IsEnabled" Value="False" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <common:TextSeparatorStyleSelector x:Key="AvailableCategoriesStyleSelector" SeparatorStyle="{StaticResource CategorySeparatorStyle}" />
 
     </UserControl.Resources>
     
@@ -60,7 +94,7 @@
                 <TextBlock Margin="0,0,0,0" Text="ADD CONTENT" FontWeight="Bold" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Foreground="#A0A0A0" />
                 <TextBlock Margin="0,40,0,0" Text="Add new content" FontWeight="Normal" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
                 <Grid Margin="0,6,0,0">
-                    <TextBox Name="TxtBxInput" TextChanged="TxtBxInput_TextChanged" KeyDown="TxtBxInput_KeyDown" />
+                    <TextBox Name="TxtBxInput" TextChanged="TxtBxInput_TextChanged" KeyDown="TxtBxInput_KeyDown" InputScope="Search" />
                     <TextBlock Name="TxtBlkInputOverlay" Text="Topic, website or RSS URL" IsHitTestVisible="False" Opacity="0.5" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </Grid>
                 <Rectangle Height="1" Fill="#707070" Margin="0,30,0,30" />
@@ -81,7 +115,7 @@
             </Grid.RowDefinitions>
             <TextBlock Margin="60,80,0,0" Text="{Binding Header, Converter={StaticResource UpperCaseConverter}}" Style="{StaticResource HeaderTextStyle}" Foreground="Black" />
             <ScrollViewer Grid.Row="1" Margin="40,20,0,0" ZoomMode="Disabled" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled">
-                <ItemsControl ItemsSource="{Binding CategoryItems}" ItemTemplate="{StaticResource FeedTemplate}" Foreground="Black" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0,0">
+                <ItemsControl Name="ItmCtrlFeeds" ItemsSource="{Binding CategoryItems}" ItemTemplate="{StaticResource FeedTemplate}" Foreground="Black" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0,0">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapGrid Orientation="Horizontal" />
@@ -99,13 +133,7 @@
                 </Storyboard>
             </Popup.Resources>
             <StackPanel Name="FlyoutContent" Background="White" Width="250" Loaded="FlyoutContent_Loaded">
-                <ListBox Name="LstBxAvailableCategories" Style="{StaticResource ListBoxStyleListSelector}" SelectionChanged="LstBxAvailableCategories_SelectionChanged">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" Margin="10,0,10,0" />
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <ListBox Name="LstBxAvailableCategories" Style="{StaticResource ListBoxStyleListSelector}" SelectionChanged="LstBxAvailableCategories_SelectionChanged" ItemTemplateSelector="{StaticResource AvailableCategoriesSelector}" ItemContainerStyleSelector="{StaticResource AvailableCategoriesStyleSelector}" />
                 <Rectangle Height="1" Fill="{StaticResource SubtleTextBrush}" Margin="5,10,5,10" />
                 <Grid Margin="10,0,10,10">
                     <Grid.ColumnDefinitions>

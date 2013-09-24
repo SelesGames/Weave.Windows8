@@ -149,6 +149,9 @@
     <Compile Include="Views\Browse\FontSizeSelection.xaml.cs">
       <DependentUpon>FontSizeSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Browse\LayoutSizeSelection.xaml.cs">
+      <DependentUpon>LayoutSizeSelection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StartHub\AddView.xaml.cs">
       <DependentUpon>AddView.xaml</DependentUpon>
     </Compile>
@@ -187,6 +190,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="packages.config" />
     <None Include="Weave_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -216,6 +220,14 @@
     <Content Include="Assets\FirstLaunch\WorldNews_Selected.png" />
     <Content Include="Assets\LiveTile.png" />
     <Content Include="Assets\LiveTileWide.png" />
+    <Content Include="Assets\Login\Facebook.png" />
+    <Content Include="Assets\Login\FacebookOn.png" />
+    <Content Include="Assets\Login\Google.png" />
+    <Content Include="Assets\Login\GoogleOn.png" />
+    <Content Include="Assets\Login\Microsoft.png" />
+    <Content Include="Assets\Login\MicrosoftOn.png" />
+    <Content Include="Assets\Login\Twitter.png" />
+    <Content Include="Assets\Login\TwitterOn.png" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\MainLogoColour.png" />
     <Content Include="Assets\MainLogoWhite.png" />
@@ -278,6 +290,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Browse\FontSizeSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Browse\LayoutSizeSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -396,7 +412,24 @@
       <Name>Weave.User.Service.Client</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="Microsoft.WindowsAzure.Mobile">
+      <HintPath>..\packages\WindowsAzure.MobileServices.1.0.2\lib\netcore45\Microsoft.WindowsAzure.Mobile.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Mobile.Ext">
+      <HintPath>..\packages\WindowsAzure.MobileServices.1.0.2\lib\netcore45\Microsoft.WindowsAzure.Mobile.Ext.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.15\lib\win8\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.15\lib\win8\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>

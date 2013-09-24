@@ -39,4 +39,21 @@ namespace Weave.Common
             return base.SelectStyleCore(item, container);
         }
     }
+
+    public class TextSeparatorStyleSelector : StyleSelector
+    {
+        public Style SeparatorStyle { get; set; }
+        public Style TextStyle { get; set; }
+
+        protected override Windows.UI.Xaml.Style SelectStyleCore(object item, Windows.UI.Xaml.DependencyObject container)
+        {
+            if (item != null && item is String)
+            {
+                String str = (String)item;
+                if (str.Equals("-")) return SeparatorStyle;
+                else return TextStyle;
+            }
+            return base.SelectStyleCore(item, container);
+        }
+    }
 }

@@ -9,7 +9,7 @@
     >
 
     <Grid Background="{StaticResource ImagePlaceholderBrush}" Width="1100" Tapped="Grid_Tapped">
-        <Image Source="{Binding Article.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
+        <Image Source="{Binding Article.Image.OriginalUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
         <Rectangle Margin="0,0,-1,0">
             <Rectangle.Fill>
                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">

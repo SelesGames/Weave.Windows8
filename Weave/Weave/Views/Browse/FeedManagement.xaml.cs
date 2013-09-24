@@ -36,6 +36,7 @@ namespace Weave.Views.Browse
                 {
                     String category = e.AddedItems[0] as String;
                     vm.SelectCategory(category);
+                    ItmCtrlFeeds.ItemTemplate = this.Resources["FeedTemplate"] as DataTemplate;
                 }
                 else vm.SelectCategory(null);
             }
@@ -60,8 +61,20 @@ namespace Weave.Views.Browse
             {
                 Rect bounds = DisplayUtilities.GetPopupElementRect(button);
                 PopupAddToCategory.HorizontalOffset = bounds.Left + button.Padding.Left;
-                PopupAddToCategory.VerticalOffset = bounds.Top + bounds.Height - button.Padding.Top;
+                PopupAddToCategory.VerticalOffset = bounds.Top + 30;
                 List<String> availableCategories = UserHelper.Instance.GetAvailableCategories();
+                String selectedCategory = GrdVwCategories.SelectedItem as String;
+                if (selectedCategory != null)
+                {
+                    int index = availableCategories.IndexOf(selectedCategory);
+                    if (index > -1)
+                    {
+                        availableCategories.RemoveAt(index);
+                    }
+
+                    availableCategories.Insert(0, selectedCategory);
+                    availableCategories.Insert(1, "-");
+                }
                 LstBxAvailableCategories.ItemsSource = availableCategories;
                 PopupAddToCategory.Tag = button.DataContext;
                 PopupAddToCategory.IsOpen = true;
@@ -135,6 +148,7 @@ namespace Weave.Views.Browse
                     {
                         GrdVwCategories.SelectedItem = null;
                         e.Handled = true;
+                        ItmCtrlFeeds.ItemTemplate = this.Resources["SearchFeedTemplate"] as DataTemplate;
                         await vm.Search(textbox.Text);
                     }
                 }

@@ -15,6 +15,8 @@
     <UserControl.Resources>
 
         <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <common:VisibilityInverter x:Key="VisibilityInverter" />
+        <common:BooleanNegationConverter x:Key="BooleanNegationConverter" />
         
         <Style TargetType="TextBlock" x:Key="AccountHeaderStyle">
             <Setter Property="Foreground" Value="White" />
@@ -31,23 +33,23 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding Header}" Style="{StaticResource SubheaderTextStyle}" />
-        <Grid Background="#2B2B2B" Grid.Row="2">
+        <Grid Background="#272727" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Grid Background="#474747">
+            <Grid Background="#373737">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="&#xE117;" FontFamily="Segoe UI Symbol" VerticalAlignment="Center" Margin="15" FontSize="50" Foreground="#272727" />
-                <TextBlock Grid.Column="1" Text="Login via one of the services below if you'd like to sync your feeds and preferences on another device" TextWrapping="Wrap" Foreground="{StaticResource SubtleTextBrush}" FontSize="15" Margin="0,20,20,20" />
+                <TextBlock Grid.Column="1" Text="Login via one of the services below if you'd like to sync your feeds and preferences on another device" FontWeight="Light" TextWrapping="Wrap" Foreground="{StaticResource SubtleTextBrush}" FontSize="15" Margin="0,20,20,20" />
             </Grid>
             <ItemsControl Margin="40,30,40,40" Grid.Row="1" ItemsSource="{Binding Items}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Style="{StaticResource ButtonStyleBasic}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0,10,0,10">
+                        <Button Style="{StaticResource ButtonStyleBasic}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0,10,0,10" Click="Account_Click" IsEnabled="{Binding IsLoggedIn, Converter={StaticResource BooleanNegationConverter}}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -58,19 +60,27 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <Rectangle Fill="{StaticResource ImagePlaceholderBrush}" Width="50" Height="50" Grid.RowSpan="2" Margin="0,0,20,0" />
+                                <Grid Width="42" Height="42" Grid.RowSpan="2" Margin="0,0,20,0">
+                                    <Image Source="{Binding LoggedOutImage}" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <Image Source="{Binding LoggedInImage}" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ElementName=TxtBlkLoggedInText, Path=Visibility}" />
+                                </Grid>
                                 <TextBlock Text="{Binding Header}" Style="{StaticResource AccountHeaderStyle}" Grid.Column="1" />
                                 <Grid Grid.Column="1" Grid.Row="1">
-                                    <TextBlock Text="{Binding LoggedOutText}" VerticalAlignment="Bottom" Foreground="{StaticResource SubtleTextBrush}" />
+                                    <TextBlock Text="{Binding LoggedOutText}" VerticalAlignment="Bottom" Foreground="{StaticResource SubtleTextBrush}" Visibility="{Binding ElementName=TxtBlkLoggedInText, Path=Visibility, Converter={StaticResource VisibilityInverter}}" />
+                                    <TextBlock Name="TxtBlkLoggedInText" Text="{Binding LoggedInText}" VerticalAlignment="Bottom" Foreground="{StaticResource WeaveBrush}" Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 </Grid>
-                                <Button Grid.Column="2" Grid.RowSpan="2" Style="{StaticResource ButtonStyleBasic}" Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <!--<Button Grid.Column="2" Grid.RowSpan="2" Style="{StaticResource ButtonStyleBasic}" Visibility="{Binding ElementName=TxtBlkLoggedInText, Path=Visibility}">
                                     <TextBlock Text="&#xE115;" FontFamily="Segoe UI Symbol" VerticalAlignment="Center" Foreground="{StaticResource SubtleTextBrush}" />
-                                </Button>
+                                </Button>-->
                             </Grid>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <Grid Grid.Row="1" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Rectangle Fill="Black" Opacity="0.5" />
+                <ProgressRing Name="PrgRngLoading" IsActive="{Binding IsBusy}" Style="{StaticResource LargeLoadingRingStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

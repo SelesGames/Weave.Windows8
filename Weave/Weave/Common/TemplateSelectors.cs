@@ -155,4 +155,22 @@ namespace Weave.Common
             return base.SelectTemplateCore(item, container);
         }
     }
+
+    public class TextSeparatorSelector : DataTemplateSelector
+    {
+        public DataTemplate SeparatorTemplate { get; set; }
+        public DataTemplate TextTemplate { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        {
+            if (item != null && item is String)
+            {
+                String str = (String)item;
+                if (str.Equals("-")) return SeparatorTemplate;
+                else return TextTemplate;
+            }
+
+            return base.SelectTemplateCore(item, container);
+        }
+    }
 }

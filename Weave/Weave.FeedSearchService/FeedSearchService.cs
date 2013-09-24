@@ -65,10 +65,29 @@ namespace Weave.FeedSearchService
         // Call the RSS url directly, extract it's name and description
         async Task<FeedApiResult> DirectSearchForFeed(string feedUrl, CancellationToken cancelToken)
         {
-            var result = await directSearchClient.GetAsync<FeedApiResult>(feedUrl, cancelToken);
-            foreach (var entry in result.responseData.entries)
-                entry.url = feedUrl;
-            return result;
+            try
+            {
+                SyndicationClient client = new SyndicationClient();
+                var feedResponse = await client.RetrieveFeedAsync(new Uri(feedUrl));
+                FeedApiResult result = new FeedApiResult();
+                result.responseStatus = "200";
+                result.responseData = new ResponseData()
+                {
+                    entries = new List<Entry>()
+                    {
+                        new Entry()
+                        {
+                            title = feedResponse.Title.Text,
+                            url = feedUrl
+                        }
+                    }
+                };
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         // Search using Google's RSS search service

@@ -14,7 +14,6 @@ namespace Weave.ViewModels.Browse
         public event Action<object, Feed> FeedAdded;
         public const String FeedsUrl = "http://weave.blob.core.windows.net/settings/masterfeeds.xml";
 
-        private ExpandedLibrary _feedLibrary;
         private Dictionary<String, List<FeedItemViewModel>> _categoryFeedMap;
         private List<String> _categories;
         private List<FeedItemViewModel> _categoryItems;
@@ -23,7 +22,6 @@ namespace Weave.ViewModels.Browse
 
         public FeedManagementViewModel()
         {
-            _feedLibrary = new ExpandedLibrary(FeedsUrl + "?xsf=" + (new Random()).Next(123, 978));
             _searchService = new FeedSearchService.FeedSearchService();
         }
 
@@ -34,13 +32,13 @@ namespace Weave.ViewModels.Browse
                 IsLoadingCategories = true;
                 try
                 {
-                    List<Feed> feeds = await _feedLibrary.Feeds.Value;
+                    ExpandedLibrary feedLibrary = new ExpandedLibrary(FeedsUrl + "?xsf=" + (new Random()).Next(123, 978));
+                    List<Feed> feeds = await feedLibrary.Feeds.Value;
                     _categoryFeedMap = BuildCategoryCollection(feeds);
                     if (_categoryFeedMap != null)
                     {
-                        _categories = _categoryFeedMap.Keys.ToList();
-                        _categories.Sort();
-                        OnPropertyChanged("Categories");
+                        Categories = _categoryFeedMap.Keys.ToList();
+                        Categories.Sort();
                         IsInitialised = true;
                         if (CategoriesLoaded != null) CategoriesLoaded(this);
                     }
@@ -55,8 +53,9 @@ namespace Weave.ViewModels.Browse
 
         private void Reset()
         {
-            _categories = null;
+            Categories = null;
             _categoryItems = null;
+            OnPropertyChanged("CategoryItems");
             if (_categoryFeedMap != null)
             {
                 _categoryFeedMap.Clear();
@@ -108,10 +107,11 @@ namespace Weave.ViewModels.Browse
                     _categoryItems = null;
                     OnPropertyChanged("CategoryItems");
                 }
-                Header = '"' + query + '"';
+                if (Uri.IsWellFormedUriString(query, UriKind.Absolute)) Header = "RSS URL";
+                else Header = '"' + query + '"';
                 IsLoading = true;
                 FeedSearchService.FeedApiResult result = await _searchService.SearchForFeedsMatching(query, System.Threading.CancellationToken.None);
-                if (result.responseStatus == "200")
+                if (result != null && result.responseStatus == "200")
                 {
                     List<FeedItemViewModel> resultsVm = new List<FeedItemViewModel>();
                     Feed feed;
@@ -131,9 +131,10 @@ namespace Weave.ViewModels.Browse
             }
         }
 
-        public IEnumerable<String> Categories
+        public List<String> Categories
         {
             get { return _categories; }
+            private set { SetProperty(ref _categories, value); }
         }
 
         public IEnumerable<FeedItemViewModel> CategoryItems

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Weave.Common;
 using Weave.ViewModels;
 using Weave.ViewModels.Browse;
+using Weave.Views.Browse;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -61,6 +62,9 @@ namespace Weave
 
         private bool _showAppBarOnSelection = true;
 
+        private FontSizeSelection _fontSizeControl = new FontSizeSelection();
+        private LayoutSizeSelection _layoutSizeControl = new LayoutSizeSelection();
+
         public BrowsePage()
         {
             this.InitializeComponent();
@@ -76,6 +80,9 @@ namespace Weave
 
             _browserBrush.SourceName = "WebVwArticle";
             RectArticleSnapshot.Fill = _browserBrush;
+
+            _fontSizeControl.FontSizeChanged += FontSizeControl_FontSizeChanged;
+            _layoutSizeControl.LayoutSizeChanged += LayoutSizeControl_LayoutSizeChanged;
         }
 
         /// <summary>
@@ -218,6 +225,7 @@ namespace Weave
                 MainScrollViewer.VerticalScrollMode = ScrollMode.Enabled;
                 MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
                 MainScrollViewer.HorizontalScrollMode = ScrollMode.Disabled;
+                if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
             }
             else
             {
@@ -256,11 +264,11 @@ namespace Weave
 
         private void UpdateTemplateSelector()
         {
-            switch (WeaveOptions.CurrentFontSize)
+            switch (WeaveOptions.CurrentLayoutSize)
             {
-                //case WeaveOptions.FontSize.Large:
-                //    itemGridView.ItemTemplateSelector = this.Resources["ArticleSelectorLarge"] as DataTemplateSelector;
-                //    break;
+                case WeaveOptions.LayoutSize.Large:
+                    itemGridView.ItemTemplateSelector = this.Resources["ArticleSelectorLarge"] as DataTemplateSelector;
+                    break;
                 default:
                     itemGridView.ItemTemplateSelector = this.Resources["ArticleSelector"] as DataTemplateSelector;
                     break;
@@ -454,7 +462,8 @@ namespace Weave
                     BrowseToWebPage(item.Link);
                 }
                 PrgRngArticleLoading.IsActive = false;
-                //WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                if (_feed != null && _feed.CurrentFeedType != NewsFeed.FeedType.PreviousRead) _readTimer.Start();
             }
         }
 
@@ -487,7 +496,6 @@ namespace Weave
                 TxtBxBrowserUrl.Text = "";
                 GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             }
-            if (_feed != null && _feed.CurrentFeedType != NewsFeed.FeedType.PreviousRead) _readTimer.Start();
         }
 
         private void TxtBxBrowserUrl_GotFocus(object sender, RoutedEventArgs e)
@@ -781,20 +789,31 @@ namespace Weave
             {
                 Rect rect = DisplayUtilities.GetPopupElementRect(button);
 
-                if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible)
-                {
-                    Rect articleBounds = DisplayUtilities.GetPopupElementRect(ArticleContainer);
-                    if (rect.Right > articleBounds.Left)
-                    {
-                        _browserBrush.Redraw();
-                        RectArticleSnapshot.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                        WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                    }
-                }
+                SnapshotArticle(rect);
+                GrdAppBarMenuContent.Children.Clear();
+                GrdAppBarMenuContent.Children.Add(_fontSizeControl);
                 PopupAppBarMenu.HorizontalOffset = rect.Left + 10;
                 PopupAppBarMenu.VerticalOffset = -212;
                 PopupAppBarMenu.IsOpen = true;
 
+            }
+        }
+
+        /// <summary>
+        /// Takes a snapshot of the article (if required) to ensure display of elements if overlapping (Windows 8).
+        /// </summary>
+        /// <param name="position"></param>
+        private void SnapshotArticle(Rect position)
+        {
+            if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible)
+            {
+                Rect articleBounds = DisplayUtilities.GetPopupElementRect(ArticleContainer);
+                if (position.Right > articleBounds.Left)
+                {
+                    _browserBrush.Redraw();
+                    RectArticleSnapshot.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                }
             }
         }
 
@@ -823,7 +842,7 @@ namespace Weave
                 int articleWidth = GetArticleWidth(fontSize);
                 AdjustArticleViewWidth(articleWidth + 160);
             }
-            UpdateTemplateSelector();
+            //UpdateTemplateSelector();
             PopupAppBarMenu.IsOpen = false;
         }
 
@@ -874,6 +893,29 @@ namespace Weave
                 BtnAddSources.Margin = (Thickness)BtnAddSources.Tag;
                 BtnAddSources.Tag = null;
             }
+        }
+
+        private void AppBarLayout_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null)
+            {
+                Rect rect = DisplayUtilities.GetPopupElementRect(button);
+
+                SnapshotArticle(rect);
+                GrdAppBarMenuContent.Children.Clear();
+                GrdAppBarMenuContent.Children.Add(_layoutSizeControl);
+                PopupAppBarMenu.HorizontalOffset = rect.Left + 10;
+                PopupAppBarMenu.VerticalOffset = -172;
+                PopupAppBarMenu.IsOpen = true;
+
+            }
+        }
+
+        private void LayoutSizeControl_LayoutSizeChanged(object sender, WeaveOptions.LayoutSize newSize)
+        {
+            PopupAppBarMenu.IsOpen = false;
+            UpdateTemplateSelector();
         }
 
 

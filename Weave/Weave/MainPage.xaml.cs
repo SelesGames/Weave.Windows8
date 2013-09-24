@@ -45,7 +45,7 @@ namespace Weave
         private static double _savedScrollPosition = 0;
 
         private static int _defaultStartItemCount; // default item count excluding clusters
-        private const int AppendixItemCount = 1;
+        private const int AppendixItemCount = 2;
 
         private static ObservableCollection<StartItemBase> _startItems = new ObservableCollection<StartItemBase>();
 
@@ -61,7 +61,7 @@ namespace Weave
                 _startItems.Add(_latestArticlesVm);
                 _startItems.Add(_sourcesVm);
                 _startItems.Add(_addVm);
-                //_startItems.Add(_loginVm);
+                _startItems.Add(_loginVm);
 
                 _defaultStartItemCount = _startItems.Count - AppendixItemCount;
             }
@@ -72,6 +72,7 @@ namespace Weave
             ClusterHelper.ClusterRemoved += ClusterHelper_ClusterRemoved;
             Weave.Views.StartHub.LatestArticles.HeroSelected += LatestArticles_HeroSelected;
             Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView().DataRequested += ShareHandler;
+            UserHelper.Instance.UserChanged += UserChanged;
         }
 
         protected override void SaveState(Dictionary<string, object> pageState)
@@ -79,6 +80,7 @@ namespace Weave
             ClusterHelper.ClusterRemoved -= ClusterHelper_ClusterRemoved;
             Weave.Views.StartHub.LatestArticles.HeroSelected -= LatestArticles_HeroSelected;
             Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView().DataRequested -= ShareHandler;
+            UserHelper.Instance.UserChanged -= UserChanged;
 
             ApplicationViewState viewState = ApplicationView.Value;
             if (viewState == ApplicationViewState.FullScreenPortrait || viewState == ApplicationViewState.Snapped)
@@ -193,7 +195,16 @@ namespace Weave
 
             if (_latestArticlesVm.Items.Count == 0)
             {
-                bool success = await UserHelper.Instance.LoadUser();
+                bool success = false;
+                try
+                {
+                    success = await UserHelper.Instance.LoadUser();
+                }
+                catch (Exception e)
+                {
+                    App.LogError("Error initialising user", e);
+                    success = false;
+                }
                 if (success) await LoadViewModels();
                 else
                 {
@@ -261,6 +272,7 @@ namespace Weave
 
         private async Task LoadViewModels()
         {
+            _loginVm.InitLoginItems();
             List<NewsItem> newsItems = UserHelper.Instance.GetLatestNews();
             if (newsItems != null && newsItems.Count > 0)
             {
@@ -278,32 +290,9 @@ namespace Weave
 
             _sourcesVm.InitSources();
 
+            if (_startItems.Count > _defaultStartItemCount + AppendixItemCount) ClearClusters();
             await InitClusters();
             RefreshClusters();
-
-            //StartClusterViewModel cluster = new StartClusterViewModel();
-            //cluster.Header = "Comic books";
-            //cluster.Category = "comic books";
-            //_startItems.Insert(_startItems.Count - 1, cluster);
-            //cluster.InitCluster();
-
-            //cluster = new StartClusterViewModel();
-            //cluster.Header = "Business";
-            //cluster.Category = "business";
-            //_startItems.Insert(_startItems.Count - 1, cluster);
-            //cluster.InitCluster();
-
-            //cluster = new StartClusterViewModel();
-            //cluster.Header = "Cars";
-            //cluster.Category = "cars";
-            //_startItems.Insert(_startItems.Count - 1, cluster);
-            //cluster.InitCluster();
-
-            //cluster = new StartClusterViewModel();
-            //cluster.Header = "Anandtech";
-            //cluster.FeedId = new Guid("7653d36b-b79c-3a9c-1919-645b48c3ed59");
-            //_startItems.Insert(_startItems.Count - 1, cluster);
-            //cluster.InitCluster();
         }
 
         public const double BaseHeight = 768; // base height of design screen
@@ -583,7 +572,7 @@ namespace Weave
                 cluster.Header = header;
                 cluster.Category = categoryKey;
                 ClusterHelper.StoreCategoryCluster(cluster);
-                _startItems.Insert(_startItems.Count - 1, cluster);
+                _startItems.Insert(_startItems.Count - AppendixItemCount, cluster);
                 ClusterHelper.UpdateClusterOrder(GetClusterOrder());
                 await cluster.InitCluster();
             }
@@ -595,7 +584,7 @@ namespace Weave
             cluster.Header = header;
             cluster.FeedId = feedId;
             ClusterHelper.StoreFeedCluster(cluster);
-            _startItems.Insert(_startItems.Count - 1, cluster);
+            _startItems.Insert(_startItems.Count - AppendixItemCount, cluster);
             ClusterHelper.UpdateClusterOrder(GetClusterOrder());
             await cluster.InitCluster();
         }
@@ -680,8 +669,23 @@ namespace Weave
 
         private async void AppBarRefresh_Click(object sender, RoutedEventArgs e)
         {
+            await Refresh();
+        }
+
+        private async Task Refresh()
+        {
+            LstVwMain.ItemsSource = null;
+            await UserHelper.Instance.LoadUser(true);
             PrgRngLoadingMain.IsActive = true;
             await LoadViewModels();
+            LstVwMain.ItemsSource = _startItems;
+            PrgRngLoadingMain.IsActive = false;
+        }
+
+        private async void UserChanged(object obj)
+        {
+            ClusterHelper.ClearAllClusters();
+            await Refresh();
         }
 
     } // end of class

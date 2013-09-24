@@ -58,6 +58,9 @@ namespace Weave.Mobilizer.Client
 
             String widthStr = String.Format("{0}px", width);
             String leftMargin = String.Format("-{0}px", width / 2);
+
+            String youtubeWidth = width.ToString();
+            String youtubeHeight = (width / 16 * 9).ToString();
                 
             sb
                 .AppendLine(htmlTemplate1)
@@ -82,7 +85,11 @@ namespace Weave.Mobilizer.Client
                                                 .Replace("[LEFT_MARGIN]", leftMargin)
                                                 .ToString())
 
-                .AppendLine(htmlTemplate2.Replace("[WIDTH]", widthStr))
+                .AppendLine(new StringBuilder(htmlTemplate2)
+                        .Replace("[WIDTH]", widthStr)
+                        .Replace("[YOUTUBE_WIDTH", youtubeWidth)
+                        .Replace("[YOUTUBE_HEIGHT", youtubeHeight)
+                        .ToString())
 
                 //.AppendLine(imageLink == null ? "" : String.Format("<img src=\"{0}\" width=\"750px\" style=\"margin: 0\" />", imageLink))
 

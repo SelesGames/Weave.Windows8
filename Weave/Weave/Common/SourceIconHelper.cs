@@ -11,6 +11,7 @@ namespace Weave.Common
         private const String IconFolder = "/Assets/SourceIcons/";
         private const String WebIconPrefix = "http://lazywormapps.com/images/weave/";
         private const String DefaultIconPath = "/Assets/SourceIcons/Default.png";
+        private const String DefaultIconWebPath = "http://lazywormapps.com/images/weave/Default.png";
 
         private static Dictionary<String, String> _mapping = new Dictionary<string, string>()
         {
@@ -52,7 +53,7 @@ namespace Weave.Common
 
         public static String GetWebIcon(String sourceUrl)
         {
-            String path = DefaultIconPath;
+            String path = DefaultIconWebPath;
             if (!String.IsNullOrEmpty(sourceUrl) && _mapping.ContainsKey(sourceUrl)) path = WebIconPrefix + _mapping[sourceUrl];
             return path;
         }

@@ -14,23 +14,27 @@ namespace Weave.Common
 {
     public class UserHelper
     {
-        private const String CloudUrlPrefix = "http://weave-user.cloudapp.net/api/user/";
+        public event Action<object> UserChanged;
+
+        //private const String CloudUrlPrefix = "http://weave-user.cloudapp.net/api/user/";
         //private const String CurrentUserId = "b41e8972-60cd-43cb-9974-0ec028bedf68"; // test user
         private const String DefaultUserIdKey = "DefaultUserId";
         private const String LoggedInUserIdKey = "LoggedInUser";
-        private const String UserInfoUrlFormat = CloudUrlPrefix + "info?userId={0}";
+        //private const String UserInfoUrlFormat = CloudUrlPrefix + "info?userId={0}";
 
         private String _currentUserId = null;
 
         private UserInfo _currentUser;
         private Weave.ViewModels.Contracts.Client.IViewModelRepository _repo;
 
-        //private Weave.Identity.Service.Client.ServiceClient _identityService;
-        //private Weave.ViewModels.Identity.IdentityInfo _identityInfo;
+        private Identity.Service.Client.ServiceClient _identityClient;
+        private Weave.ViewModels.Identity.IdentityInfo _identityInfo;
 
         private bool _isLoaded;
         private bool _loading;
         private ManualResetEvent _loadingEvent = new ManualResetEvent(true);
+
+        private bool _isLoggedIn;
 
         private ApplicationDataContainer _localSettings;
         private ApplicationDataContainer _roamingSettings;
@@ -50,7 +54,24 @@ namespace Weave.Common
                         new Weave.User.Service.Client.Client(),
                         new Weave.Article.Service.Client.ServiceClient());
 
+            _identityClient = new Identity.Service.Client.ServiceClient();
+            _identityInfo = new ViewModels.Identity.IdentityInfo(_identityClient);
+            _identityInfo.UserIdChanged += IdentityInfo_UserIdChanged;
+
             _currentUserId = GetCurrentUser();
+        }
+
+        void IdentityInfo_UserIdChanged(object sender, EventArgs e)
+        {
+            if (_identityInfo.UserId != Guid.Empty)
+            {
+                String newId = _identityInfo.UserId.ToString();
+                if (!String.Equals(newId, _currentUserId))
+                {
+                    _currentUserId = newId;
+                    if (UserChanged != null) UserChanged(this);
+                }
+            }
         }
 
         public Dictionary<String, List<Feed>> CategoryFeeds
@@ -91,18 +112,15 @@ namespace Weave.Common
             get { return _isLoaded; }
         }
 
-        public async Task<bool> LoadUser()
+        public async Task<bool> LoadUser(bool refresh = false)
         {
             bool success = true;
-            if (!_isLoaded && !_loading)
+            if (!_isLoaded || refresh)
             {
                 if (!_loading)
                 {
                     _loading = true;
                     _loadingEvent.Reset();
-
-                    //_identityService = new Weave.Identity.Service.Client.ServiceClient();
-                    //_identityInfo = new ViewModels.Identity.IdentityInfo(_identityService);
 
                     if (_currentUserId != null)
                     {
@@ -128,6 +146,19 @@ namespace Weave.Common
                 //await _currentUser.AddFeed(feed);
             }
             return success;
+        }
+
+        public async Task LoadIdentity()
+        {
+            if (_currentUserId != null)
+            {
+                Guid userId = Guid.Parse(_currentUserId);
+                if (_isLoggedIn && _identityInfo.UserId != userId)
+                {
+                    _identityInfo.UserId = userId;
+                    await _identityInfo.LoadFromUserId();
+                }
+            }
         }
 
         public async Task<NewsList> GetCategoryNews(String category, int start, int count, EntryType entry)
@@ -230,7 +261,11 @@ namespace Weave.Common
         {
             String id = null;
             ApplicationDataContainer settingsContainer = RoamingSettings;
-            if (settingsContainer.Values.ContainsKey(LoggedInUserIdKey)) id = settingsContainer.Values[LoggedInUserIdKey] as String;
+            if (settingsContainer.Values.ContainsKey(LoggedInUserIdKey))
+            {
+                id = settingsContainer.Values[LoggedInUserIdKey] as String;
+                _isLoggedIn = true;
+            }
             else if (settingsContainer.Values.ContainsKey(DefaultUserIdKey)) id = settingsContainer.Values[DefaultUserIdKey] as String;
             else
             {
@@ -348,6 +383,59 @@ namespace Weave.Common
                 settingsContainer.Values[DefaultUserIdKey] = _currentUserId;
                 IsNewUser = false;
             }
+        }
+
+        public async Task CreateSyncUserFromCurrent()
+        {
+            if (_currentUser != null)
+            {
+                ApplicationDataContainer settingsContainer = RoamingSettings;
+
+                _identityInfo.UserId = _currentUser.Id;
+                await _identityClient.Add(ConvertIdentityVm(_identityInfo));
+
+                _isLoggedIn = true;
+                settingsContainer.Values[LoggedInUserIdKey] = _currentUserId;
+            }
+        }
+
+        public async Task UpdateSyncUser()
+        {
+            if (_identityInfo.UserId != Guid.Empty)
+            {
+                await _identityClient.Update(ConvertIdentityVm(_identityInfo));
+            }
+        }
+
+        private Identity.Service.DTOs.IdentityInfo ConvertIdentityVm(ViewModels.Identity.IdentityInfo info)
+        {
+            var o = new Identity.Service.DTOs.IdentityInfo
+            {
+                UserId = info.UserId,
+                UserName = info.UserName,
+                PasswordHash = info.PasswordHash,
+                FacebookAuthToken = info.FacebookAuthToken,
+                TwitterAuthToken = info.TwitterAuthToken,
+                MicrosoftAuthToken = info.MicrosoftAuthToken,
+                GoogleAuthToken = info.GoogleAuthToken,
+            };
+            return o;
+        }
+
+        public void LoadIdentityDTO(Identity.Service.DTOs.IdentityInfo o)
+        {
+            _identityInfo.UserName = o.UserName;
+            _identityInfo.PasswordHash = o.PasswordHash;
+            _identityInfo.FacebookAuthToken = o.FacebookAuthToken;
+            _identityInfo.TwitterAuthToken = o.TwitterAuthToken;
+            _identityInfo.MicrosoftAuthToken = o.MicrosoftAuthToken;
+            _identityInfo.GoogleAuthToken = o.GoogleAuthToken;
+            _identityInfo.UserId = o.UserId;
+        }
+
+        public Weave.ViewModels.Identity.IdentityInfo IdentityInfo
+        {
+            get { return _identityInfo; }
         }
 
     } // end of class

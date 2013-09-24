@@ -27,12 +27,6 @@ namespace Weave.Common
             Category
         }
 
-        public static void test()
-        {
-            ApplicationDataContainer container = GetClusterContainer();
-            container.Values.Remove(FeedIdKey);
-        }
-
         /// <summary>
         /// Gets the cluster container to store/retrieve clusters.
         /// </summary>
@@ -167,6 +161,14 @@ namespace Weave.Common
             else removed = false;
 
             if (removed && ClusterRemoved != null) ClusterRemoved(cluster);
+        }
+
+        public static void ClearAllClusters()
+        {
+            ApplicationDataContainer container = UserHelper.Instance.GetUserContainer(true);
+            if (container.Values.ContainsKey(ClusterOrderKey)) container.Values.Remove(ClusterOrderKey);
+            container = GetClusterContainer();
+            container.Values.Clear();
         }
 
     } // end of class

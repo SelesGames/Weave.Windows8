@@ -41,6 +41,7 @@ namespace Weave.ViewModels.StartHub
 
         public void InitItems(List<StartNewsItemContainer> newsItems)
         {
+            Items.Clear();
             int index = 0;
             foreach (StartNewsItemContainer item in newsItems)
             {
