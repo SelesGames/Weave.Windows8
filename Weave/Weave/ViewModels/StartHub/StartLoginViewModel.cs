@@ -170,39 +170,6 @@ namespace Weave.ViewModels.StartHub
             IsBusy = false;
         }
 
-        private async Task LoginFacebook()
-        {
-            try
-            {
-                var mobileUser = await CreateMobileServiceClient().LoginAsync(MobileServiceAuthenticationProvider.Facebook);
-                IsBusy = true;
-                Weave.Identity.Service.DTOs.IdentityInfo info = null;
-                try
-                {
-                    info = await _client.GetUserFromFacebookToken(mobileUser.UserId);
-                }
-                catch (Exception)
-                {
-                    info = null;
-                }
-
-                IdentityInfo viewModel = UserHelper.Instance.IdentityInfo;
-                viewModel.FacebookAuthToken = mobileUser.UserId;
-                if (info != null)
-                {
-                    UserHelper.Instance.LoadIdentityDTO(info);
-                }
-                else
-                {
-                    await UserHelper.Instance.CreateSyncUserFromCurrent();
-                }
-            }
-            catch (Exception ex)
-            {
-                App.LogError("Error logging into Facebook account", ex);
-            }
-        }
-
         private async Task<bool> ProcessLogin(MobileServiceAuthenticationProvider provider, Func<String, Task<Weave.Identity.Service.DTOs.IdentityInfo>> getUser)
         {
             bool success = false;
@@ -220,90 +187,42 @@ namespace Weave.ViewModels.StartHub
                     info = null;
                 }
 
-                if (info != null)
+                IdentityInfo viewModel = UserHelper.Instance.IdentityInfo;
+
+                if (info == null)
                 {
-                    UserHelper.Instance.LoadIdentityDTO(info);
+                    viewModel.UserId = UserHelper.Instance.CurrentUser.Id;
                 }
-                else
+
+                switch (provider)
                 {
-                    IdentityInfo viewModel = UserHelper.Instance.IdentityInfo;
-
-                    switch (provider)
-                    {
-                        case MobileServiceAuthenticationProvider.Facebook:
-                            viewModel.FacebookAuthToken = mobileUser.UserId;
-                            break;
-                        case MobileServiceAuthenticationProvider.Google:
-                            viewModel.GoogleAuthToken = mobileUser.UserId;
-                            break;
-                        case MobileServiceAuthenticationProvider.MicrosoftAccount:
-                            viewModel.MicrosoftAuthToken = mobileUser.UserId;
-                            break;
-                        case MobileServiceAuthenticationProvider.Twitter:
-                            viewModel.TwitterAuthToken = mobileUser.UserId;
-                            break;
-                        default:
-                            return false;
-                    }
-
-                    await UserHelper.Instance.CreateSyncUserFromCurrent();
+                    case MobileServiceAuthenticationProvider.Facebook:
+                        viewModel.FacebookAuthToken = mobileUser.UserId;
+                        await viewModel.LoadFromFacebook();
+                        break;
+                    case MobileServiceAuthenticationProvider.Google:
+                        viewModel.GoogleAuthToken = mobileUser.UserId;
+                        await viewModel.LoadFromGoogle();
+                        break;
+                    case MobileServiceAuthenticationProvider.MicrosoftAccount:
+                        viewModel.MicrosoftAuthToken = mobileUser.UserId;
+                        await viewModel.LoadFromMicrosoft();
+                        break;
+                    case MobileServiceAuthenticationProvider.Twitter:
+                        viewModel.TwitterAuthToken = mobileUser.UserId;
+                        await viewModel.LoadFromTwitter();
+                        break;
+                    default:
+                        return false;
                 }
                 success = true;
             }
             catch (Exception ex)
             {
-                App.LogError("Error logging into Facebook account", ex);
+                App.LogError("Error logging into account", ex);
                 success = false;
             }
             return success;
-        }
-
-        private async Task LoginTwitter()
-        {
-            try
-            {
-                var mobileUser = await CreateMobileServiceClient().LoginAsync(MobileServiceAuthenticationProvider.Twitter);
-                IsBusy = true;
-                IdentityInfo viewModel = UserHelper.Instance.IdentityInfo;
-                viewModel.TwitterAuthToken = mobileUser.UserId;
-                await viewModel.LoadFromTwitter();
-            }
-            catch (Exception ex)
-            {
-                App.LogError("Error logging into Twitter account", ex);
-            }
-        }
-
-        private async Task LoginMicrosoft()
-        {
-            try
-            {
-                var mobileUser = await CreateMobileServiceClient().LoginAsync(MobileServiceAuthenticationProvider.MicrosoftAccount);
-                IsBusy = true;
-                IdentityInfo viewModel = UserHelper.Instance.IdentityInfo;
-                viewModel.MicrosoftAuthToken = mobileUser.UserId;
-                await viewModel.LoadFromMicrosoft();
-            }
-            catch (Exception ex)
-            {
-                App.LogError("Error logging into Microsoft account", ex);
-            }
-        }
-
-        private async Task LoginGoogle()
-        {
-            try
-            {
-                var mobileUser = await CreateMobileServiceClient().LoginAsync(MobileServiceAuthenticationProvider.Google);
-                IsBusy = true;
-                IdentityInfo viewModel = UserHelper.Instance.IdentityInfo;
-                viewModel.GoogleAuthToken = mobileUser.UserId;
-                await viewModel.LoadFromGoogle();
-            }
-            catch (Exception ex)
-            {
-                App.LogError("Error logging into Google account", ex);
-            }
         }
     }
 }

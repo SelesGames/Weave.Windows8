@@ -66,6 +66,11 @@ namespace Weave.Common
             if (_identityInfo.UserId != Guid.Empty)
             {
                 String newId = _identityInfo.UserId.ToString();
+
+                ApplicationDataContainer settingsContainer = RoamingSettings;
+                _isLoggedIn = true;
+                settingsContainer.Values[LoggedInUserIdKey] = newId;
+
                 if (!String.Equals(newId, _currentUserId))
                 {
                     _currentUserId = newId;
@@ -119,6 +124,13 @@ namespace Weave.Common
             {
                 if (!_loading)
                 {
+                    if (refresh)
+                    {
+                        _feedIdMap.Clear();
+                        _categoryFeedMap.Clear();
+                        _categoryFeedMap = null;
+                    }
+
                     _loading = true;
                     _loadingEvent.Reset();
 
@@ -391,19 +403,11 @@ namespace Weave.Common
             {
                 ApplicationDataContainer settingsContainer = RoamingSettings;
 
-                _identityInfo.UserId = _currentUser.Id;
                 await _identityClient.Add(ConvertIdentityVm(_identityInfo));
+                _identityInfo.UserId = _currentUser.Id;
 
                 _isLoggedIn = true;
                 settingsContainer.Values[LoggedInUserIdKey] = _currentUserId;
-            }
-        }
-
-        public async Task UpdateSyncUser()
-        {
-            if (_identityInfo.UserId != Guid.Empty)
-            {
-                await _identityClient.Update(ConvertIdentityVm(_identityInfo));
             }
         }
 
@@ -422,20 +426,14 @@ namespace Weave.Common
             return o;
         }
 
-        public void LoadIdentityDTO(Identity.Service.DTOs.IdentityInfo o)
-        {
-            _identityInfo.UserName = o.UserName;
-            _identityInfo.PasswordHash = o.PasswordHash;
-            _identityInfo.FacebookAuthToken = o.FacebookAuthToken;
-            _identityInfo.TwitterAuthToken = o.TwitterAuthToken;
-            _identityInfo.MicrosoftAuthToken = o.MicrosoftAuthToken;
-            _identityInfo.GoogleAuthToken = o.GoogleAuthToken;
-            _identityInfo.UserId = o.UserId;
-        }
-
         public Weave.ViewModels.Identity.IdentityInfo IdentityInfo
         {
             get { return _identityInfo; }
+        }
+
+        public UserInfo CurrentUser
+        {
+            get { return _currentUser; }
         }
 
     } // end of class

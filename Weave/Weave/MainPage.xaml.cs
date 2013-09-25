@@ -272,6 +272,7 @@ namespace Weave
 
         private async Task LoadViewModels()
         {
+            LstBxCategorySelector.ItemsSource = null;
             _loginVm.InitLoginItems();
             List<NewsItem> newsItems = UserHelper.Instance.GetLatestNews();
             if (newsItems != null && newsItems.Count > 0)
@@ -368,9 +369,10 @@ namespace Weave
         private void AddView_Loaded(object sender, RoutedEventArgs e)
         {
             Weave.Views.StartHub.AddView view = sender as Weave.Views.StartHub.AddView;
-            if (view != null && _addClusterButton == null)
+            if (view != null)
             {
                 _addClusterButton = view.AddButton;
+                _addClusterButton.Click -= BtnAddCluster_Click;
                 _addClusterButton.Click += BtnAddCluster_Click;
             }
         }
