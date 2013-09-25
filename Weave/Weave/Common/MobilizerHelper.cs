@@ -14,6 +14,12 @@ namespace Weave.Common
         private static Formatter _formatter = new Formatter();
         private static Client _client = new Client();
 
+        private static HashSet<String> _ignoreParagraphClasses = new HashSet<string>()
+        {
+            "article-date",
+            "photo_credit",
+        };
+
         public static async Task<String> GetMobilizedHtml(NewsItem item, int fontSize, int articleWidth)
         {
             String result = null;
@@ -24,12 +30,23 @@ namespace Weave.Common
                 String body = content.content;
                 int firstCharIndex = -1;
                 StringBuilder sb = new StringBuilder();
+                String paragraphPattern = "<p(?<properties>[^>]*)>(?<content>.*)</p>";
 
-                foreach (Match m in Regex.Matches(body, "<p[^>]*>(?<content>.*)</p>", RegexOptions.Singleline))
+                foreach (Match m in Regex.Matches(body, paragraphPattern, RegexOptions.Singleline))
                 {
                     if (m.Success && m.Groups["content"].Success)
                     {
                         Group g = m.Groups["content"];
+                        //String properties = m.Groups["properties"].Value;
+                        //if (!String.IsNullOrEmpty(properties))
+                        //{
+                        //    Match classMatch = Regex.Match(properties, "class=\"(?<class>[^\"]*)\"");
+                        //    if (classMatch.Success && _ignoreParagraphClasses.Contains(classMatch.Groups["class"].Value))
+                        //    {
+                        //        int newStartIndex = g.Index;
+                        //    }
+                        //}
+
                         firstCharIndex = FindFirstCharIndex(g.Value);
                         if (firstCharIndex > -1)
                         {

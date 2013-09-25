@@ -25,6 +25,7 @@ using Weave.ViewModels.Browse;
 using Windows.Storage;
 using Windows.UI.Popups;
 using Weave.Views.StartHub;
+using Windows.UI.ApplicationSettings;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -73,6 +74,7 @@ namespace Weave
             Weave.Views.StartHub.LatestArticles.HeroSelected += LatestArticles_HeroSelected;
             Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView().DataRequested += ShareHandler;
             UserHelper.Instance.UserChanged += UserChanged;
+            SettingsPane.GetForCurrentView().CommandsRequested += Page_CommandsRequested;
         }
 
         protected override void SaveState(Dictionary<string, object> pageState)
@@ -81,6 +83,7 @@ namespace Weave
             Weave.Views.StartHub.LatestArticles.HeroSelected -= LatestArticles_HeroSelected;
             Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView().DataRequested -= ShareHandler;
             UserHelper.Instance.UserChanged -= UserChanged;
+            SettingsPane.GetForCurrentView().CommandsRequested -= Page_CommandsRequested;
 
             ApplicationViewState viewState = ApplicationView.Value;
             if (viewState == ApplicationViewState.FullScreenPortrait || viewState == ApplicationViewState.Snapped)
@@ -95,10 +98,6 @@ namespace Weave
         private void PopupFlyout_Opened(object sender, object e)
         {
             SbFlyoutPopIn.Begin();
-        }
-
-        private void PopupFlyout_Closed(object sender, object e)
-        {
         }
 
         private void semanticZoomControl_ViewChangeCompleted(object sender, SemanticZoomViewChangedEventArgs e)
@@ -688,6 +687,18 @@ namespace Weave
         {
             ClusterHelper.ClearAllClusters();
             await Refresh();
+        }
+
+        void Page_CommandsRequested(Windows.UI.ApplicationSettings.SettingsPane sender, Windows.UI.ApplicationSettings.SettingsPaneCommandsRequestedEventArgs args)
+        {
+            args.Request.ApplicationCommands.Add(new SettingsCommand("About", "About", new UICommandInvokedHandler(OnAboutClicked)));
+        }
+
+        private void OnAboutClicked(IUICommand command)
+        {
+            GrdFlyoutContent.Children.Clear();
+            GrdFlyoutContent.Children.Add(new AboutFlyout());
+            PopupFlyout.IsOpen = true;
         }
 
     } // end of class

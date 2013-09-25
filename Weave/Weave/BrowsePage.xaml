@@ -878,10 +878,10 @@
         <Popup Name="PopupManageFeeds" Margin="0,0,0,0" Grid.RowSpan="2" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Closed="PopupManageFeeds_Closed" Opened="PopupManageFeeds_Opened">
             <Popup.Resources>
                 <Storyboard x:Name="SbManageFeedsPopIn">
-                    <PopInThemeAnimation TargetName="GrdFlyoutContent" FromVerticalOffset="0" FromHorizontalOffset="-346" />
+                    <PopInThemeAnimation TargetName="GrdManageFeedsContent" FromVerticalOffset="0" FromHorizontalOffset="-346" />
                 </Storyboard>
             </Popup.Resources>
-            <Grid Name="GrdFlyoutContent" Height="{Binding ElementName=GrdRoot, Path=ActualHeight}">
+            <Grid Name="GrdManageFeedsContent" Height="{Binding ElementName=GrdRoot, Path=ActualHeight}">
                 <browse:FeedManagement x:Name="FeedManagementControl" Width="1030" HorizontalAlignment="Left" />
             </Grid>
         </Popup>
@@ -893,6 +893,16 @@
                 </Storyboard>
             </Popup.Resources>
             <Grid Name="GrdAppBarMenuContent" Background="White">
+            </Grid>
+        </Popup>
+
+        <Popup Name="PopupFlyout" Margin="0,0,346,0" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Top" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupFlyout_Opened">
+            <Popup.Resources>
+                <Storyboard x:Name="SbFlyoutPopIn">
+                    <PopInThemeAnimation TargetName="GrdFlyoutContent" FromVerticalOffset="0" FromHorizontalOffset="346" />
+                </Storyboard>
+            </Popup.Resources>
+            <Grid Name="GrdFlyoutContent" Height="{Binding ElementName=GrdRoot, Path=ActualHeight}">
             </Grid>
         </Popup>
 

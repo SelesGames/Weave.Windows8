@@ -13,6 +13,7 @@ using Weave.Views.Browse;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -101,6 +102,7 @@ namespace Weave
             _navigatingAway = false;
 
             Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView().DataRequested += ShareHandler;
+            SettingsPane.GetForCurrentView().CommandsRequested += Page_CommandsRequested;
 
             if (navigationParameter != null && navigationParameter is Dictionary<String, object>)
             {
@@ -123,6 +125,7 @@ namespace Weave
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
             Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView().DataRequested -= ShareHandler;
+            SettingsPane.GetForCurrentView().CommandsRequested -= Page_CommandsRequested;
         }
 
         private void itemGridView_ItemClick(object sender, ItemClickEventArgs e)
@@ -916,6 +919,23 @@ namespace Weave
         {
             PopupAppBarMenu.IsOpen = false;
             UpdateTemplateSelector();
+        }
+
+        private void PopupFlyout_Opened(object sender, object e)
+        {
+            SbFlyoutPopIn.Begin();
+        }
+
+        void Page_CommandsRequested(Windows.UI.ApplicationSettings.SettingsPane sender, Windows.UI.ApplicationSettings.SettingsPaneCommandsRequestedEventArgs args)
+        {
+            args.Request.ApplicationCommands.Add(new SettingsCommand("About", "About", new UICommandInvokedHandler(OnAboutClicked)));
+        }
+
+        private void OnAboutClicked(IUICommand command)
+        {
+            GrdFlyoutContent.Children.Clear();
+            GrdFlyoutContent.Children.Add(new AboutFlyout());
+            PopupFlyout.IsOpen = true;
         }
 
 
