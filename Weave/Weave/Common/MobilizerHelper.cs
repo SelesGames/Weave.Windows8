@@ -68,7 +68,11 @@ namespace Weave.Common
 
                 String sourceIcon = null;
                 String imageUrl = null;
-                if (item.HasImage) imageUrl = item.Image.OriginalUrl;
+                if (item.HasImage)
+                {
+                    if (item.Image != null) imageUrl = item.Image.OriginalUrl;
+                    else if (!String.IsNullOrEmpty(item.ImageUrl)) imageUrl = item.ImageUrl;
+                }
                 else sourceIcon = SourceIconHelper.GetWebIcon(item.Feed.Uri);
 
                 result = await _formatter.CreateHtml(item.FormattedForMainPageSourceAndDate.Replace('•', '|'), item.Title, item.Link, sb.ToString(), "#333333", "#FFFFFF", "Cambria", fontSize + "pt", "#E96113", imageUrl, sourceIcon, articleWidth);

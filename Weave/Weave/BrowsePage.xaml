@@ -566,9 +566,6 @@
                 </Grid.RowDefinitions>
                 <Rectangle Grid.RowSpan="2" Fill="White" Opacity="0.05" />
                 <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" VerticalAlignment="Top" Foreground="White" FontWeight="Light" Margin="20,14,20,0" MaxHeight="150" TextTrimming="None" />
-                <Grid Background="Red" Width="30" Height="30" Visibility="{Binding VideoUri, Converter={StaticResource ObjectToVisibilityConverter}}" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-
-                </Grid>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,0,0,20">
                     <Image Source="{Binding SourceIconUrl}" Stretch="UniformToFill" Width="20" Height="20" Margin="0,0,10,0" />
                     <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="110" VerticalAlignment="Center" />
@@ -594,9 +591,6 @@
                 <Border Height="200" Background="{StaticResource ImagePlaceholderBrush}">
                     <Image Source="{Binding ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </Border>
-                <Grid Background="Red" Width="30" Height="30" Visibility="{Binding VideoUri, Converter={StaticResource ObjectToVisibilityConverter}}" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-                    
-                </Grid>
                 <TextBlock Grid.Row="1" Text="{Binding Title}" FontSize="15" Foreground="White" FontWeight="SemiBold" Margin="0,20,0,0" MaxHeight="40" TextTrimming="None" TextWrapping="Wrap" />
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,3,0,0">
                     <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="170" />

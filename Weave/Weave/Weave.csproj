@@ -116,6 +116,7 @@
     <Compile Include="Common\DisplayUtilities.cs" />
     <Compile Include="Common\HtmlToXaml.cs" />
     <Compile Include="Common\LayoutAwarePage.cs" />
+    <Compile Include="Common\LiveTileHelper.cs" />
     <Compile Include="Common\MobilizerHelper.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\SourceIconHelper.cs" />
