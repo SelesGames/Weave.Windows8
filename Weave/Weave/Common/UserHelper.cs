@@ -136,7 +136,15 @@ namespace Weave.Common
 
                     if (_currentUserId != null)
                     {
-                        _currentUser = await _repo.GetUserInfo(Guid.Parse(_currentUserId), true);
+                        try
+                        {
+                            _currentUser = await _repo.GetUserInfo(Guid.Parse(_currentUserId), true);
+                        }
+                        catch (Exception e)
+                        {
+                            success = false;
+                            App.LogError("Error getting user", e);
+                        }
                     }
                     else success = false;
 
@@ -168,7 +176,14 @@ namespace Weave.Common
                 if (_isLoggedIn && _identityInfo.UserId != userId)
                 {
                     _identityInfo.UserId = userId;
-                    await _identityInfo.LoadFromUserId();
+                    try
+                    {
+                        await _identityInfo.LoadFromUserId();
+                    }
+                    catch (Exception e)
+                    {
+                        App.LogError("Error loading identity info", e);
+                    }
                 }
             }
         }
@@ -199,22 +214,52 @@ namespace Weave.Common
 
         public async Task<List<NewsItem>> GetFavorites(int start, int count)
         {
-            return await _currentUser.GetFavorites(start, count);
+            try
+            {
+                return await _currentUser.GetFavorites(start, count);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<List<NewsItem>> GetRead(int start, int count)
         {
-            return await _currentUser.GetRead(start, count);
+            try
+            {
+                return await _currentUser.GetRead(start, count);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
-        public async Task AddFavorite(NewsItem item)
+        public async Task<bool> AddFavorite(NewsItem item)
         {
-            await _currentUser.AddFavorite(item);
+            try
+            {
+                await _currentUser.AddFavorite(item);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        public async Task RemoveFavorite(NewsItem item)
+        public async Task<bool> RemoveFavorite(NewsItem item)
         {
-            await _currentUser.RemoveFavorite(item);
+            try
+            {
+                await _currentUser.RemoveFavorite(item);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public List<NewsItem> GetLatestNews()
@@ -333,7 +378,13 @@ namespace Weave.Common
         {
             if (_currentUser != null)
             {
-                await _currentUser.MarkArticleRead(item);
+                try
+                {
+                    await _currentUser.MarkArticleRead(item);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 
@@ -341,7 +392,13 @@ namespace Weave.Common
         {
             if (_currentUser != null)
             {
-                await _currentUser.MarkArticlesSoftRead(items);
+                try
+                {
+                    await _currentUser.MarkArticlesSoftRead(items);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 
@@ -349,81 +406,85 @@ namespace Weave.Common
         {
             if (_currentUser != null)
             {
-                await _currentUser.AddFeed(feed);
-                Feed addedFeed = _currentUser.Feeds[_currentUser.Feeds.Count - 1];
-                _currentUser.GetNewsForFeed(addedFeed.Id, EntryType.ExtendRefresh, 0, 0);
-                String category = addedFeed.Category;
-                if (category == null) category = "";
-                if (!CategoryFeeds.ContainsKey(category)) CategoryFeeds[category] = new List<Feed>();
-                CategoryFeeds[category].Add(addedFeed);
-                return addedFeed;
+                try
+                {
+                    await _currentUser.AddFeed(feed);
+                    Feed addedFeed = _currentUser.Feeds[_currentUser.Feeds.Count - 1];
+                    _currentUser.GetNewsForFeed(addedFeed.Id, EntryType.ExtendRefresh, 0, 0);
+                    String category = addedFeed.Category;
+                    if (category == null) category = "";
+                    if (!CategoryFeeds.ContainsKey(category)) CategoryFeeds[category] = new List<Feed>();
+                    CategoryFeeds[category].Add(addedFeed);
+                    return addedFeed;
+                }
+                catch (Exception e)
+                {
+                    App.LogError("Error adding feed", e);
+                }
             }
             return null;
         }
 
-        public async Task RemoveFeed(Feed feed)
+        public async Task<bool> RemoveFeed(Feed feed)
         {
             if (_currentUser != null)
             {
-                await _currentUser.RemoveFeed(feed);
-                String category = feed.Category;
-                if (category == null) category = "";
-                if (CategoryFeeds.ContainsKey(category)) CategoryFeeds[category].Remove(feed);
+                try
+                {
+                    await _currentUser.RemoveFeed(feed);
+                    String category = feed.Category;
+                    if (category == null) category = "";
+                    if (CategoryFeeds.ContainsKey(category)) CategoryFeeds[category].Remove(feed);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    App.LogError("Error removing feed", e);
+                }
             }
+            return false;
         }
 
-        public async Task RemoveCategoryFeeds(String category, List<Feed> feeds)
+        public async Task<bool> RemoveCategoryFeeds(String category, List<Feed> feeds)
         {
             if (_currentUser != null)
             {
-                await _currentUser.BatchChange(null, feeds, null);
-                if (category == null) category = "";
-                if (CategoryFeeds.ContainsKey(category)) CategoryFeeds.Remove(category);
+                try
+                {
+                    await _currentUser.BatchChange(null, feeds, null);
+                    if (category == null) category = "";
+                    if (CategoryFeeds.ContainsKey(category)) CategoryFeeds.Remove(category);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    App.LogError("Error removing batch feeds", e);
+                }
             }
+            return false;
         }
 
-        public async Task InitUserWithFeeds(List<Feed> feeds)
+        public async Task<bool> InitUserWithFeeds(List<Feed> feeds)
         {
             if (feeds != null && feeds.Count > 0)
             {
-                ApplicationDataContainer settingsContainer = RoamingSettings;
-                UserInfo newUserInfo = new UserInfo(_repo);
-                foreach (Feed f in feeds) newUserInfo.Feeds.Add(f);
-                newUserInfo.Id = Guid.NewGuid();
-                await newUserInfo.Save();
-                _currentUserId = newUserInfo.Id.ToString();
-                settingsContainer.Values[DefaultUserIdKey] = _currentUserId;
-                IsNewUser = false;
+                try
+                {
+                    ApplicationDataContainer settingsContainer = RoamingSettings;
+                    UserInfo newUserInfo = new UserInfo(_repo);
+                    foreach (Feed f in feeds) newUserInfo.Feeds.Add(f);
+                    newUserInfo.Id = Guid.NewGuid();
+                    await newUserInfo.Save();
+                    _currentUserId = newUserInfo.Id.ToString();
+                    settingsContainer.Values[DefaultUserIdKey] = _currentUserId;
+                    IsNewUser = false;
+                    return true;
+                }
+                catch (Exception)
+                {
+                }
             }
-        }
-
-        public async Task CreateSyncUserFromCurrent()
-        {
-            if (_currentUser != null)
-            {
-                ApplicationDataContainer settingsContainer = RoamingSettings;
-
-                await _identityClient.Add(ConvertIdentityVm(_identityInfo));
-                _identityInfo.UserId = _currentUser.Id;
-
-                _isLoggedIn = true;
-                settingsContainer.Values[LoggedInUserIdKey] = _currentUserId;
-            }
-        }
-
-        private Identity.Service.DTOs.IdentityInfo ConvertIdentityVm(ViewModels.Identity.IdentityInfo info)
-        {
-            var o = new Identity.Service.DTOs.IdentityInfo
-            {
-                UserId = info.UserId,
-                UserName = info.UserName,
-                PasswordHash = info.PasswordHash,
-                FacebookAuthToken = info.FacebookAuthToken,
-                TwitterAuthToken = info.TwitterAuthToken,
-                MicrosoftAuthToken = info.MicrosoftAuthToken,
-                GoogleAuthToken = info.GoogleAuthToken,
-            };
-            return o;
+            return false;
         }
 
         public Weave.ViewModels.Identity.IdentityInfo IdentityInfo

@@ -155,5 +155,12 @@ namespace Weave
             // add logging logic
         }
 
+        public static async System.Threading.Tasks.Task ShowStandardError(String message)
+        {
+            Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(message, "Oops!");
+            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Ok", null, null));
+            await dialog.ShowAsync();
+        }
+
     } // end of class
 }

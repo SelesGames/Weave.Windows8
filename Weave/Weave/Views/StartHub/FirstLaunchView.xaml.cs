@@ -139,7 +139,10 @@ namespace Weave.Views.StartHub
                     }
                 }
             }
-            await UserHelper.Instance.InitUserWithFeeds(toAdd);
+            if (!await UserHelper.Instance.InitUserWithFeeds(toAdd))
+            {
+                await App.ShowStandardError("There was a problem creating your account. Please check your connection and try again.");
+            }
         }
 
         private void GrdVwCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)

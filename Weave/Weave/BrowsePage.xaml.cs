@@ -249,6 +249,7 @@ namespace Weave
             }
 
             ApplicationViewState state = ApplicationView.Value;
+            BottomAppBar.Visibility = state == ApplicationViewState.Snapped ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
             UpdateItemGridView(state);
         }
 
@@ -381,7 +382,7 @@ namespace Weave
 
         public static int GetArticleWidth(int fontSize)
         {
-            return (int)(fontSize * 41);
+            return (int)(fontSize * 43);
         }
 
         private void ShowArticle(NewsItem item, bool showLoading = true)
@@ -393,7 +394,7 @@ namespace Weave
                 if (item.IsNew) item.IsNew = false;
                 int fontSize = GetFontSize();
                 int articleWidth = GetArticleWidth(fontSize);
-                AdjustArticleViewWidth(articleWidth + 160);
+                AdjustArticleViewWidth(articleWidth);
                 RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 ArticleContainer.DataContext = item;
                 ArticleContainer.Visibility = Windows.UI.Xaml.Visibility.Visible;
@@ -649,12 +650,19 @@ namespace Weave
             {
                 AppBarFavorite.IsEnabled = false;
 
-                await UserHelper.Instance.AddFavorite(item);
+                bool success = await UserHelper.Instance.AddFavorite(item);
 
                 if (!_navigatingAway)
                 {
                     AppBarFavorite.IsEnabled = true;
-                    AppBarFavorite.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    if (success)
+                    {
+                        AppBarFavorite.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        App.ShowStandardError("Something went wrong adding this article to your favorites.");
+                    }
                 }
             }
         }
@@ -666,17 +674,25 @@ namespace Weave
             {
                 AppBarUnfavorite.IsEnabled = false;
 
-                await UserHelper.Instance.RemoveFavorite(item);
-                if (_feed != null && _feed.CurrentFeedType == NewsFeed.FeedType.Favorites)
-                {
-                    _feed.Items.Remove(item);
-                    BottomAppBar.IsOpen = false;
-                }
+                bool success = await UserHelper.Instance.RemoveFavorite(item);
 
                 if (!_navigatingAway)
                 {
                     AppBarUnfavorite.IsEnabled = true;
-                    AppBarFavorite.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    if (success)
+                    {
+                        if (_feed != null && _feed.CurrentFeedType == NewsFeed.FeedType.Favorites)
+                        {
+                            _feed.Items.Remove(item);
+                            BottomAppBar.IsOpen = false;
+                        }
+
+                        AppBarFavorite.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    }
+                    else
+                    {
+                        App.ShowStandardError("Something went wrong removing this article to your favorites.");
+                    }
                 }
             }
         }
@@ -843,7 +859,7 @@ namespace Weave
                 WebVwArticle.InvokeScript("setTextSize", parameters);
 
                 int articleWidth = GetArticleWidth(fontSize);
-                AdjustArticleViewWidth(articleWidth + 160);
+                AdjustArticleViewWidth(articleWidth);
             }
             //UpdateTemplateSelector();
             PopupAppBarMenu.IsOpen = false;
@@ -851,6 +867,23 @@ namespace Weave
 
         private void AdjustArticleViewWidth(int width)
         {
+            switch (WeaveOptions.CurrentFontSize)
+            {
+                case WeaveOptions.FontSize.Small:
+                    width += 160;
+                    break;
+                case WeaveOptions.FontSize.Medium:
+                    width += 200;
+                    break;
+                case WeaveOptions.FontSize.Large:
+                    width += 220;
+                    break;
+                default:
+                    break;
+            }
+
+            if (width > (this.ActualWidth - 100)) width = (int)this.ActualWidth - 100;
+
             if (_browserDisplayWidth != width)
             {
                 _browserDisplayWidth = width;

@@ -176,8 +176,15 @@ namespace Weave.ViewModels.Browse
             {
                 feed.Feed.Category = category;
                 Feed addedFeed = await UserHelper.Instance.AddFeed(feed.Feed);
-                if (FeedAdded != null) FeedAdded(this, addedFeed);
-                feed.IsAdded = true;
+                if (addedFeed != null)
+                {
+                    if (FeedAdded != null) FeedAdded(this, addedFeed);
+                    feed.IsAdded = true;
+                }
+                else
+                {
+                    App.ShowStandardError("Something went wrong when adding this feed.");
+                }
             }
         }
 
@@ -185,8 +192,14 @@ namespace Weave.ViewModels.Browse
         {
             if (feed != null)
             {
-                await UserHelper.Instance.RemoveFeed(feed.Feed);
-                Reset();
+                if (await UserHelper.Instance.RemoveFeed(feed.Feed))
+                {
+                    Reset();
+                }
+                else
+                {
+                    App.ShowStandardError("Something went wrong when removing this feed.");
+                }
             }
         }
 
@@ -196,8 +209,14 @@ namespace Weave.ViewModels.Browse
             {
                 List<Feed> remove = new List<Feed>();
                 foreach (FeedItemViewModel vm in feeds) remove.Add(vm.Feed);
-                await UserHelper.Instance.RemoveCategoryFeeds(category.Info.Category, remove);
-                Reset();
+                if (await UserHelper.Instance.RemoveCategoryFeeds(category.Info.Category, remove))
+                {
+                    Reset();
+                }
+                else
+                {
+                    App.ShowStandardError("Something went wrong when removing this category.");
+                }
             }
         }
 

@@ -31,7 +31,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Grid Height="90" Width="90">
+                    <Grid Height="110" Width="110">
                         <Border Background="#A1A1A1">
                             <Image Source="{Binding Feed.IconUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </Border>
@@ -48,7 +48,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="SearchFeedTemplate">
-            <Button Style="{StaticResource ButtonStyleBasic}" Width="265" Height="90" Margin="20,20,20,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Click="BtnAdd_Click" IsEnabled="{Binding IsAdded, Converter={StaticResource BooleanNegationConverter}}">
+            <Button Style="{StaticResource ButtonStyleBasic}" Width="265" Height="110" Margin="20,20,20,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Click="BtnAdd_Click" IsEnabled="{Binding IsAdded, Converter={StaticResource BooleanNegationConverter}}">
                 <Grid Opacity="{Binding IsAdded, Converter={StaticResource FeedAddedToOpacityConverter}}" Background="#A1A1A1">
                     <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=BdrAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
                         <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />

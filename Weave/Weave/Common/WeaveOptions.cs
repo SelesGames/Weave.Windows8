@@ -9,7 +9,7 @@ namespace Weave.Common
 {
     public static class WeaveOptions
     {
-        public enum FontSize { Small = 12, Medium = 16, Large = 20 };
+        public enum FontSize { Small = 14, Medium = 18, Large = 23 };
 
         private const String FontSizeKey = "FontSize";
         private static FontSize? _fontSize = null;

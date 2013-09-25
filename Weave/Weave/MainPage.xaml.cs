@@ -274,6 +274,7 @@ namespace Weave
             LstBxCategorySelector.ItemsSource = null;
             _loginVm.InitLoginItems();
             List<NewsItem> newsItems = UserHelper.Instance.GetLatestNews();
+            UpdateLiveTileArticles(newsItems);
             if (newsItems != null && newsItems.Count > 0)
             {
                 List<StartNewsItemContainer> viewItems = new List<StartNewsItemContainer>();
@@ -330,6 +331,7 @@ namespace Weave
         private void pageRoot_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             AdjustForScreenResolution();
+            BottomAppBar.Visibility = ApplicationView.Value == ApplicationViewState.Snapped ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
         }
 
         private void MainScrollChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -670,6 +672,7 @@ namespace Weave
 
         private async void AppBarRefresh_Click(object sender, RoutedEventArgs e)
         {
+            _forceTileUpdate = true;
             await Refresh();
         }
 
@@ -686,6 +689,7 @@ namespace Weave
         private async void UserChanged(object obj)
         {
             ClusterHelper.ClearAllClusters();
+            LiveTileHelper.ResetMainTile();
             await Refresh();
         }
 
@@ -699,6 +703,32 @@ namespace Weave
             GrdFlyoutContent.Children.Clear();
             GrdFlyoutContent.Children.Add(new AboutFlyout());
             PopupFlyout.IsOpen = true;
+        }
+
+        private bool _forceTileUpdate = false;
+        private const int LiveTileArticleCount = 3;
+
+        private void UpdateLiveTileArticles(IList<NewsItem> items)
+        {
+            if (items.Count > 0)
+            {
+                String latestId = items[0].Id.ToString();
+                if (_forceTileUpdate || LiveTileHelper.RequireMainTileUpdate(latestId))
+                {
+                    _forceTileUpdate = false;
+                    LiveTileHelper.EnableTileQueue(true);
+                    LiveTileHelper.ClearMainTile();
+                    for (int i = 0, count = 0; i < items.Count && count < LiveTileArticleCount; i++)
+                    {
+                        if (items[i].HasImage)
+                        {
+                            LiveTileHelper.UpdateVideoTile(items[i]);
+                            count++;
+                        }
+                    }
+                    LiveTileHelper.UpdateMainTileLatestId(latestId);
+                }
+            }
         }
 
     } // end of class
