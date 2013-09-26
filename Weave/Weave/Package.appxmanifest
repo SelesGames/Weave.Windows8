@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="SelesGames.WeaveNewsReader" Publisher="CN=432DBEB3-4322-4B37-A907-C81DF70BA9A7" Version="0.0.7.9" />
+  <Identity Name="SelesGames.WeaveNewsReader" Publisher="CN=432DBEB3-4322-4B37-A907-C81DF70BA9A7" Version="0.0.7.10" />
   <Properties>
     <DisplayName>Weave News Reader</DisplayName>
     <PublisherDisplayName>Seles Games</PublisherDisplayName>
