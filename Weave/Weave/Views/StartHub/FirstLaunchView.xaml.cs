@@ -115,9 +115,9 @@ namespace Weave.Views.StartHub
 
             GrdVwCategories.ItemsSource = _items;
 
-            GrdVwCategories.SelectedItems.Add(_items[2]);
-            GrdVwCategories.SelectedItems.Add(_items[5]);
-            GrdVwCategories.SelectedItems.Add(_items[7]);
+            //GrdVwCategories.SelectedItems.Add(_items[2]);
+            //GrdVwCategories.SelectedItems.Add(_items[5]);
+            //GrdVwCategories.SelectedItems.Add(_items[7]);
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)

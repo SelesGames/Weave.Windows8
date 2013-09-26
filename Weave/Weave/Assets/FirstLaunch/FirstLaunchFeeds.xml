@@ -4,17 +4,19 @@
   <Category Type="Business">
     <Feed Name="Business Insider">http://feeds2.feedburner.com/businessinsider</Feed>
     <Feed Name="Fast Company">http://feeds.feedburner.com/fastcompany/headlines</Feed>
-    <Feed Name="Forbes">http://www.forbes.com/business/index.xml</Feed>
+    <Feed Name="Inc.com">http://feeds.feedburner.com/inc/headlines</Feed>
+    <Feed Name="Reuters">http://feeds.reuters.com/reuters/businessNews</Feed>
+    <Feed Name="The Telegraph">http://www.telegraph.co.uk/finance/rss</Feed>
   </Category>
 
 
   <Category Type="Gaming">
-    <Feed Name="IGN.com">http://feeds.ign.com/ign/games-articles</Feed>
-    <Feed Name="Joystiq.com">http://www.joystiq.com/rss.xml</Feed>
-    <Feed Name="Kotaku" in="mu">http://feeds.gawker.com/kotaku/vip</Feed>
+    <Feed Name="Ars Technica">http://feeds.arstechnica.com/arstechnica/gaming</Feed>
+    <Feed Name="Destructoid">http://feeds.feedburner.com/Destructoid</Feed>
+    <Feed Name="EDGE">http://www.edge-online.com/feed</Feed>
+    <Feed Name="Eurogamer.net">http://www.eurogamer.net/?format=rss</Feed>
+    <Feed Name="Game Informer">http://www.gameinformer.com:80/feeds/thefeedrss.aspx</Feed>
     <Feed Name="PC Gamer">http://www.pcgamer.com/feed/rss2</Feed>
-    <Feed Name="Polygon">http://www.polygon.com/rss/index.xml</Feed>
-    <Feed Name="Rock, Paper, Shotgun">http://feeds.feedburner.com/RockPaperShotgun</Feed>
   </Category>
 
 
@@ -28,25 +30,31 @@
 
   <Category Type="Science &amp; Astronomy">
     <Feed Name="Earth Techling">http://www.earthtechling.com/customfeed/</Feed>
-    <Feed Name="io9">http://feeds.gawker.com/io9/vip</Feed>
     <Feed Name="KQED Quest">http://www.kqed.org/quest/blog/feed/</Feed>
     <Feed Name="Popular Science">http://www.popsci.com/rss.xml</Feed>
     <Feed Name="Smithsonian Science">http://smithsonianscience.org/feed/</Feed>
-    <Feed Name="Wired Science" ViewType="ie">http://www.wired.com/wiredscience/feed/</Feed>
     <Feed Name="Universe Today">http://feeds.feedburner.com/universetoday/pYdq</Feed>
+    <Feed Name="Wired Science" ViewType="ie">http://www.wired.com/wiredscience/feed/</Feed>
   </Category>
 
 
   <Category Type="Sports">
     <Feed Name="Deadspin">http://feeds.gawker.com/deadspin/vip</Feed>
+    <Feed Name="ESPN" ViewType="ie">http://sports.espn.go.com/espn/rss/news</Feed>
     <Feed Name="SI.com" ViewType="ie">http://rss.cnn.com/rss/si_topstories.rss</Feed>
   </Category>
 
 
   <Category Type="Technology">
     <Feed Name="All Things Digital">http://allthingsd.com/category/news/feed</Feed>
-    <Feed Name="CNET">http://feeds.feedburner.com/cnet/NnTv?tag=contentBody.1</Feed>
-    <Feed Name="TechCrunch">http://feeds.feedburner.com/Techcrunch</Feed>
+    <Feed Name="AnandTech">http://www.anandtech.com/rss/</Feed>
+    <Feed Name="Ars Technica">http://feeds.arstechnica.com/arstechnica/index</Feed>
+    <Feed Name="Betanews">http://feeds.betanews.com/bn</Feed>
+    <Feed Name="Boy Genius Report">http://www.bgr.com/feed/</Feed>
+    <Feed Name="Engadget">http://www.engadget.com/rss.xml</Feed>
+    <Feed Name="Geek.com">http://www.geek.com/feed/</Feed>
+    <Feed Name="Lifehacker" in="mu">http://feeds.gawker.com/lifehacker/vip</Feed>
+    <Feed Name="Pocketnow">http://feeds.feedburner.com/pocketnow</Feed>
     <Feed Name="The Next Web">http://feeds2.feedburner.com/thenextweb</Feed>
     <Feed Name="The Verge">http://www.theverge.com/rss/index.xml</Feed>
   </Category>
@@ -56,6 +64,7 @@
     <Feed Name="MSNBC" ViewType="ie">http://rss.msnbc.msn.com/id/3032524/device/rss/rss.xml</Feed>
     <Feed Name="The Atlantic Wire">http://feeds.feedburner.com/TheAtlanticWire</Feed>
     <Feed Name="The New Yorker">http://pipes.yahoo.com/pipes/pipe.run?_id=d0f11f71c7db0ddb409f24431f767024&amp;_render=rss</Feed>
+    <Feed Name="U.S. News &amp; World Report">http://www.usnews.com/topics/series/pulse/rss_full</Feed>
   </Category>
   
   
