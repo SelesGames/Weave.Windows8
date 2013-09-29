@@ -20,7 +20,7 @@ namespace SelesGames.Rest
             return request.GetResponseAsync();
         }
 
-        public Task<T> GetAsync<T>(string url, CancellationToken cancellationToken)
+        public async Task<T> GetAsync<T>(string url, CancellationToken cancellationToken)
         {
             var request = HttpWebRequest.CreateHttp(url);
 
@@ -30,23 +30,19 @@ namespace SelesGames.Rest
             if (UseGzip)
                 request.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
 
-            return request
-                .GetResponseAsync()
-                .ContinueWith(
-                    task =>
-                    {
-                        var response = (HttpWebResponse)task.Result;
-                        if (response.StatusCode == HttpStatusCode.OK)
-                            return ReadObjectFromWebResponse<T>(response);
-                        else
-                            return default(T);
-                        
-                        throw new WebException(string.Format("Status code: {0}", response.StatusCode), null, WebExceptionStatus.UnknownError, response);
-                    },
-                    cancellationToken,
-                    TaskContinuationOptions.OnlyOnRanToCompletion, 
-                    TaskScheduler.Default
-                );
+            var webresponse = await request.GetResponseAsync().ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var response = (HttpWebResponse)webresponse;
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return ReadObjectFromWebResponse<T>(response);
+            }
+            else
+            {
+                throw new WebException(string.Format("Status code: {0}", response.StatusCode), null, WebExceptionStatus.UnknownError, response);
+            }
         }
 
         public async Task<TResult> PostAsync<TPost, TResult>(string url, TPost obj, CancellationToken cancelToken)
