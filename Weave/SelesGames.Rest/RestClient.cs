@@ -41,8 +41,10 @@ namespace SelesGames.Rest
             }
             else
             {
-                throw new WebException(string.Format("Status code: {0}", response.StatusCode), null, WebExceptionStatus.UnknownError, response);
+                return default(T);
             }
+
+            throw new WebException(string.Format("Status code: {0}", response.StatusCode), null, WebExceptionStatus.UnknownError, response);
         }
 
         public async Task<TResult> PostAsync<TPost, TResult>(string url, TPost obj, CancellationToken cancelToken)

@@ -55,7 +55,7 @@ namespace Weave
         private Guid? _initialSelectedItemId = null;
 
         private DispatcherTimer _readTimer;
-        private const double ReadInterval = 3;
+        private const double ReadInterval = 0.1;
 
         private bool _navigatingAway = false;
 
