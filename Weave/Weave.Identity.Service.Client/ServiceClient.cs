@@ -1,9 +1,6 @@
 ﻿using SelesGames.Rest;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Weave.Identity.Service.Contracts;
@@ -78,7 +75,7 @@ namespace Weave.Identity.Service.Client
         public Task Update(DTOs.IdentityInfo user)
         {
             var client = CreateClient();
-            return client.PostAsync(SERVICE_URL, user, CancellationToken.None);
+            return client.PutAsync(SERVICE_URL, user, CancellationToken.None);
         }
 
 
@@ -94,9 +91,13 @@ namespace Weave.Identity.Service.Client
             }
             catch (WebException responseException)
             {
-                //if (responseException.Status == WebExceptionStatus. == HttpStatusCode.NotFound)
-                //    throw new NoMatchingUserException();
-                //else
+                var response = responseException.Response as HttpWebResponse;
+                if (response == null)
+                    throw responseException;
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    throw new NoMatchingUserException();
+                else
                     throw responseException;
             }
         }
@@ -104,7 +105,7 @@ namespace Weave.Identity.Service.Client
         RestClient CreateClient()
         {
             //return new SelesGames.Rest.Protobuf.ProtobufRestClient { UseGzip = true };
-            return new SelesGames.Rest.JsonDotNet.JsonDotNetRestClient { UseGzip = true };
+            return new SelesGames.Rest.JsonDotNet.JsonDotNetRestClient { UseGzip = false };
         }
 
         #endregion

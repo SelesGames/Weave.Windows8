@@ -97,6 +97,59 @@ namespace SelesGames.Rest
             return httpResponse.StatusCode == HttpStatusCode.Created;        
         }
 
+        public async Task<TResult> PutAsync<TPost, TResult>(string url, TPost obj, CancellationToken cancelToken)
+        {
+            var request = HttpWebRequest.CreateHttp(url);
+            request.Method = "PUT";
+
+            if (!string.IsNullOrEmpty(Headers.ContentType))
+                request.ContentType = Headers.ContentType;
+
+            if (!string.IsNullOrEmpty(Headers.Accept))
+                request.Accept = Headers.Accept;
+
+            if (UseGzip)
+                request.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
+
+            using (var requestStream = await request.GetRequestStreamAsync().ConfigureAwait(false))
+            {
+                cancelToken.ThrowIfCancellationRequested();
+                WriteObject(requestStream, obj);
+            }
+
+            var response = await request.GetResponseAsync().ConfigureAwait(false);
+
+            cancelToken.ThrowIfCancellationRequested();
+
+            return ReadObjectFromWebResponse<TResult>((HttpWebResponse)response);
+        }
+
+        public async Task<bool> PutAsync<TPost>(string url, TPost obj, CancellationToken cancelToken)
+        {
+            var request = HttpWebRequest.CreateHttp(url);
+            request.Method = "PUT";
+
+            if (!string.IsNullOrEmpty(Headers.ContentType))
+                request.ContentType = Headers.ContentType;
+
+            if (!string.IsNullOrEmpty(Headers.Accept))
+                request.Accept = Headers.Accept;
+
+            if (UseGzip)
+                request.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
+
+            using (var requestStream = await request.GetRequestStreamAsync().ConfigureAwait(false))
+            {
+                cancelToken.ThrowIfCancellationRequested();
+                WriteObject(requestStream, obj);
+            }
+
+            var response = await request.GetResponseAsync().ConfigureAwait(false);
+            var httpResponse = (HttpWebResponse)response;
+            return httpResponse.StatusCode == HttpStatusCode.Created;
+        }
+
+
 
 
 
