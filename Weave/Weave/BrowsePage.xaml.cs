@@ -357,13 +357,19 @@ namespace Weave
             }
             else
             {
-                _nav.ClearCategoryNewCount(category);
                 _feed.SetFeedParam(NewsFeed.FeedType.Category, category.Info.Category);
-                if (category.Type == CategoryViewModel.CategoryType.All) entry = EntryType.Peek;
-                else if (category.RequiresRefresh)
+                if (category.Type == CategoryViewModel.CategoryType.All)
                 {
-                    category.RequiresRefresh = false;
-                    entry = EntryType.ExtendRefresh;
+                    _nav.ClearAllNewCounts();
+                }
+                else
+                {
+                    _nav.ClearCategoryNewCount(category);
+                    if (category.RequiresRefresh)
+                    {
+                        category.RequiresRefresh = false;
+                        entry = EntryType.ExtendRefresh;
+                    }
                 }
                 await _feed.LoadInitialData(entry);
             }

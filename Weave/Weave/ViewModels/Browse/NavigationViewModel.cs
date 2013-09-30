@@ -220,5 +220,17 @@ namespace Weave.ViewModels.Browse
             }
         }
 
+        public void ClearAllNewCounts()
+        {
+            foreach (KeyValuePair<CategoryViewModel, List<FeedItemViewModel>> kv in _cateogyrFeedsMap)
+            {
+                kv.Key.NewCount = 0;
+                foreach (FeedItemViewModel feed in kv.Value)
+                {
+                    feed.NewCount = 0;
+                }
+            }
+        }
+
     } // end of class
 }

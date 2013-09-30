@@ -73,7 +73,11 @@ namespace Weave.Common
                     if (item.Image != null) imageUrl = item.Image.OriginalUrl;
                     else if (!String.IsNullOrEmpty(item.ImageUrl)) imageUrl = item.ImageUrl;
                 }
-                else sourceIcon = SourceIconHelper.GetWebIcon(item.Feed.Uri);
+                else
+                {
+                    if (item.Feed != null && !String.IsNullOrEmpty(item.Feed.IconUrl)) sourceIcon = item.Feed.IconUrl;
+                    else sourceIcon = SourceIconHelper.GetWebIcon(item.Feed.Uri);
+                }
 
                 result = await _formatter.CreateHtml(item.FormattedForMainPageSourceAndDate.Replace('•', '|'), item.Title, item.Link, sb.ToString(), "#333333", "#FFFFFF", "Cambria", fontSize + "pt", "#E96113", imageUrl, sourceIcon, articleWidth);
             }
