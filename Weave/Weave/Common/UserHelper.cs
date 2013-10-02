@@ -158,17 +158,6 @@ namespace Weave.Common
                     _isLoaded = true;
                 }
                 else await Task.Run(() => _loadingEvent.WaitOne()); // wait for loading to complete
-
-                //Feed feed = new Feed();
-                //feed.Id = new Guid("8a26950a-d939-5c90-76e8-3a193f88bff0");
-                //await _currentUser.RemoveFeed(feed);
-
-                //feed = new Feed();
-                //feed.Uri = "http://www.cnbc.com/id/15837362/devices/rss.xml";
-                //feed.Name = "CNBC";
-                //feed.ArticleViewingType = ArticleViewingType.Mobilizer;
-                //feed.Category = "Business";
-                //await _currentUser.AddFeed(feed);
             }
             return success;
         }
@@ -325,10 +314,9 @@ namespace Weave.Common
 
         public String GetCurrentUser()
         {
-#if DEBUG
-            _isNewUser = true;
-            return Guid.NewGuid().ToString();
-#else
+            //_isNewUser = true;
+            //return null;
+
             String id = null;
             ApplicationDataContainer settingsContainer = RoamingSettings;
             if (settingsContainer.Values.ContainsKey(LoggedInUserIdKey))
@@ -344,7 +332,6 @@ namespace Weave.Common
             }
 
             return id;
-#endif
         }
 
         public bool IsNewUser
@@ -423,7 +410,7 @@ namespace Weave.Common
                 {
                     await _currentUser.AddFeed(feed);
                     Feed addedFeed = _currentUser.Feeds[_currentUser.Feeds.Count - 1];
-                    //_currentUser.GetNewsForFeed(addedFeed.Id, EntryType.ExtendRefresh, 0, 0);
+                    _currentUser.GetNewsForFeed(addedFeed.Id, EntryType.ExtendRefresh, 0, 0);
                     String category = addedFeed.Category;
                     if (category == null) category = "";
                     if (!CategoryFeeds.ContainsKey(category)) CategoryFeeds[category] = new List<Feed>();

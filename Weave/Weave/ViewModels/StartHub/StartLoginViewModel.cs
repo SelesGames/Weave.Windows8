@@ -138,6 +138,31 @@ namespace Weave.ViewModels.StartHub
             }
         }
 
+        private void RefreshLoginStates()
+        {
+            IdentityInfo identity = UserHelper.Instance.IdentityInfo;
+            foreach (LoginInfo info in Items)
+            {
+                switch (info.Service)
+                {
+                    case LoginService.Facebook:
+                        info.IsLoggedIn = !identity.IsFacebookLoginEnabled;
+                        break;
+                    case LoginService.Google:
+                        info.IsLoggedIn = !identity.IsGoogleLoginEnabled;
+                        break;
+                    case LoginService.Microsoft:
+                        info.IsLoggedIn = !identity.IsMicrosoftLoginEnabled;
+                        break;
+                    case LoginService.Twitter:
+                        info.IsLoggedIn = !identity.IsTwitterLoginEnabled;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         private MobileServiceClient CreateMobileServiceClient()
         {
             return new MobileServiceClient("https://weaveuser.azure-mobile.net/", "AItWGBDhTNmoHYvcCvixuYgxSvcljU97");
@@ -166,7 +191,7 @@ namespace Weave.ViewModels.StartHub
                 default:
                     break;
             }
-            if (success) info.IsLoggedIn = true;
+            if (success) RefreshLoginStates();
             IsBusy = false;
         }
 
@@ -179,6 +204,7 @@ namespace Weave.ViewModels.StartHub
                 var mobileUser = await CreateMobileServiceClient().LoginAsync(provider);
                 IsBusy = true;
                 await syncFunc(mobileUser.UserId);
+                success = true;
             }
             catch (Exception ex)
             {
@@ -188,61 +214,5 @@ namespace Weave.ViewModels.StartHub
 
             return success;
         }
-
-
-        //private async Task<bool> ProcessLogin(MobileServiceAuthenticationProvider provider, Func<String, Task<Weave.Identity.Service.DTOs.IdentityInfo>> getUser)
-        //{
-        //    bool success = false;
-        //    try
-        //    {
-        //        var mobileUser = await CreateMobileServiceClient().LoginAsync(provider);
-        //        IsBusy = true;
-        //        Weave.Identity.Service.DTOs.IdentityInfo info = null;
-        //        try
-        //        {
-        //            info = await getUser(mobileUser.UserId);
-        //        }
-        //        catch (Exception)
-        //        {
-        //            info = null;
-        //        }
-
-        //        IdentityInfo viewModel = UserHelper.Instance.IdentityInfo;
-
-        //        if (info == null)
-        //        {
-        //            viewModel.UserId = UserHelper.Instance.CurrentUser.Id;
-        //        }
-
-        //        switch (provider)
-        //        {
-        //            case MobileServiceAuthenticationProvider.Facebook:
-        //                viewModel.FacebookAuthToken = mobileUser.UserId;
-        //                await viewModel.LoadFromFacebook();
-        //                break;
-        //            case MobileServiceAuthenticationProvider.Google:
-        //                viewModel.GoogleAuthToken = mobileUser.UserId;
-        //                await viewModel.LoadFromGoogle();
-        //                break;
-        //            case MobileServiceAuthenticationProvider.MicrosoftAccount:
-        //                viewModel.MicrosoftAuthToken = mobileUser.UserId;
-        //                await viewModel.LoadFromMicrosoft();
-        //                break;
-        //            case MobileServiceAuthenticationProvider.Twitter:
-        //                viewModel.TwitterAuthToken = mobileUser.UserId;
-        //                await viewModel.LoadFromTwitter();
-        //                break;
-        //            default:
-        //                return false;
-        //        }
-        //        success = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        App.LogError("Error logging into account", ex);
-        //        success = false;
-        //    }
-        //    return success;
-        //}
     }
 }
