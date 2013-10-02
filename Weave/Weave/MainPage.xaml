@@ -182,7 +182,9 @@
             <views:AddZoomedView Padding="0,120,80,0" Tapped="ZoomedOutItem_Tapped" VerticalAlignment="Top" HorizontalAlignment="Left" />
         </DataTemplate>
 
-        <common:StartItemSelector x:Name="ZoomedItemSelector" HeroTemplate="{StaticResource HeroTemplateZoomed}" LatestTemplate="{StaticResource LatestArticlesZoomedTemplate}" SourcesTemplate="{StaticResource SourcesZoomedTemplate}" ClusterTemplate="{StaticResource LatestArticlesZoomedTemplate}" AddTemplate="{StaticResource AddZoomedTemplate}" />
+        <DataTemplate x:Key="EmptyItemTemplate" />
+
+        <common:StartItemSelector x:Name="ZoomedItemSelector" HeroTemplate="{StaticResource HeroTemplateZoomed}" LatestTemplate="{StaticResource LatestArticlesZoomedTemplate}" SourcesTemplate="{StaticResource SourcesZoomedTemplate}" ClusterTemplate="{StaticResource LatestArticlesZoomedTemplate}" AddTemplate="{StaticResource AddZoomedTemplate}" LoginTemplate="{StaticResource EmptyItemTemplate}" />
 
         <Style x:Key="MainListViewStyle" TargetType="ListView">
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
