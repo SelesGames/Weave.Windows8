@@ -34,7 +34,9 @@ namespace Weave.Common
         private bool _loading;
         private ManualResetEvent _loadingEvent = new ManualResetEvent(true);
 
-        private bool _isLoggedIn;
+        //private bool _isLoggedIn;
+
+        private bool suppressIdentityInfo_UserIdChanged = false;
 
         private ApplicationDataContainer _localSettings;
         private ApplicationDataContainer _roamingSettings;
@@ -63,12 +65,15 @@ namespace Weave.Common
 
         void IdentityInfo_UserIdChanged(object sender, EventArgs e)
         {
+            if (suppressIdentityInfo_UserIdChanged)
+                return;
+
             if (_identityInfo.UserId != Guid.Empty)
             {
                 String newId = _identityInfo.UserId.ToString();
 
                 ApplicationDataContainer settingsContainer = RoamingSettings;
-                _isLoggedIn = true;
+                //_isLoggedIn = true;
                 settingsContainer.Values[LoggedInUserIdKey] = newId;
 
                 if (!String.Equals(newId, _currentUserId))
@@ -173,18 +178,22 @@ namespace Weave.Common
             if (_currentUserId != null)
             {
                 Guid userId = Guid.Parse(_currentUserId);
-                if (_isLoggedIn && _identityInfo.UserId != userId)
-                {
-                    _identityInfo.UserId = userId;
+
+                suppressIdentityInfo_UserIdChanged = true;
+                _identityInfo.UserId = userId;
+                suppressIdentityInfo_UserIdChanged = false;
+
+                //if (_isLoggedIn && _identityInfo.UserId != userId)
+                //{
                     try
                     {
                         await _identityInfo.LoadFromUserId();
                     }
                     catch (Exception e)
                     {
-                        App.LogError("Error loading identity info", e);
+                        //App.LogError("Error loading identity info", e);
                     }
-                }
+                //}
             }
         }
 
@@ -316,6 +325,10 @@ namespace Weave.Common
 
         public String GetCurrentUser()
         {
+#if DEBUG
+            _isNewUser = true;
+            return Guid.NewGuid().ToString();
+#else
             String id = null;
             ApplicationDataContainer settingsContainer = RoamingSettings;
             if (settingsContainer.Values.ContainsKey(LoggedInUserIdKey))
@@ -328,10 +341,10 @@ namespace Weave.Common
             {
                 // first start, generate and store new id and create user on cloud
                 _isNewUser = true;
-                //id = "b41e8972-60cd-43cb-9974-0ec028bedf68";
             }
 
             return id;
+#endif
         }
 
         public bool IsNewUser
@@ -410,7 +423,7 @@ namespace Weave.Common
                 {
                     await _currentUser.AddFeed(feed);
                     Feed addedFeed = _currentUser.Feeds[_currentUser.Feeds.Count - 1];
-                    _currentUser.GetNewsForFeed(addedFeed.Id, EntryType.ExtendRefresh, 0, 0);
+                    //_currentUser.GetNewsForFeed(addedFeed.Id, EntryType.ExtendRefresh, 0, 0);
                     String category = addedFeed.Category;
                     if (category == null) category = "";
                     if (!CategoryFeeds.ContainsKey(category)) CategoryFeeds[category] = new List<Feed>();

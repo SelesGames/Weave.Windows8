@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.WindowsAzure.MobileServices;
+using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Weave.Common;
-using System.Collections.ObjectModel;
-using Microsoft.WindowsAzure.MobileServices;
 using Weave.ViewModels.Identity;
 
 namespace Weave.ViewModels.StartHub
@@ -149,19 +146,22 @@ namespace Weave.ViewModels.StartHub
         public async Task Login(LoginInfo info)
         {
             bool success = false;
+
+            var viewModel = UserHelper.Instance.IdentityInfo;
+
             switch (info.Service)
             {
                 case LoginService.Facebook:
-                    success = await ProcessLogin(MobileServiceAuthenticationProvider.Facebook, _client.GetUserFromFacebookToken);
+                    success = await ProcessLogin(MobileServiceAuthenticationProvider.Facebook, viewModel.SyncFacebook);
                     break;
                 case LoginService.Google:
-                    success = await ProcessLogin(MobileServiceAuthenticationProvider.Google, _client.GetUserFromGoogleToken);
+                    success = await ProcessLogin(MobileServiceAuthenticationProvider.Google, viewModel.SyncGoogle);
                     break;
                 case LoginService.Microsoft:
-                    success = await ProcessLogin(MobileServiceAuthenticationProvider.MicrosoftAccount, _client.GetUserFromMicrosoftToken);;
+                    success = await ProcessLogin(MobileServiceAuthenticationProvider.MicrosoftAccount, viewModel.SyncMicrosoft);;
                     break;
                 case LoginService.Twitter:
-                    success = await ProcessLogin(MobileServiceAuthenticationProvider.Twitter, _client.GetUserFromTwitterToken);
+                    success = await ProcessLogin(MobileServiceAuthenticationProvider.Twitter, viewModel.SyncTwitter);
                     break;
                 default:
                     break;
@@ -170,59 +170,79 @@ namespace Weave.ViewModels.StartHub
             IsBusy = false;
         }
 
-        private async Task<bool> ProcessLogin(MobileServiceAuthenticationProvider provider, Func<String, Task<Weave.Identity.Service.DTOs.IdentityInfo>> getUser)
+        private async Task<bool> ProcessLogin(MobileServiceAuthenticationProvider provider, Func<string, Task> syncFunc)
         {
             bool success = false;
+
             try
             {
                 var mobileUser = await CreateMobileServiceClient().LoginAsync(provider);
                 IsBusy = true;
-                Weave.Identity.Service.DTOs.IdentityInfo info = null;
-                try
-                {
-                    info = await getUser(mobileUser.UserId);
-                }
-                catch (Exception)
-                {
-                    info = null;
-                }
-
-                IdentityInfo viewModel = UserHelper.Instance.IdentityInfo;
-
-                if (info == null)
-                {
-                    viewModel.UserId = UserHelper.Instance.CurrentUser.Id;
-                }
-
-                switch (provider)
-                {
-                    case MobileServiceAuthenticationProvider.Facebook:
-                        viewModel.FacebookAuthToken = mobileUser.UserId;
-                        await viewModel.LoadFromFacebook();
-                        break;
-                    case MobileServiceAuthenticationProvider.Google:
-                        viewModel.GoogleAuthToken = mobileUser.UserId;
-                        await viewModel.LoadFromGoogle();
-                        break;
-                    case MobileServiceAuthenticationProvider.MicrosoftAccount:
-                        viewModel.MicrosoftAuthToken = mobileUser.UserId;
-                        await viewModel.LoadFromMicrosoft();
-                        break;
-                    case MobileServiceAuthenticationProvider.Twitter:
-                        viewModel.TwitterAuthToken = mobileUser.UserId;
-                        await viewModel.LoadFromTwitter();
-                        break;
-                    default:
-                        return false;
-                }
-                success = true;
+                await syncFunc(mobileUser.UserId);
             }
             catch (Exception ex)
             {
                 App.LogError("Error logging into account", ex);
                 success = false;
             }
+
             return success;
         }
+
+
+        //private async Task<bool> ProcessLogin(MobileServiceAuthenticationProvider provider, Func<String, Task<Weave.Identity.Service.DTOs.IdentityInfo>> getUser)
+        //{
+        //    bool success = false;
+        //    try
+        //    {
+        //        var mobileUser = await CreateMobileServiceClient().LoginAsync(provider);
+        //        IsBusy = true;
+        //        Weave.Identity.Service.DTOs.IdentityInfo info = null;
+        //        try
+        //        {
+        //            info = await getUser(mobileUser.UserId);
+        //        }
+        //        catch (Exception)
+        //        {
+        //            info = null;
+        //        }
+
+        //        IdentityInfo viewModel = UserHelper.Instance.IdentityInfo;
+
+        //        if (info == null)
+        //        {
+        //            viewModel.UserId = UserHelper.Instance.CurrentUser.Id;
+        //        }
+
+        //        switch (provider)
+        //        {
+        //            case MobileServiceAuthenticationProvider.Facebook:
+        //                viewModel.FacebookAuthToken = mobileUser.UserId;
+        //                await viewModel.LoadFromFacebook();
+        //                break;
+        //            case MobileServiceAuthenticationProvider.Google:
+        //                viewModel.GoogleAuthToken = mobileUser.UserId;
+        //                await viewModel.LoadFromGoogle();
+        //                break;
+        //            case MobileServiceAuthenticationProvider.MicrosoftAccount:
+        //                viewModel.MicrosoftAuthToken = mobileUser.UserId;
+        //                await viewModel.LoadFromMicrosoft();
+        //                break;
+        //            case MobileServiceAuthenticationProvider.Twitter:
+        //                viewModel.TwitterAuthToken = mobileUser.UserId;
+        //                await viewModel.LoadFromTwitter();
+        //                break;
+        //            default:
+        //                return false;
+        //        }
+        //        success = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        App.LogError("Error logging into account", ex);
+        //        success = false;
+        //    }
+        //    return success;
+        //}
     }
 }
