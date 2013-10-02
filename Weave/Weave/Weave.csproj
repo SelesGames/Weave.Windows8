@@ -365,10 +365,6 @@
       <Project>{cce98720-6054-4ef8-ba8c-14821b35ec1d}</Project>
       <Name>Weave.Identity.Service.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Identity.Service.DTOs\Weave.Identity.Service.DTOs.csproj">
-      <Project>{6fa5ac47-653a-4634-8bca-cf68ba33f884}</Project>
-      <Name>Weave.Identity.Service.DTOs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.User.Service.Contracts\Weave.User.Service.Contracts.csproj">
       <Project>{02f3363f-7b0f-4c5f-9123-b388f2870c35}</Project>
       <Name>Weave.User.Service.Contracts</Name>
