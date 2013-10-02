@@ -314,6 +314,10 @@ namespace Weave.Common
 
         public String GetCurrentUser()
         {
+            // non-synced user test
+            //return "b41e8972-60cd-43cb-9974-0ec028bedf68";
+
+            // new user test
             //_isNewUser = true;
             //return null;
 
