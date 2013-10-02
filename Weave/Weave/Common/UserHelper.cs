@@ -334,7 +334,7 @@ namespace Weave.Common
             if (settingsContainer.Values.ContainsKey(LoggedInUserIdKey))
             {
                 id = settingsContainer.Values[LoggedInUserIdKey] as String;
-                _isLoggedIn = true;
+                //_isLoggedIn = true;
             }
             else if (settingsContainer.Values.ContainsKey(DefaultUserIdKey)) id = settingsContainer.Values[DefaultUserIdKey] as String;
             else
