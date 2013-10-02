@@ -20,62 +20,44 @@ namespace Weave.Identity.Service.Client
             return await GetIdentityInfo(url);
         }
 
-        public async Task<DTOs.IdentityInfo> GetUserFromFacebookToken(string facebookToken)
+        public async Task<DTOs.IdentityInfo> SyncFacebook(Guid userId, string facebookToken)
         {
-            var url = new UriBuilder(SERVICE_URL)
+            var url = new UriBuilder(SERVICE_URL + "/sync")
+                .AddParameter("userId", userId)
                 .AddParameter("facebookToken", facebookToken)
                 .ToString();
 
             return await GetIdentityInfo(url);
         }
 
-        public async Task<DTOs.IdentityInfo> GetUserFromTwitterToken(string twitterToken)
+        public async Task<DTOs.IdentityInfo> SyncTwitter(Guid userId, string twitterToken)
         {
-            var url = new UriBuilder(SERVICE_URL)
+            var url = new UriBuilder(SERVICE_URL + "/sync")
+                .AddParameter("userId", userId)
                 .AddParameter("twitterToken", twitterToken)
                 .ToString();
 
             return await GetIdentityInfo(url);
         }
 
-        public async Task<DTOs.IdentityInfo> GetUserFromMicrosoftToken(string microsoftToken)
+        public async Task<DTOs.IdentityInfo> SyncMicrosoft(Guid userId, string microsoftToken)
         {
-            var url = new UriBuilder(SERVICE_URL)
+            var url = new UriBuilder(SERVICE_URL + "/sync")
+                .AddParameter("userId", userId)
                 .AddParameter("microsoftToken", microsoftToken)
                 .ToString();
 
             return await GetIdentityInfo(url);
         }
 
-        public async Task<DTOs.IdentityInfo> GetUserFromGoogleToken(string googleToken)
+        public async Task<DTOs.IdentityInfo> SyncGoogle(Guid userId, string googleToken)
         {
-            var url = new UriBuilder(SERVICE_URL)
+            var url = new UriBuilder(SERVICE_URL + "/sync")
+                .AddParameter("userId", userId)
                 .AddParameter("googleToken", googleToken)
                 .ToString();
 
             return await GetIdentityInfo(url);
-        }
-
-        public async Task<DTOs.IdentityInfo> GetUserFromUserNameAndPassword(string username, string password)
-        {
-            var url = new UriBuilder(SERVICE_URL)
-                .AddParameter("username", username)
-                .AddParameter("password", password)
-                .ToString();
-
-            return await GetIdentityInfo(url);
-        }
-
-        public Task Add(DTOs.IdentityInfo user)
-        {
-            var client = CreateClient();
-            return client.PostAsync(SERVICE_URL, user, CancellationToken.None);
-        }
-
-        public Task Update(DTOs.IdentityInfo user)
-        {
-            var client = CreateClient();
-            return client.PutAsync(SERVICE_URL, user, CancellationToken.None);
         }
 
 
