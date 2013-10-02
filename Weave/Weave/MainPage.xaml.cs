@@ -223,6 +223,7 @@ namespace Weave
             }
             LstVwMain.ItemsSource = _startItems;
             PrgRngLoadingMain.IsActive = false;
+            BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Visible;
 
             if (_savedScrollPosition > 0)
             {
@@ -331,7 +332,7 @@ namespace Weave
         private void pageRoot_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             AdjustForScreenResolution();
-            BottomAppBar.Visibility = ApplicationView.Value == ApplicationViewState.Snapped ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
+            if (LstVwMain.ItemsSource != null) BottomAppBar.Visibility = ApplicationView.Value == ApplicationViewState.Snapped ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
         }
 
         private void MainScrollChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

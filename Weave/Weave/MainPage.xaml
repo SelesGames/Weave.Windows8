@@ -374,7 +374,7 @@
     </Grid>
 
     <Page.BottomAppBar>
-        <AppBar Padding="10,0,10,0" Background="{StaticResource WeaveBrush}">
+        <AppBar Padding="10,0,10,0" Background="{StaticResource WeaveBrush}" Visibility="Collapsed">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
