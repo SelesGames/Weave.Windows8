@@ -157,6 +157,9 @@
     <Compile Include="Views\Browse\LayoutSizeSelection.xaml.cs">
       <DependentUpon>LayoutSizeSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Browse\ReadingThemeSelection.xaml.cs">
+      <DependentUpon>ReadingThemeSelection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StartHub\AddView.xaml.cs">
       <DependentUpon>AddView.xaml</DependentUpon>
     </Compile>
@@ -304,6 +307,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Browse\LayoutSizeSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Browse\ReadingThemeSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

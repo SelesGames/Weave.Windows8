@@ -65,6 +65,7 @@ namespace Weave
 
         private FontSizeSelection _fontSizeControl = new FontSizeSelection();
         private LayoutSizeSelection _layoutSizeControl = new LayoutSizeSelection();
+        private ReadingThemeSelection _readingThemeControl = new ReadingThemeSelection();
 
         public BrowsePage()
         {
@@ -84,6 +85,7 @@ namespace Weave
 
             _fontSizeControl.FontSizeChanged += FontSizeControl_FontSizeChanged;
             _layoutSizeControl.LayoutSizeChanged += LayoutSizeControl_LayoutSizeChanged;
+            _readingThemeControl.ReadingThemeChanged += ReadingThemeControl_ReadingThemeChanged;
         }
 
         /// <summary>
@@ -211,6 +213,7 @@ namespace Weave
             int initialSelection = _nav.Initialise();
             GrdVwNavigation.DataContext = _nav;
             GrdVwNavigation.SelectedIndex = initialSelection;
+            UpdateArticleContainerBackground();
         }
 
         private void UpdateMainScrollOrientation(ApplicationViewState viewState)
@@ -408,6 +411,7 @@ namespace Weave
                 if (showLoading) WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 SbArticleFlyIn.Begin();
                 ParseArticle(item, fontSize, articleWidth);
+                RightPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             }
         }
 
@@ -415,6 +419,7 @@ namespace Weave
         {
             _readTimer.Stop();
             SbArticleFlyOut.Begin();
+            RightPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
         }
 
         private void Image_ImageOpened(object sender, RoutedEventArgs e)
@@ -577,8 +582,6 @@ namespace Weave
         {
             if (e.NewSize.Height > 1 && GrdVwNavigation.SelectedIndex > 0)
             {
-                UpdateAddSourceMargin();
-
                 GrdVwNavigation.ScrollIntoView(GrdVwNavigation.Items[GrdVwNavigation.SelectedIndex]);
             }
         }
@@ -767,7 +770,6 @@ namespace Weave
         {
             FeedItemViewModel vm = _nav.InsertFeed(addedFeed);
             if (vm != null) GrdVwNavigation.ScrollIntoView(vm);
-            UpdateAddSourceMargin();
         }
 
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
@@ -801,8 +803,6 @@ namespace Weave
                         _feedManageVm.RemoveCategory(vm, feeds);
                         MainPage.RequireCategoryRefresh = true;
                     }
-
-                    UpdateAddSourceMargin();
                 }
             }
         }
@@ -916,27 +916,6 @@ namespace Weave
             Windows.ApplicationModel.DataTransfer.DataTransferManager.ShowShareUI();
         }
 
-        private void UpdateAddSourceMargin()
-        {
-            return;
-            double navBottom = GrdVwNavigation.TransformToVisual(this).TransformPoint(new Point()).Y + GrdVwNavigation.ActualHeight;
-            double addSourcesTop = BtnAddSources.TransformToVisual(this).TransformPoint(new Point()).Y;
-            double spaceBetween = addSourcesTop - navBottom - 20;
-
-            if (spaceBetween > 0)
-            {
-                Thickness storeMargin = BtnAddSources.Margin;
-                BtnAddSources.Tag = storeMargin;
-
-                BtnAddSources.Margin = new Thickness(storeMargin.Left, -(spaceBetween + NavigationViewModel.NavSpacerHeight + 40), storeMargin.Right, storeMargin.Bottom);
-            }
-            else if (BtnAddSources.Tag is Thickness)
-            {
-                BtnAddSources.Margin = (Thickness)BtnAddSources.Tag;
-                BtnAddSources.Tag = null;
-            }
-        }
-
         private void AppBarLayout_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -975,6 +954,41 @@ namespace Weave
             GrdFlyoutContent.Children.Clear();
             GrdFlyoutContent.Children.Add(new AboutFlyout());
             PopupFlyout.IsOpen = true;
+        }
+
+        private void AppBarReadingTheme_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null)
+            {
+                Rect rect = DisplayUtilities.GetPopupElementRect(button);
+
+                SnapshotArticle(rect);
+                GrdAppBarMenuContent.Children.Clear();
+                GrdAppBarMenuContent.Children.Add(_readingThemeControl);
+                PopupAppBarMenu.HorizontalOffset = rect.Left + 22;
+                PopupAppBarMenu.VerticalOffset = -173;
+                PopupAppBarMenu.IsOpen = true;
+
+            }
+        }
+
+        private void ReadingThemeControl_ReadingThemeChanged(object arg1, WeaveOptions.ReadingTheme arg2)
+        {
+            if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible)
+            {
+                int fontSize = GetFontSize();
+                String[] parameters = { MobilizerHelper.GetForeground(), MobilizerHelper.GetBackground() };
+                WebVwArticle.InvokeScript("colorFontAndBackground", parameters);
+                UpdateArticleContainerBackground();
+            }
+            PopupAppBarMenu.IsOpen = false;
+        }
+
+        private void UpdateArticleContainerBackground()
+        {
+            if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) ArticleContainer.Background = MobilizerHelper.LightBackgroundBrush;
+            else ArticleContainer.Background = MobilizerHelper.DarkBackgroundBrush;
         }
 
 

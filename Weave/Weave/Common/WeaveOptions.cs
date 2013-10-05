@@ -23,7 +23,7 @@ namespace Weave.Common
                     ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
                     FontSize fontSize;
                     if (container.Values.ContainsKey(FontSizeKey) && Enum.TryParse<FontSize>((String)container.Values[FontSizeKey], out fontSize)) _fontSize = fontSize;
-                    else fontSize = FontSize.Medium;
+                    else _fontSize = FontSize.Medium;
                 }
                 return _fontSize == null ? FontSize.Medium : _fontSize.Value;
             }
@@ -48,7 +48,7 @@ namespace Weave.Common
                     ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
                     LayoutSize layoutSize;
                     if (container.Values.ContainsKey(LayoutSizeKey) && Enum.TryParse<LayoutSize>((String)container.Values[LayoutSizeKey], out layoutSize)) _layoutSize = layoutSize;
-                    else layoutSize = LayoutSize.Normal;
+                    else _layoutSize = LayoutSize.Normal;
                 }
                 return _layoutSize == null ? LayoutSize.Normal : _layoutSize.Value;
             }
@@ -57,6 +57,30 @@ namespace Weave.Common
                 _layoutSize = value;
                 ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
                 container.Values[LayoutSizeKey] = value.ToString();
+            }
+        }
+
+        public enum ReadingTheme { Light, Dark };
+        private const String ReadingThemeKey = "ReadingTheme";
+        private static ReadingTheme? _readingTheme = null;
+        public static ReadingTheme CurrentReadingTheme
+        {
+            get
+            {
+                if (_readingTheme == null)
+                {
+                    ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
+                    ReadingTheme readingTheme;
+                    if (container.Values.ContainsKey(ReadingThemeKey) && Enum.TryParse<ReadingTheme>((String)container.Values[ReadingThemeKey], out readingTheme)) _readingTheme = readingTheme;
+                    else _readingTheme = ReadingTheme.Light;
+                }
+                return _readingTheme == null ? ReadingTheme.Light : _readingTheme.Value;
+            }
+            set
+            {
+                _readingTheme = value;
+                ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
+                container.Values[ReadingThemeKey] = value.ToString();
             }
         }
 

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Weave.Mobilizer.Client;
 using Weave.ViewModels;
+using Windows.UI.Xaml.Media;
 
 namespace Weave.Common
 {
@@ -19,6 +20,21 @@ namespace Weave.Common
             "article-date",
             "photo_credit",
         };
+
+        public static Brush DarkBackgroundBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 16, 16, 16));
+        public static Brush LightBackgroundBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 255, 255));
+
+        public static String GetForeground()
+        {
+            if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) return "#333333";
+            else return "#F0F0F0";
+        }
+
+        public static String GetBackground()
+        {
+            if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) return "#FFFFFF";
+            else return "#101010";
+        }
 
         public static async Task<String> GetMobilizedHtml(NewsItem item, int fontSize, int articleWidth)
         {
@@ -79,7 +95,7 @@ namespace Weave.Common
                     else sourceIcon = SourceIconHelper.GetWebIcon(item.Feed.Uri);
                 }
 
-                result = await _formatter.CreateHtml(item.FormattedForMainPageSourceAndDate.Replace('•', '|'), item.Title, item.Link, sb.ToString(), "#333333", "#FFFFFF", "Cambria", fontSize + "pt", "#E96113", imageUrl, sourceIcon, articleWidth);
+                result = await _formatter.CreateHtml(item.FormattedForMainPageSourceAndDate.Replace('•', '|'), item.Title, item.Link, sb.ToString(), GetForeground(), GetBackground(), "Cambria", fontSize + "pt", "#E96113", imageUrl, sourceIcon, articleWidth);
             }
             catch (Exception e)
             {
