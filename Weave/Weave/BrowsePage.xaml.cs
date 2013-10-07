@@ -412,6 +412,8 @@ namespace Weave
                 SbArticleFlyIn.Begin();
                 ParseArticle(item, fontSize, articleWidth);
                 RightPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
         }
 
@@ -420,6 +422,8 @@ namespace Weave
             _readTimer.Stop();
             SbArticleFlyOut.Begin();
             RightPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
         }
 
         private void Image_ImageOpened(object sender, RoutedEventArgs e)
