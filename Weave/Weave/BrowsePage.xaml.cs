@@ -971,7 +971,7 @@ namespace Weave
                 GrdAppBarMenuContent.Children.Clear();
                 GrdAppBarMenuContent.Children.Add(_readingThemeControl);
                 PopupAppBarMenu.HorizontalOffset = rect.Left + 22;
-                PopupAppBarMenu.VerticalOffset = -173;
+                PopupAppBarMenu.VerticalOffset = -172;
                 PopupAppBarMenu.IsOpen = true;
 
             }
