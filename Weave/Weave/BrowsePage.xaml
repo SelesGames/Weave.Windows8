@@ -795,6 +795,7 @@
         </Grid>
         
         <Rectangle Name="RectOverlay" Visibility="Collapsed" Tapped="RectOverlay_Tapped" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="Black" Opacity="0.85" />
+        <Button Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{Binding ElementName=backButton, Path=Style}"/>
 
         <Grid Name="ArticleContainer" Visibility="Collapsed" Width="975" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White">
             <Grid.Resources>

@@ -23,6 +23,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+            <TextBlock Text="{Binding Article.Title}" Style="{StaticResource HeaderTextStyle}" Foreground="Black" LineHeight="52" TextWrapping="Wrap" Margin="2,2,0,0" Opacity="0.5" />
             <TextBlock Text="{Binding Article.Title}" Style="{StaticResource HeaderTextStyle}" Foreground="White" LineHeight="52" TextWrapping="Wrap" />
             <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,40,0,0">
                 <TextBlock Text="{Binding Article.OriginalSource}" FontSize="15" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
