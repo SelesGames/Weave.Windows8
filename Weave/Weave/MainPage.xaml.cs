@@ -66,6 +66,10 @@ namespace Weave
 
                 _defaultStartItemCount = _startItems.Count - AppendixItemCount;
             }
+
+#if DEBUG
+            AppBarClearRoaming.Visibility = Windows.UI.Xaml.Visibility.Visible;
+#endif
         }
 
         protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
@@ -730,6 +734,11 @@ namespace Weave
                     LiveTileHelper.UpdateMainTileLatestId(latestId);
                 }
             }
+        }
+
+        private void AppBarClearRoaming_Click(object sender, RoutedEventArgs e)
+        {
+            UserHelper.Instance.ClearRoamingData();
         }
 
     } // end of class

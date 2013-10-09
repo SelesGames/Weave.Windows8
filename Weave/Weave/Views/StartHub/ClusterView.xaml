@@ -25,7 +25,11 @@
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
                 <Grid Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="20,0,0,0">
-                    <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" />
+                    <Image Stretch="UniformToFill">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding NewsItem.SourceIconUrl}" DecodePixelHeight="30" DecodePixelWidth="30"/>
+                        </Image.Source>
+                    </Image>
                 </Grid>
                 <Rectangle Fill="{StaticResource OpacityGradientBrush}" />
                 <Grid VerticalAlignment="Bottom">
@@ -43,7 +47,11 @@
                 <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title, Converter={StaticResource UpperCaseConverter}}" Style="{StaticResource SubheaderTextStyle}" FontWeight="Bold" Margin="0,-12,0,0" MaxHeight="60" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,20,0,0" VerticalAlignment="Top">
                     <Grid Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="0,0,10,0">
-                        <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" />
+                        <Image Stretch="UniformToFill">
+                            <Image.Source>
+                                <BitmapImage UriSource="{Binding NewsItem.SourceIconUrl}" DecodePixelHeight="30" DecodePixelWidth="30"/>
+                            </Image.Source>
+                        </Image>
                     </Grid>
                     <TextBlock Text="{Binding NewsItem.OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
                     <TextBlock Text="|" Margin="5,-3,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
@@ -59,7 +67,11 @@
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
                 <Grid Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="20,0,0,0">
-                    <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" />
+                    <Image Stretch="UniformToFill">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding NewsItem.SourceIconUrl}" DecodePixelHeight="30" DecodePixelWidth="30"/>
+                        </Image.Source>
+                    </Image>
                 </Grid>
                 <Rectangle Fill="{StaticResource OpacityGradientBrush}" />
                 <Grid VerticalAlignment="Bottom">
@@ -77,7 +89,11 @@
                 <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,0" MaxHeight="60" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,20,0,0" VerticalAlignment="Top">
                     <Grid Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" Height="20" Margin="0,0,10,0">
-                        <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" />
+                        <Image Stretch="UniformToFill">
+                            <Image.Source>
+                                <BitmapImage UriSource="{Binding NewsItem.SourceIconUrl}" DecodePixelHeight="20" DecodePixelWidth="20"/>
+                            </Image.Source>
+                        </Image>
                     </Grid>
                     <TextBlock Text="{Binding NewsItem.OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
                     <TextBlock Text="|" Margin="5,-3,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
@@ -92,7 +108,11 @@
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
                 <Grid Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Margin="20,0,0,0">
-                    <Image Source="{Binding NewsItem.SourceIconUrl}" Stretch="UniformToFill" />
+                    <Image Stretch="UniformToFill">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding NewsItem.SourceIconUrl}" DecodePixelHeight="30" DecodePixelWidth="30"/>
+                        </Image.Source>
+                    </Image>
                 </Grid>
                 <Rectangle Fill="{StaticResource OpacityGradientBrush}" />
                 <Grid VerticalAlignment="Bottom">
