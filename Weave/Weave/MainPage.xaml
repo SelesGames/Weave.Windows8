@@ -383,6 +383,7 @@
                 <StackPanel x:Name="LeftPanel" Orientation="Horizontal" Visibility="Collapsed" Grid.Column="0" HorizontalAlignment="Left">
                 </StackPanel>
                 <StackPanel x:Name="RightPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                    <Button x:Name="AppBarClearRoaming" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Clear Roaming" Click="AppBarClearRoaming_Click" Visibility="Collapsed" />
                     <Button x:Name="AppBarRefresh" Style="{StaticResource RefreshAppBarButtonStyle}" Click="AppBarRefresh_Click" />
                 </StackPanel>
             </Grid>

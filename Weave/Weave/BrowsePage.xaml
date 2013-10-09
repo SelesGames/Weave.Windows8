@@ -698,7 +698,11 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Image Source="{Binding IconUrl}" Stretch="UniformToFill" Width="30" Height="30" />
+                    <Image Stretch="UniformToFill" Width="30" Height="30">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding IconUrl}" DecodePixelHeight="30" DecodePixelWidth="30"/>
+                        </Image.Source>
+                    </Image>
                     <TextBlock Text="{Binding Feed.Name}" Grid.Column="1" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Margin="10,0,0,0" />
                 </Grid>
             </Grid>

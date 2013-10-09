@@ -501,5 +501,12 @@ namespace Weave.Common
             get { return _currentUser; }
         }
 
+        public void ClearRoamingData()
+        {
+            ApplicationDataContainer settingsContainer = RoamingSettings;
+            settingsContainer.Values[DefaultUserIdKey] = null;
+            settingsContainer.Values[LoggedInUserIdKey] = null;
+        }
+
     } // end of class
 }
