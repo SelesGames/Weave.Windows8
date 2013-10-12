@@ -599,11 +599,6 @@ namespace Weave
             else base.GoBack(sender, e);
         }
 
-        private void RectOverlay_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
-        }
-
         private async void ReadTimer_Tick(object sender, object e)
         {
             _readTimer.Stop();
@@ -993,6 +988,11 @@ namespace Weave
         {
             if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) ArticleContainer.Background = MobilizerHelper.LightBackgroundBrush;
             else ArticleContainer.Background = MobilizerHelper.DarkBackgroundBrush;
+        }
+
+        private void RectOverlay_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
         }
 
 
