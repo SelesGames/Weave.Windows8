@@ -567,7 +567,11 @@
                 <Rectangle Grid.RowSpan="2" Fill="White" Opacity="0.05" />
                 <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" VerticalAlignment="Top" Foreground="White" FontWeight="Light" Margin="20,14,20,0" MaxHeight="150" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,0,0,20">
-                    <Image Source="{Binding SourceIconUrl}" Stretch="UniformToFill" Width="20" Height="20" Margin="0,0,10,0" />
+                    <Image Stretch="UniformToFill" Width="20" Height="20" Margin="0,0,10,0">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding SourceIconUrl}" DecodePixelHeight="20" DecodePixelWidth="20"/>
+                        </Image.Source>
+                    </Image>
                     <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="110" VerticalAlignment="Center" />
                     <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
                     <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
@@ -615,7 +619,11 @@
                 <Rectangle Grid.RowSpan="2" Fill="White" Opacity="0.05" />
                 <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" FontSize="40" LineHeight="45" VerticalAlignment="Top" FontWeight="ExtraLight" Margin="20,14,20,0" TextTrimming="None" />
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,0,0,20">
-                    <Image Source="{Binding SourceIconUrl}" Stretch="UniformToFill" Width="30" Height="30" Margin="0,0,10,0" />
+                    <Image Stretch="UniformToFill" Width="30" Height="30" Margin="0,0,10,0">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding SourceIconUrl}" DecodePixelHeight="30" DecodePixelWidth="30"/>
+                        </Image.Source>
+                    </Image>
                     <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="15" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="193" VerticalAlignment="Center" />
                     <TextBlock Text="|" Margin="5,0,5,0" FontSize="15" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
                     <TextBlock Text="{Binding PublishDate}" FontSize="15" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
@@ -798,8 +806,8 @@
             </StackPanel>
         </Grid>
         
-        <Rectangle Name="RectOverlay" Visibility="Collapsed" Tapped="RectOverlay_Tapped" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="Black" Opacity="0.85" />
-        <Button Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{Binding ElementName=backButton, Path=Style}"/>
+        <Rectangle Name="RectOverlay" Visibility="Collapsed" PointerPressed="RectOverlay_PointerPressed" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="Black" Opacity="0.85" />
+        <Button Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{Binding ElementName=backButton, Path=Style}" Visibility="{Binding ElementName=RectOverlay, Path=Visibility}" />
 
         <Grid Name="ArticleContainer" Visibility="Collapsed" Width="975" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White">
             <Grid.Resources>

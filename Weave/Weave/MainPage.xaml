@@ -237,7 +237,11 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Height="30" Margin="0,0,0,0">
-                        <Image Source="{Binding IconUrl}" Stretch="UniformToFill" />
+                        <Image Stretch="UniformToFill">
+                            <Image.Source>
+                                <BitmapImage UriSource="{Binding IconUrl}" DecodePixelHeight="30" DecodePixelWidth="30"/>
+                            </Image.Source>
+                        </Image>
                     </Grid>
                     <TextBlock Margin="10,0,0,0" Grid.Column="1" HorizontalAlignment="Left" Text="{Binding Feed.Name}" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="WordEllipsis" FontSize="{StaticResource ControlContentThemeFontSize}" VerticalAlignment="Center" />
                 </Grid>
