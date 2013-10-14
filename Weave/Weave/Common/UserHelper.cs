@@ -413,8 +413,9 @@ namespace Weave.Common
                 try
                 {
                     await _currentUser.AddFeed(feed);
+                    FeedsInfoList list = await _repo.GetFeeds(_currentUser.Id, true);
+                    _currentUser.Feeds[_currentUser.Feeds.Count - 1] = list.Feeds[list.Feeds.Count - 1];
                     Feed addedFeed = _currentUser.Feeds[_currentUser.Feeds.Count - 1];
-                    _currentUser.GetNewsForFeed(addedFeed.Id, EntryType.ExtendRefresh, 0, 0);
                     String category = addedFeed.Category;
                     if (category == null) category = "";
                     if (!CategoryFeeds.ContainsKey(category)) CategoryFeeds[category] = new List<Feed>();
@@ -506,6 +507,11 @@ namespace Weave.Common
             ApplicationDataContainer settingsContainer = RoamingSettings;
             settingsContainer.Values[DefaultUserIdKey] = null;
             settingsContainer.Values[LoggedInUserIdKey] = null;
+        }
+
+        public async Task UpdateFeed(Feed feed)
+        {
+            if (_currentUser != null) await _currentUser.UpdateFeed(feed);
         }
 
     } // end of class

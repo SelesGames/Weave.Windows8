@@ -175,7 +175,9 @@ namespace Weave.ViewModels.Browse
             if (!String.IsNullOrEmpty(category) && feed != null)
             {
                 feed.Feed.Category = category;
+                feed.IsBusy = true;
                 Feed addedFeed = await UserHelper.Instance.AddFeed(feed.Feed);
+                feed.IsBusy = false;
                 if (addedFeed != null)
                 {
                     if (FeedAdded != null) FeedAdded(this, addedFeed);

@@ -171,5 +171,25 @@ namespace Weave.Common
             container.Values.Clear();
         }
 
+        public static bool EditFeedClusterHeader(String feedId, String newHeader)
+        {
+            bool editted = false;
+            if (!String.IsNullOrEmpty(feedId) && !String.IsNullOrEmpty(newHeader))
+            {
+                ApplicationDataContainer clusterContainer = GetClusterContainer();
+                if (clusterContainer.Values.ContainsKey(feedId))
+                {
+                    ApplicationDataCompositeValue compositeValue = clusterContainer.Values[feedId] as ApplicationDataCompositeValue;
+                    if (compositeValue != null)
+                    {
+                        compositeValue[ClusterHeaderKey] = newHeader;
+                        clusterContainer.Values[feedId] = compositeValue;
+                        editted = true;
+                    }
+                }
+            }
+            return editted;
+        }
+
     } // end of class
 }

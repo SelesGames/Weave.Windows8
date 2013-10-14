@@ -148,6 +148,9 @@
     <Compile Include="ViewModels\StartHub\StartLoginViewModel.cs" />
     <Compile Include="ViewModels\StartHub\StartNewsItem.cs" />
     <Compile Include="ViewModels\StartHub\StartSourcesViewModel.cs" />
+    <Compile Include="Views\Browse\EditFeed.xaml.cs">
+      <DependentUpon>EditFeed.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Browse\FeedManagement.xaml.cs">
       <DependentUpon>FeedManagement.xaml</DependentUpon>
     </Compile>
@@ -297,6 +300,10 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Browse\EditFeed.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Browse\FeedManagement.xaml">
       <SubType>Designer</SubType>

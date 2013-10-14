@@ -67,6 +67,8 @@ namespace Weave
         private LayoutSizeSelection _layoutSizeControl = new LayoutSizeSelection();
         private ReadingThemeSelection _readingThemeControl = new ReadingThemeSelection();
 
+        private bool? _isMouse = null;
+
         public BrowsePage()
         {
             this.InitializeComponent();
@@ -86,6 +88,8 @@ namespace Weave
             _fontSizeControl.FontSizeChanged += FontSizeControl_FontSizeChanged;
             _layoutSizeControl.LayoutSizeChanged += LayoutSizeControl_LayoutSizeChanged;
             _readingThemeControl.ReadingThemeChanged += ReadingThemeControl_ReadingThemeChanged;
+
+            EditFeedControl.SaveRequest += EditFeedControl_SaveRequest;
         }
 
         /// <summary>
@@ -400,6 +404,7 @@ namespace Weave
             BtnBrowserBack.IsEnabled = false;
             if (item != null)
             {
+                if (CheckForMouse()) ArticleContainer.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
                 if (item.IsNew) item.IsNew = false;
                 int fontSize = GetFontSize();
                 int articleWidth = GetArticleWidth(fontSize);
@@ -420,6 +425,8 @@ namespace Weave
         private void CloseArticle()
         {
             _readTimer.Stop();
+            Point p = ArticleContainer.TransformToVisual(this).TransformPoint(new Point());
+            AnimArticleFlyOut.To = Window.Current.Bounds.Width - p.X;
             SbArticleFlyOut.Begin();
             RightPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
             AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
@@ -618,6 +625,11 @@ namespace Weave
 
         private async void AppBarRefresh_Click(object sender, RoutedEventArgs e)
         {
+            Refresh();
+        }
+
+        private async void Refresh()
+        {
             if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
             await ProcessSelectedNav(true);
         }
@@ -782,25 +794,40 @@ namespace Weave
                 //    menu.Commands.Add(new UICommand("Add source...", null, "Add"));
                 //    menu.Commands.Add(new UICommandSeparator());
                 //}
-                menu.Commands.Add(new UICommand("Delete"));
+                if (button.DataContext is FeedItemViewModel)
+                {
+                    menu.Commands.Add(new UICommand("Edit...", null, "Edit"));
+                }
+                menu.Commands.Add(new UICommand("Delete", null, "Delete"));
                 IUICommand result = await menu.ShowForSelectionAsync(DisplayUtilities.GetPopupElementRect(button), Placement.Below);
                 if (result != null)
                 {
-                    if (button.DataContext is FeedItemViewModel)
+                    if (String.Equals(result.Id, "Delete"))
                     {
-                        FeedItemViewModel vm = (FeedItemViewModel)button.DataContext;
-                        GrdVwNavigation.SelectedIndex = NavigationViewModel.DefaultInitialSelection;
-                        _nav.RemoveFeed(vm);
-                        _feedManageVm.RemoveFeed(vm);
+                        if (button.DataContext is FeedItemViewModel)
+                        {
+                            FeedItemViewModel vm = (FeedItemViewModel)button.DataContext;
+                            GrdVwNavigation.SelectedIndex = NavigationViewModel.DefaultInitialSelection;
+                            _nav.RemoveFeed(vm);
+                            _feedManageVm.RemoveFeed(vm);
+                        }
+                        else if (button.DataContext is CategoryViewModel)
+                        {
+                            CategoryViewModel vm = (CategoryViewModel)button.DataContext;
+                            GrdVwNavigation.SelectedIndex = NavigationViewModel.DefaultInitialSelection;
+                            List<FeedItemViewModel> feeds = _nav.GetCategoryFeeds(vm);
+                            _nav.RemoveCategory(vm);
+                            _feedManageVm.RemoveCategory(vm, feeds);
+                            MainPage.RequireCategoryRefresh = true;
+                        }
                     }
-                    else if (button.DataContext is CategoryViewModel)
+                    else if (String.Equals(result.Id, "Edit"))
                     {
-                        CategoryViewModel vm = (CategoryViewModel)button.DataContext;
-                        GrdVwNavigation.SelectedIndex = NavigationViewModel.DefaultInitialSelection;
-                        List<FeedItemViewModel> feeds = _nav.GetCategoryFeeds(vm);
-                        _nav.RemoveCategory(vm);
-                        _feedManageVm.RemoveCategory(vm, feeds);
-                        MainPage.RequireCategoryRefresh = true;
+                        EditFeedControl.LoadFeed(button.DataContext as FeedItemViewModel);
+                        Rect rect = DisplayUtilities.GetPopupElementRect(button);
+                        PopupEditFeed.HorizontalOffset = rect.Left - (EditFeedControl.Width / 2);
+                        PopupEditFeed.VerticalOffset = rect.Top + button.ActualHeight;
+                        PopupEditFeed.IsOpen = true;
                     }
                 }
             }
@@ -992,9 +1019,46 @@ namespace Weave
 
         private void RectOverlay_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
+            bool close = true;
+            Pointer p = e.Pointer;
+            if (p.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
+            {
+                Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(RectOverlay);
+                if (ptrPt.Properties.IsRightButtonPressed) close = false;
+            }
+
+            if (close && ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
         }
 
+
+
+        private bool CheckForMouse()
+        {
+            if (_isMouse == null)
+            {
+                Windows.Devices.Input.MouseCapabilities mouseCapabilities = new Windows.Devices.Input.MouseCapabilities();
+                Windows.Devices.Input.TouchCapabilities touchCapabilities = new Windows.Devices.Input.TouchCapabilities();
+                if (touchCapabilities.TouchPresent == 0) _isMouse = true;
+                else _isMouse = mouseCapabilities.MousePresent > 0;
+            }
+            return _isMouse == null ? false : _isMouse.Value;
+        }
+
+        private void PopupEditFeed_Opened(object sender, object e)
+        {
+            SbEditFeedPopIn.Begin();
+        }
+
+        void EditFeedControl_SaveRequest(object sender, FeedItemViewModel feed)
+        {
+            // rebind model so it updates the view in the nav
+            Feed model = feed.Feed;
+            feed.Feed = null;
+            feed.Feed = model;
+
+            PopupEditFeed.IsOpen = false;
+            Refresh();
+        }
 
     } // end of class
 }

@@ -902,6 +902,17 @@
             <Grid Name="GrdAppBarMenuContent" Background="White">
             </Grid>
         </Popup>
+        
+        <Popup Name="PopupEditFeed" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.RowSpan="2" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupEditFeed_Opened">
+            <Popup.Resources>
+                <Storyboard x:Name="SbEditFeedPopIn">
+                    <PopInThemeAnimation TargetName="GrdEditFeedContent" FromVerticalOffset="50" FromHorizontalOffset="0" />
+                </Storyboard>
+            </Popup.Resources>
+            <Border Name="GrdEditFeedContent" Background="#272727" BorderBrush="Black" BorderThickness="2">
+                <browse:EditFeed x:Name="EditFeedControl" Width="250" HorizontalAlignment="Left" />
+            </Border>
+        </Popup>
 
         <Popup Name="PopupFlyout" Margin="0,0,346,0" HorizontalAlignment="Right" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Top" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupFlyout_Opened">
             <Popup.Resources>

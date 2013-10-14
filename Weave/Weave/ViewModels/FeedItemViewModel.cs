@@ -37,7 +37,12 @@ namespace Weave.ViewModels
             set { SetProperty(ref _iconUrl, value); }
         }
 
-        public Feed Feed { get; set; }
+        private Feed _feed;
+        public Feed Feed
+        {
+            get { return _feed; }
+            set { SetProperty(ref _feed, value); }
+        }
         public CategoryViewModel ParentCategory { get; set; }
 
         public FeedItemViewModel(Feed feed)
@@ -55,6 +60,13 @@ namespace Weave.ViewModels
         {
             get { return _requiresRefresh; }
             set { SetProperty(ref _requiresRefresh, value); }
+        }
+
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { SetProperty(ref _isBusy, value); }
         }
     }
 }

@@ -43,6 +43,7 @@
                         </Border>
                     </Grid>
                     <TextBlock Text="{Binding Feed.Name}" FontWeight="Bold" Grid.Column="1" Margin="10,5,0,0" TextWrapping="Wrap" Foreground="Black" FontSize="{StaticResource ControlContentThemeFontSize}" />
+                    <ProgressRing Style="{StaticResource LargeLoadingRingStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="{Binding IsBusy}" />
                 </Grid>
             </Button>
         </DataTemplate>
@@ -57,6 +58,7 @@
                         <TextBlock Text="&#xE10B;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" Margin="5,5,0,0" />
                     </Border>
                     <TextBlock Text="{Binding Feed.Name}" FontWeight="Bold" Grid.Column="1" Margin="50,20,20,20" MaxHeight="40" TextWrapping="Wrap" Foreground="Black" FontSize="{StaticResource ControlContentThemeFontSize}" />
+                    <ProgressRing Style="{StaticResource LargeLoadingRingStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="{Binding IsBusy}" />
                 </Grid>
             </Button>
         </DataTemplate>

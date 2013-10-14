@@ -219,10 +219,18 @@ namespace Weave
             }
             else // check if anything requires refreshing
             {
-                if (RequireCategoryRefresh)
+                if (RequireAllRefresh)
                 {
-                    RequireCategoryRefresh = false;
-                    _sourcesVm.InitSources();
+                    RequireAllRefresh = false;
+                    await Refresh();
+                }
+                else
+                {
+                    if (RequireCategoryRefresh)
+                    {
+                        RequireCategoryRefresh = false;
+                        _sourcesVm.InitSources();
+                    }
                 }
             }
             LstVwMain.ItemsSource = _startItems;
@@ -673,6 +681,13 @@ namespace Weave
         {
             get { return _requireCategoryRefresh; }
             set { _requireCategoryRefresh = value; }
+        }
+
+        private static bool _requireAllRefresh;
+        public static bool RequireAllRefresh
+        {
+            get { return _requireAllRefresh; }
+            set { _requireAllRefresh = value; }
         }
 
         private async void AppBarRefresh_Click(object sender, RoutedEventArgs e)
