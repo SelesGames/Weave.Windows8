@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
+using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,157 +18,93 @@ namespace SelesGames.Rest
 
         public Task GetAsync(string url, CancellationToken cancellationToken)
         {
-            var request = HttpWebRequest.CreateHttp(url);
-            return request.GetResponseAsync();
+#if DEBUG
+            Debug.WriteLine("HTTP GET : {0}", url);
+#endif
+            return new HttpClient().GetAsync(url, cancellationToken);
         }
 
         public async Task<T> GetAsync<T>(string url, CancellationToken cancellationToken)
         {
-            var request = HttpWebRequest.CreateHttp(url);
-
-            if (!string.IsNullOrEmpty(Headers.Accept))
-                request.Accept = Headers.Accept;
-
-            if (UseGzip)
-                request.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
-
-            var webresponse = await request.GetResponseAsync().ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var response = (HttpWebResponse)webresponse;
-
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                return ReadObjectFromWebResponse<T>(response);
-            }
-            else
-            {
-                return default(T);
-            }
-
-            throw new WebException(string.Format("Status code: {0}", response.StatusCode), null, WebExceptionStatus.UnknownError, response);
+#if DEBUG
+            Debug.WriteLine("HTTP GET : {0}", url);
+#endif
+            var response = await CreateClient().GetAsync(url, cancellationToken).ConfigureAwait(false);
+            return await ReadObjectFromResponseMessage<T>(response);
         }
 
         public async Task<TResult> PostAsync<TPost, TResult>(string url, TPost obj, CancellationToken cancelToken)
         {
-            var request = HttpWebRequest.CreateHttp(url);
-            request.Method = "POST";
+#if DEBUG
+            Debug.WriteLine("HTTP POST : {0}", url);
+#endif
+            var client = CreateClient();
 
-            if (!string.IsNullOrEmpty(Headers.ContentType))
-                request.ContentType = Headers.ContentType;
+            HttpResponseMessage response;
 
-            if (!string.IsNullOrEmpty(Headers.Accept))
-                request.Accept = Headers.Accept;
-
-            if (UseGzip)
-                request.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
-
-            using (var requestStream = await request.GetRequestStreamAsync().ConfigureAwait(false))
+            using (var ms = new MemoryStream())
             {
-                cancelToken.ThrowIfCancellationRequested();
-                WriteObject(requestStream, obj);
+                WriteObject(ms, obj);
+                ms.Position = 0;
+
+                var content = new StreamContent(ms);
+                content.Headers.TryAddWithoutValidation("Content-Type", Headers.ContentType);
+
+                response = await client.PostAsync(url, content).ConfigureAwait(false);
             }
 
-            var response = await request.GetResponseAsync().ConfigureAwait(false);
-
-            cancelToken.ThrowIfCancellationRequested();
-
-            return ReadObjectFromWebResponse<TResult>((HttpWebResponse)response);
+            return await ReadObjectFromResponseMessage<TResult>(response);
         }
 
-        public async Task<bool> PostAsync<TPost>(string url, TPost obj, CancellationToken cancelToken)
+        public async Task PostAsync<TPost>(string url, TPost obj, CancellationToken cancelToken)
         {
-            var request = HttpWebRequest.CreateHttp(url);
-            request.Method = "POST";
+#if DEBUG
+            Debug.WriteLine("HTTP POST : {0}", url);
+#endif
+            var client = CreateClient();
 
-            if (!string.IsNullOrEmpty(Headers.ContentType))
-                request.ContentType = Headers.ContentType;
-
-            if (!string.IsNullOrEmpty(Headers.Accept))
-                request.Accept = Headers.Accept;
-
-            if (UseGzip)
-                request.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
-
-            using (var requestStream = await request.GetRequestStreamAsync().ConfigureAwait(false))
+            using (var ms = new MemoryStream())
             {
-                cancelToken.ThrowIfCancellationRequested();
-                WriteObject(requestStream, obj);
+                WriteObject(ms, obj);
+                ms.Position = 0;
+
+                var content = new StreamContent(ms);
+                content.Headers.TryAddWithoutValidation("Content-Type", Headers.ContentType);
+
+                await client.PostAsync(url, content).ConfigureAwait(false);
             }
-
-            var response = await request.GetResponseAsync().ConfigureAwait(false);
-            var httpResponse = (HttpWebResponse)response;
-            return httpResponse.StatusCode == HttpStatusCode.Created;        
         }
-
-        public async Task<TResult> PutAsync<TPost, TResult>(string url, TPost obj, CancellationToken cancelToken)
-        {
-            var request = HttpWebRequest.CreateHttp(url);
-            request.Method = "PUT";
-
-            if (!string.IsNullOrEmpty(Headers.ContentType))
-                request.ContentType = Headers.ContentType;
-
-            if (!string.IsNullOrEmpty(Headers.Accept))
-                request.Accept = Headers.Accept;
-
-            if (UseGzip)
-                request.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
-
-            using (var requestStream = await request.GetRequestStreamAsync().ConfigureAwait(false))
-            {
-                cancelToken.ThrowIfCancellationRequested();
-                WriteObject(requestStream, obj);
-            }
-
-            var response = await request.GetResponseAsync().ConfigureAwait(false);
-
-            cancelToken.ThrowIfCancellationRequested();
-
-            return ReadObjectFromWebResponse<TResult>((HttpWebResponse)response);
-        }
-
-        public async Task<bool> PutAsync<TPost>(string url, TPost obj, CancellationToken cancelToken)
-        {
-            var request = HttpWebRequest.CreateHttp(url);
-            request.Method = "PUT";
-
-            if (!string.IsNullOrEmpty(Headers.ContentType))
-                request.ContentType = Headers.ContentType;
-
-            if (!string.IsNullOrEmpty(Headers.Accept))
-                request.Accept = Headers.Accept;
-
-            if (UseGzip)
-                request.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
-
-            using (var requestStream = await request.GetRequestStreamAsync().ConfigureAwait(false))
-            {
-                cancelToken.ThrowIfCancellationRequested();
-                WriteObject(requestStream, obj);
-            }
-
-            var response = await request.GetResponseAsync().ConfigureAwait(false);
-            var httpResponse = (HttpWebResponse)response;
-            return httpResponse.StatusCode == HttpStatusCode.Created;
-        }
-
 
 
 
 
         #region helper methods
 
-        T ReadObjectFromWebResponse<T>(HttpWebResponse response)
+        HttpClient CreateClient()
         {
+            var client = new HttpClient();
+
+            if (!string.IsNullOrEmpty(Headers.Accept))
+                client.DefaultRequestHeaders.TryAddWithoutValidation("Accept", Headers.Accept);
+
+            if (UseGzip)
+                client.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Encoding", "gzip");
+
+            return client;
+        }
+
+        async Task<T> ReadObjectFromResponseMessage<T>(HttpResponseMessage response)
+        {
+            response.EnsureSuccessStatusCode();
+
             T result;
 
-            using (var stream = response.GetResponseStream())
+            using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
             {
-                var contentEncoding = response.Headers["Content-Encoding"];
-                if (UseGzip || "gzip".Equals(contentEncoding, StringComparison.OrdinalIgnoreCase))
+                var contentEncoding = response.Content.Headers.ContentEncoding.FirstOrDefault();
+                if ("gzip".Equals(contentEncoding, StringComparison.OrdinalIgnoreCase))
                 {
-                    using (var gzip = new GZipStream(stream, CompressionMode.Decompress, false))
+                    using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
                     {
                         result = ReadObject<T>(gzip);
                     }
