@@ -26,7 +26,7 @@ namespace Weave.Common
 
         public static String GetForeground()
         {
-            if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) return "#0A0A0A";
+            if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) return "#101010";
             //if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) return "#333333";
             else return "#FAFAFA";
         }
