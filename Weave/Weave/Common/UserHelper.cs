@@ -479,7 +479,7 @@ namespace Weave.Common
                     UserInfo newUserInfo = new UserInfo(_repo);
                     foreach (Feed f in feeds) newUserInfo.Feeds.Add(f);
                     newUserInfo.Id = Guid.NewGuid();
-                    await newUserInfo.Save();
+                    await newUserInfo.Create();
                     _currentUserId = newUserInfo.Id.ToString();
                     settingsContainer.Values[DefaultUserIdKey] = _currentUserId;
                     IsNewUser = false;

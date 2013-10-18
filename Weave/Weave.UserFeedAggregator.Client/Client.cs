@@ -238,6 +238,32 @@ namespace Weave.User.Service.Client
             await client.PostAsync(url, newsItemIds, CancellationToken.None);
         }
 
+        public async Task MarkArticlesSoftRead(Guid userId, string category)
+        {
+            string append = "soft_read";
+            var url = new UriBuilder(SERVICE_URL + append)
+                .AddParameter("userId", userId)
+                .AddParameter("category", category)
+                .AddCacheBuster()
+                .ToString();
+
+            var client = CreateClient();
+            await client.GetAsync(url, CancellationToken.None);
+        }
+
+        public async Task MarkArticlesSoftRead(Guid userId, Guid feedId)
+        {
+            string append = "soft_read";
+            var url = new UriBuilder(SERVICE_URL + append)
+                .AddParameter("userId", userId)
+                .AddParameter("feedId", feedId)
+                .AddCacheBuster()
+                .ToString();
+
+            var client = CreateClient();
+            await client.GetAsync(url, CancellationToken.None);
+        }
+
         public async Task AddFavorite(Guid userId, Guid newsItemId)
         {
             string append = "add_favorite";
