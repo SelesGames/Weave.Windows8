@@ -511,7 +511,44 @@ namespace Weave.Common
 
         public async Task UpdateFeed(Feed feed)
         {
-            if (_currentUser != null) await _currentUser.UpdateFeed(feed);
+            if (_currentUser != null)
+            {
+                try
+                {
+                    await _currentUser.UpdateFeed(feed);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        public async Task MarkFeedAsRead(Feed feed)
+        {
+            if (_currentUser != null)
+            {
+                try
+                {
+                    await _currentUser.MarkFeedSoftRead(feed.Id);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        public async Task MarkCategoryAsRead(String category)
+        {
+            if (_currentUser != null)
+            {
+                try
+                {
+                    await _currentUser.MarkCategorySoftRead(category);
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
 
     } // end of class

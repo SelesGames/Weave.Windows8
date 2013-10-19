@@ -975,6 +975,7 @@
                     <Button x:Name="AppBarReadingTheme" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Reading theme" Content="&#xE158;" Click="AppBarReadingTheme_Click" Visibility="Collapsed" />
                 </StackPanel>
                 <StackPanel x:Name="RightPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                    <Button x:Name="AppBarMarkAllRead" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Mark all read" Content="&#xE119;" Click="AppBarMarkAllRead_Click" />
                     <Button x:Name="AppBarLayout" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Layout" Content="&#xE138;" Click="AppBarLayout_Click" />
                     <Button x:Name="AppBarRefresh" Style="{StaticResource RefreshAppBarButtonStyle}" Click="AppBarRefresh_Click" />
                 </StackPanel>

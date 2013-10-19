@@ -1060,5 +1060,35 @@ namespace Weave
             Refresh();
         }
 
+        private async void AppBarMarkAllRead_Click(object sender, RoutedEventArgs e)
+        {
+            object selected = GrdVwNavigation.SelectedItem;
+            AppBarMarkAllRead.IsEnabled = false;
+            if (selected is CategoryViewModel)
+            {
+                CategoryViewModel vm = (CategoryViewModel)selected;
+                await UserHelper.Instance.MarkCategoryAsRead(vm.Info.Category);
+                MarkAllArticlesRead();
+            }
+            else if (selected is FeedItemViewModel)
+            {
+                FeedItemViewModel vm = (FeedItemViewModel)selected;
+                await UserHelper.Instance.MarkFeedAsRead(vm.Feed);
+                MarkAllArticlesRead();
+            }
+            AppBarMarkAllRead.IsEnabled = true;
+        }
+
+        private void MarkAllArticlesRead()
+        {
+            if (_feed != null)
+            {
+                foreach (NewsItem item in _feed.Items)
+                {
+                    if (!item.HasBeenViewed) item.HasBeenViewed = true;
+                }
+            }
+        }
+
     } // end of class
 }
