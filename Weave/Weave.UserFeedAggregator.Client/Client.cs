@@ -74,7 +74,6 @@ namespace Weave.User.Service.Client
                 .ToString();
 
             var client = CreateClient();
-            System.Diagnostics.Debug.WriteLine("Calling {0}", url);
             var result = await client.GetAsync<Outgoing.NewsList>(url, CancellationToken.None);
             return result;
         }
@@ -94,7 +93,6 @@ namespace Weave.User.Service.Client
                 .ToString();
 
             var client = CreateClient();
-            System.Diagnostics.Debug.WriteLine("Calling {0}", url);
             var result = await client.GetAsync<Outgoing.NewsList>(url, CancellationToken.None);
             return result;
         }
@@ -238,6 +236,32 @@ namespace Weave.User.Service.Client
 
             var client = CreateClient();
             await client.PostAsync(url, newsItemIds, CancellationToken.None);
+        }
+
+        public async Task MarkArticlesSoftRead(Guid userId, string category)
+        {
+            string append = "soft_read";
+            var url = new UriBuilder(SERVICE_URL + append)
+                .AddParameter("userId", userId)
+                .AddParameter("category", category)
+                .AddCacheBuster()
+                .ToString();
+
+            var client = CreateClient();
+            await client.GetAsync(url, CancellationToken.None);
+        }
+
+        public async Task MarkArticlesSoftRead(Guid userId, Guid feedId)
+        {
+            string append = "soft_read";
+            var url = new UriBuilder(SERVICE_URL + append)
+                .AddParameter("userId", userId)
+                .AddParameter("feedId", feedId)
+                .AddCacheBuster()
+                .ToString();
+
+            var client = CreateClient();
+            await client.GetAsync(url, CancellationToken.None);
         }
 
         public async Task AddFavorite(Guid userId, Guid newsItemId)

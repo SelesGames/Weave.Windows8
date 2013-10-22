@@ -21,19 +21,20 @@ namespace Weave.Common
             "photo_credit",
         };
 
-        public static Brush DarkBackgroundBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 16, 16, 16));
-        public static Brush LightBackgroundBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 255, 255));
+        public static Brush DarkBackgroundBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 18, 18, 18));
+        public static Brush LightBackgroundBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 242, 242, 242));
 
         public static String GetForeground()
         {
-            if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) return "#333333";
-            else return "#F0F0F0";
+            if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) return "#101010";
+            //if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) return "#333333";
+            else return "#FAFAFA";
         }
 
         public static String GetBackground()
         {
-            if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) return "#FFFFFF";
-            else return "#101010";
+            if (WeaveOptions.CurrentReadingTheme == WeaveOptions.ReadingTheme.Light) return "#F2F2F2";
+            else return "#121212";
         }
 
         public static async Task<String> GetMobilizedHtml(NewsItem item, int fontSize, int articleWidth)
