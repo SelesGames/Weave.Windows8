@@ -298,11 +298,11 @@ namespace Weave.Common
             return null;
         }
 
-        public bool IsFeedAdded(String name)
+        public bool IsFeedAdded(String url)
         {
             foreach (Feed f in _currentUser.Feeds)
             {
-                if (String.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase))
+                if (String.Equals(f.Uri, url, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

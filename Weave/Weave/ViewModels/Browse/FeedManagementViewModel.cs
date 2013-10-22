@@ -73,7 +73,7 @@ namespace Weave.ViewModels.Browse
                 key = f.Category == null ? "" : f.Category;
                 if (!collection.ContainsKey(key)) collection[key] = new List<FeedItemViewModel>();
                 FeedItemViewModel vm = new FeedItemViewModel(f);
-                vm.IsAdded = UserHelper.Instance.IsFeedAdded(f.Name);
+                vm.IsAdded = UserHelper.Instance.IsFeedAdded(f.Uri);
                 collection[key].Add(vm);
             }
             return collection;
