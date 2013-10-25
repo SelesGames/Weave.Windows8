@@ -694,6 +694,14 @@
         <DataTemplate x:Key="CategoryTemplate">
             <Grid Margin="0,0,0,0">
                 <TextBlock Text="{Binding NewCount, Converter={StaticResource NewCountConverter}}" Foreground="{StaticResource WeaveBrush}" Margin="50,0,0,0" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
+                <Grid Margin="100,0,0,0" Visibility="{Binding CanCollapse, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Button Name="BtnExpanded" Style="{StaticResource ButtonStyleBasic}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-10" Padding="10" Visibility="{Binding IsCollapsed, Converter={StaticResource InverseBooleanToVisibilityConverter}}" Click="BtnExpanded_Click">
+                        <TextBlock Text="&#xE0E5;" FontFamily="Segoe UI Symbol" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Button>
+                    <Button Name="BtnCollapsed" Style="{StaticResource ButtonStyleBasic}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-10" Padding="10" Visibility="{Binding IsCollapsed, Converter={StaticResource BooleanToVisibilityConverter}}" Click="BtnCollapsed_Click">
+                        <TextBlock Text="&#xE0E3;" FontFamily="Segoe UI Symbol" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Button>
+                </Grid>
                 <TextBlock Margin="120,0,0,0" Text="{Binding DisplayName, Converter={StaticResource UpperCaseConverter}}" FontWeight="Bold" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" />
             </Grid>
         </DataTemplate>

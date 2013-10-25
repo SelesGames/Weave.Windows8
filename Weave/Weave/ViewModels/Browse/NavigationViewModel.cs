@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Weave.Common;
+using Windows.Storage;
+using Windows.UI.Xaml;
 
 namespace Weave.ViewModels.Browse
 {
@@ -21,23 +23,42 @@ namespace Weave.ViewModels.Browse
         public CategoryViewModel.CategoryType? InitialSelectedSpecial { get; set; }
 
         private Dictionary<CategoryViewModel, List<FeedItemViewModel>> _cateogyrFeedsMap = new Dictionary<CategoryViewModel,List<FeedItemViewModel>>();
+        private HashSet<CategoryViewModel> _collapsedCategories = new HashSet<CategoryViewModel>();
 
         public const int NavSpacerHeight = 40;
         public const int DefaultInitialSelection = 2;
 
-        public int Initialise()
+        private DispatcherTimer _saveCollapseStateTimer;
+
+        private const String CollapsedCategoriesFile = "CollapsedCategories.dat";
+
+        public NavigationViewModel()
+        {
+            _saveCollapseStateTimer = new DispatcherTimer();
+            _saveCollapseStateTimer.Interval = TimeSpan.FromSeconds(2);
+            _saveCollapseStateTimer.Tick += SaveCollapseStateTimer_Tick;
+        }
+
+        async void SaveCollapseStateTimer_Tick(object sender, object e)
+        {
+            _saveCollapseStateTimer.Stop();
+            await SaveCollpasedCategories();
+        }
+
+        public async Task<int> Initialise()
         {
             int initialSelection = DefaultInitialSelection;
-            _items.Add(new CategoryViewModel() { DisplayName = "All News", Info = new CategoryInfo() { Category = "All News" }, Type = CategoryViewModel.CategoryType.All });
+            _items.Add(new CategoryViewModel() { DisplayName = "All News", Info = new CategoryInfo() { Category = "All News" }, Type = CategoryViewModel.CategoryType.All, CanCollapse = false });
             _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 3) });
-            _items.Add(new CategoryViewModel() { DisplayName = "Latest News", Type = CategoryViewModel.CategoryType.Latest });
+            _items.Add(new CategoryViewModel() { DisplayName = "Latest News", Type = CategoryViewModel.CategoryType.Latest, CanCollapse = false });
             _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 3) });
             if (InitialSelectedSpecial != null && InitialSelectedSpecial.Value == CategoryViewModel.CategoryType.Favorites) initialSelection = _items.Count;
-            _items.Add(new CategoryViewModel() { DisplayName = "Favorites", Type = CategoryViewModel.CategoryType.Favorites });
+            _items.Add(new CategoryViewModel() { DisplayName = "Favorites", Type = CategoryViewModel.CategoryType.Favorites, CanCollapse = false });
             _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 3) });
-            _items.Add(new CategoryViewModel() { DisplayName = "Previously Read", Type = CategoryViewModel.CategoryType.PreviousRead });
+            _items.Add(new CategoryViewModel() { DisplayName = "Previously Read", Type = CategoryViewModel.CategoryType.PreviousRead, CanCollapse = false });
             _items.Add(new SpacerViewModel() { SpacerHeight = NavSpacerHeight });
 
+            HashSet<String> collapsed = await UserHelper.Instance.LoadFromFile<HashSet<String>>(CollapsedCategoriesFile);
             String noCategoryKey = "";
             Dictionary<String, List<Feed>> categoryFeeds = UserHelper.Instance.CategoryFeeds;
             if (categoryFeeds != null && categoryFeeds.Count > 0)
@@ -49,6 +70,11 @@ namespace Weave.ViewModels.Browse
                     {
                         if (InitialSelectedCategory != null && String.Equals(InitialSelectedCategory, category, StringComparison.OrdinalIgnoreCase)) initialSelection = _items.Count;
                         CategoryViewModel categoryVm = new CategoryViewModel() { DisplayName = category, Info = new CategoryInfo() { Category = category } };
+                        if (collapsed != null && collapsed.Contains(category))
+                        {
+                            _collapsedCategories.Add(categoryVm);
+                            categoryVm.IsCollapsed = true;
+                        }
                         _items.Add(categoryVm);
 
                         List<FeedItemViewModel> mappedFeeds = new List<FeedItemViewModel>();
@@ -60,10 +86,22 @@ namespace Weave.ViewModels.Browse
                         int newCount = 0;
                         foreach (Feed feed in feeds)
                         {
-                            if (InitialSelectedFeed != null && InitialSelectedFeed.Value == feed.Id) initialSelection = _items.Count;
+                            if (InitialSelectedFeed != null && InitialSelectedFeed.Value == feed.Id)
+                            {
+                                if (categoryVm.IsCollapsed)
+                                {
+                                    categoryVm.IsCollapsed = false;
+                                    foreach (FeedItemViewModel hiddenFeed in mappedFeeds) _items.Add(hiddenFeed);
+                                    collapsed.Remove(category);
+                                    UserHelper.Instance.SaveToFile<HashSet<String>>(collapsed, CollapsedCategoriesFile);
+                                }
+                                initialSelection = _items.Count;
+                            }
                             feedVm = new FeedItemViewModel(feed);
                             feedVm.ParentCategory = categoryVm;
-                            _items.Add(feedVm);
+
+                            if (!categoryVm.IsCollapsed) _items.Add(feedVm);
+
                             mappedFeeds.Add(feedVm);
                             newCount += feed.NewArticleCount;
                         }
@@ -107,6 +145,7 @@ namespace Weave.ViewModels.Browse
                     _items.RemoveAt(categoryIndex);
                 }
                 _cateogyrFeedsMap.Remove(category);
+                _collapsedCategories.Remove(category);
             }
         }
 
@@ -230,6 +269,58 @@ namespace Weave.ViewModels.Browse
                     feed.NewCount = 0;
                 }
             }
+        }
+
+        public void CollapseCategory(CategoryViewModel category)
+        {
+            if (category != null && !_collapsedCategories.Contains(category))
+            {
+                int index = _items.IndexOf(category);
+                if (index > -1)
+                {
+                    index++;
+
+                    while (_items[index] is FeedItemViewModel) _items.RemoveAt(index);
+
+                    _collapsedCategories.Add(category);
+
+                    category.IsCollapsed = true;
+
+                    _saveCollapseStateTimer.Start();
+                }
+            }
+        }
+
+        public void ExpandCategory(CategoryViewModel category)
+        {
+            if (category != null && _collapsedCategories.Contains(category))
+            {
+                int index = _items.IndexOf(category);
+
+                if (index > -1 && _cateogyrFeedsMap.ContainsKey(category) && _items[index + 1] is SpacerViewModel)
+                {
+                    index++;
+
+                    List<FeedItemViewModel> feeds = _cateogyrFeedsMap[category];
+                    foreach (FeedItemViewModel feed in feeds) _items.Insert(index++, feed);
+
+                    _collapsedCategories.Remove(category);
+
+                    category.IsCollapsed = false;
+
+                    _saveCollapseStateTimer.Start();
+                }
+            }
+        }
+
+        private async Task SaveCollpasedCategories()
+        {
+            HashSet<String> categoryNames = new HashSet<string>();
+            foreach (CategoryViewModel vm in _collapsedCategories)
+            {
+                categoryNames.Add(vm.Info.Category);
+            }
+            await UserHelper.Instance.SaveToFile<HashSet<String>>(categoryNames, CollapsedCategoriesFile);
         }
 
     } // end of class

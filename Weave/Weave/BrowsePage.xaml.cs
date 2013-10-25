@@ -69,6 +69,8 @@ namespace Weave
 
         private bool? _isMouse = null;
 
+        private bool _ignoreScrollIntoView = false;
+
         public BrowsePage()
         {
             this.InitializeComponent();
@@ -214,7 +216,7 @@ namespace Weave
         private async void pageRoot_Loaded(object sender, RoutedEventArgs e)
         {
             _pageLoaded = true;
-            int initialSelection = _nav.Initialise();
+            int initialSelection = await _nav.Initialise();
             GrdVwNavigation.DataContext = _nav;
             GrdVwNavigation.SelectedIndex = initialSelection;
             UpdateArticleContainerBackground();
@@ -593,7 +595,8 @@ namespace Weave
         {
             if (e.NewSize.Height > 1 && GrdVwNavigation.SelectedIndex > 0)
             {
-                GrdVwNavigation.ScrollIntoView(GrdVwNavigation.Items[GrdVwNavigation.SelectedIndex]);
+                if (_ignoreScrollIntoView) _ignoreScrollIntoView = false;
+                else GrdVwNavigation.ScrollIntoView(GrdVwNavigation.Items[GrdVwNavigation.SelectedIndex]);
             }
         }
 
@@ -780,7 +783,7 @@ namespace Weave
         private void FeedManageVm_FeedAdded(object sender, Feed addedFeed)
         {
             FeedItemViewModel vm = _nav.InsertFeed(addedFeed);
-            if (vm != null) GrdVwNavigation.ScrollIntoView(vm);
+            if (vm != null && !_ignoreScrollIntoView) GrdVwNavigation.ScrollIntoView(vm);
         }
 
         private async void BtnDelete_Click(object sender, RoutedEventArgs e)
@@ -1088,6 +1091,28 @@ namespace Weave
                 {
                     if (!item.HasBeenViewed) item.HasBeenViewed = true;
                 }
+            }
+        }
+
+        private void BtnExpanded_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null && button.DataContext is CategoryViewModel)
+            {
+                CategoryViewModel category = (CategoryViewModel)button.DataContext;
+                _ignoreScrollIntoView = true;
+                _nav.CollapseCategory(category);
+            }
+        }
+
+        private void BtnCollapsed_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null && button.DataContext is CategoryViewModel)
+            {
+                CategoryViewModel category = (CategoryViewModel)button.DataContext;
+                _ignoreScrollIntoView = true;
+                _nav.ExpandCategory(category);
             }
         }
 

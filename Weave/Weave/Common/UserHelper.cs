@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Weave.ViewModels;
 using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace Weave.Common
 {
@@ -549,6 +551,70 @@ namespace Weave.Common
                 {
                 }
             }
+        }
+
+        public async Task<StorageFolder> GetUserFolder()
+        {
+            if (!String.IsNullOrEmpty(_currentUserId))
+            {
+                StorageFolder folder = ApplicationData.Current.LocalFolder;
+                try
+                {
+                    StorageFolder userfolder = await folder.CreateFolderAsync(_currentUserId, CreationCollisionOption.OpenIfExists);
+                    return userfolder;
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return null;
+        }
+
+        public async Task<bool> SaveToFile<T>(T obj, String filename)
+        {
+            try
+            {
+                StorageFolder folder = await GetUserFolder();
+                if (folder != null)
+                {
+                    StorageFile file = await folder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(T));
+                    using (Stream fileStream = await file.OpenStreamForWriteAsync())
+                    {
+                        serializer.WriteObject(fileStream, obj);
+                        await fileStream.FlushAsync();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
+        public async Task<T> LoadFromFile<T>(String filename)
+        {
+            T result = default(T);
+
+            try
+            {
+                StorageFolder folder = await GetUserFolder();
+                if (folder != null)
+                {
+                    StorageFile file = await folder.GetFileAsync(filename);
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(T));
+                    using (IInputStream inStream = await file.OpenSequentialReadAsync())
+                    {
+                        result = (T)serializer.ReadObject(inStream.AsStreamForRead());
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            return result;
         }
 
     } // end of class

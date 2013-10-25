@@ -46,5 +46,19 @@ namespace Weave.ViewModels.Browse
             set { SetProperty(ref _requiresRefresh, value); }
         }
 
+        private bool _isCollapsed;
+        public bool IsCollapsed
+        {
+            get { return _isCollapsed; }
+            set { SetProperty(ref _isCollapsed, value); }
+        }
+
+        private bool _canCollapse = true;
+        public bool CanCollapse
+        {
+            get { return _canCollapse; }
+            set { SetProperty(ref _canCollapse, value); }
+        }
+
     } // end of class
 }

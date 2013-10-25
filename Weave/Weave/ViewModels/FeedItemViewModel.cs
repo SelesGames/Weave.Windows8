@@ -68,5 +68,12 @@ namespace Weave.ViewModels
             get { return _isBusy; }
             set { SetProperty(ref _isBusy, value); }
         }
+
+        private bool _isHidden;
+        public bool IsHidden
+        {
+            get { return _isHidden; }
+            set { SetProperty(ref _isHidden, value); }
+        }
     }
 }
