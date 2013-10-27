@@ -981,6 +981,7 @@
                     <Button x:Name="AppBarShare" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Share" Content="&#xE1D7;" Click="AppBarShare_Click" FontSize="14" />
                     <Button x:Name="AppBarFontSize" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Font size" Content="&#xE185;" Click="AppBarFontSize_Click" Visibility="Collapsed" />
                     <Button x:Name="AppBarReadingTheme" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Reading theme" Content="&#xE158;" Click="AppBarReadingTheme_Click" Visibility="Collapsed" />
+                    <Button x:Name="AppBarArticleView" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Article view" Content="&#xE12A;" Click="AppBarArticleView_Click" Visibility="Collapsed" />
                 </StackPanel>
                 <StackPanel x:Name="RightPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
                     <Button x:Name="AppBarMarkAllRead" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Mark all read" Content="&#xE119;" Click="AppBarMarkAllRead_Click" />

@@ -1,0 +1,22 @@
+﻿<UserControl
+    x:Class="Weave.Views.Browse.ArticleViewSelection"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Weave.Views.Browse"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    >
+
+    <Grid>
+        <ListBox Name="LstBxViews" Style="{StaticResource ListBoxStyleListSelector}" ItemContainerStyle="{StaticResource ListBoxItemStyleWeave}" SelectionChanged="LstBxViews_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" Margin="10,0,10,0" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBoxItem Name="LstBxItmMobilizer">Mobilizer</ListBoxItem>
+            <ListBoxItem Name="LstBxItmBrowser">Browser</ListBoxItem>
+        </ListBox>
+    </Grid>
+</UserControl>

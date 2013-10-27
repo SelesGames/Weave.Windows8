@@ -66,6 +66,7 @@ namespace Weave
         private FontSizeSelection _fontSizeControl = new FontSizeSelection();
         private LayoutSizeSelection _layoutSizeControl = new LayoutSizeSelection();
         private ReadingThemeSelection _readingThemeControl = new ReadingThemeSelection();
+        ArticleViewSelection _articleSelectionControl = new ArticleViewSelection();
 
         private bool? _isMouse = null;
 
@@ -90,6 +91,7 @@ namespace Weave
             _fontSizeControl.FontSizeChanged += FontSizeControl_FontSizeChanged;
             _layoutSizeControl.LayoutSizeChanged += LayoutSizeControl_LayoutSizeChanged;
             _readingThemeControl.ReadingThemeChanged += ReadingThemeControl_ReadingThemeChanged;
+            _articleSelectionControl.ArticleViewChanged += ArticleSelectionControl_ArticleViewChanged;
 
             EditFeedControl.SaveRequest += EditFeedControl_SaveRequest;
         }
@@ -303,7 +305,7 @@ namespace Weave
                         itemGridView.SelectedItem = initialSelection;
                         _showAppBarOnSelection = true;
                         await Task.Delay(1); // allow rendering of page
-                        ShowArticle(initialSelection, false);
+                        ShowArticle(initialSelection, true, false);
                         _initialSelectedItemId = null;
                     }
                 }
@@ -400,7 +402,7 @@ namespace Weave
             return (int)(fontSize * 43);
         }
 
-        private void ShowArticle(NewsItem item, bool showLoading = true)
+        private void ShowArticle(NewsItem item, bool allowMobilizer = true, bool showLoading = true)
         {
             _browserBackStack.Clear();
             BtnBrowserBack.IsEnabled = false;
@@ -417,10 +419,11 @@ namespace Weave
                 PrgRngArticleLoading.IsActive = true;
                 if (showLoading) WebVwArticle.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 SbArticleFlyIn.Begin();
-                ParseArticle(item, fontSize, articleWidth);
+                ParseArticle(item, fontSize, articleWidth, allowMobilizer);
                 RightPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                AppBarArticleView.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
         }
 
@@ -433,6 +436,7 @@ namespace Weave
             RightPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
             AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            AppBarArticleView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
         }
 
         private void Image_ImageOpened(object sender, RoutedEventArgs e)
@@ -464,14 +468,14 @@ namespace Weave
             ArticleContainer.Width = _browserDisplayWidth;
         }
 
-        private async void ParseArticle(NewsItem item, int fontSize, int articleWidth)
+        private async void ParseArticle(NewsItem item, int fontSize, int articleWidth, bool allowMobilizer)
         {
             if (item != null)
             {
                 PrgRngBrowserLoading.IsActive = true;
                 bool loadWebBrowser = true;
 
-                if (item.Feed.ArticleViewingType == ArticleViewingType.Mobilizer)
+                if (allowMobilizer && item.Feed.ArticleViewingType == ArticleViewingType.Mobilizer)
                 {
                     loadWebBrowser = false;
                     String result = await MobilizerHelper.GetMobilizedHtml(item, fontSize, articleWidth);
@@ -1113,6 +1117,35 @@ namespace Weave
                 CategoryViewModel category = (CategoryViewModel)button.DataContext;
                 _ignoreScrollIntoView = true;
                 _nav.ExpandCategory(category);
+            }
+        }
+
+        private void ArticleSelectionControl_ArticleViewChanged(object sender, bool useMobilizer)
+        {
+            if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible && ArticleContainer.DataContext is NewsItem)
+            {
+                NewsItem item = (NewsItem)ArticleContainer.DataContext;
+                WebVwArticle.NavigateToString("");
+                ShowArticle(item, useMobilizer);
+            }
+            PopupAppBarMenu.IsOpen = false;
+        }
+
+        private void AppBarArticleView_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null)
+            {
+                Rect rect = DisplayUtilities.GetPopupElementRect(button);
+
+                SnapshotArticle(rect);
+                GrdAppBarMenuContent.Children.Clear();
+                GrdAppBarMenuContent.Children.Add(_articleSelectionControl);
+                _articleSelectionControl.SetArticleView(GrdBrowserControls.Visibility == Windows.UI.Xaml.Visibility.Collapsed);
+                PopupAppBarMenu.HorizontalOffset = rect.Left + 15;
+                PopupAppBarMenu.VerticalOffset = -172;
+                PopupAppBarMenu.IsOpen = true;
+
             }
         }
 
