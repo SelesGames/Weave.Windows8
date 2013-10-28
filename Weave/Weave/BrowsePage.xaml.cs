@@ -421,8 +421,6 @@ namespace Weave
                 SbArticleFlyIn.Begin();
                 ParseArticle(item, fontSize, articleWidth, allowMobilizer);
                 RightPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 AppBarArticleView.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
         }
@@ -481,6 +479,8 @@ namespace Weave
                     String result = await MobilizerHelper.GetMobilizedHtml(item, fontSize, articleWidth);
                     if (result != null)
                     {
+                        AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                        AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Visible;
                         WebVwArticle.NavigateToString(result);
                     }
                     else
@@ -491,6 +491,8 @@ namespace Weave
 
                 if (loadWebBrowser)
                 {
+                    AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                     BrowseToWebPage(item.Link);
                 }
                 PrgRngArticleLoading.IsActive = false;
@@ -1145,7 +1147,6 @@ namespace Weave
                 PopupAppBarMenu.HorizontalOffset = rect.Left + 15;
                 PopupAppBarMenu.VerticalOffset = -172;
                 PopupAppBarMenu.IsOpen = true;
-
             }
         }
 
