@@ -36,7 +36,7 @@ namespace Weave.Views.Browse
                 {
                     String category = e.AddedItems[0] as String;
                     vm.SelectCategory(category);
-                    ItmCtrlFeeds.ItemTemplate = this.Resources["FeedTemplate"] as DataTemplate;
+                    //ItmCtrlFeeds.ItemTemplate = this.Resources["FeedTemplate"] as DataTemplate;
                 }
                 else vm.SelectCategory(null);
             }
@@ -148,7 +148,7 @@ namespace Weave.Views.Browse
                     {
                         GrdVwCategories.SelectedItem = null;
                         e.Handled = true;
-                        ItmCtrlFeeds.ItemTemplate = this.Resources["SearchFeedTemplate"] as DataTemplate;
+                        //ItmCtrlFeeds.ItemTemplate = this.Resources["SearchFeedTemplate"] as DataTemplate;
                         await vm.Search(textbox.Text);
                     }
                 }
