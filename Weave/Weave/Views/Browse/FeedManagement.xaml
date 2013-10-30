@@ -49,7 +49,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="SearchFeedTemplate">
-            <Button Style="{StaticResource ButtonStyleBasic}" Width="265" Height="110" Margin="20,20,20,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Click="BtnAdd_Click" IsEnabled="{Binding IsAdded, Converter={StaticResource BooleanNegationConverter}}">
+            <Button Style="{StaticResource ButtonStyleBasic}" Width="265" Height="110" Margin="10,20,20,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Click="BtnAdd_Click" IsEnabled="{Binding IsAdded, Converter={StaticResource BooleanNegationConverter}}">
                 <Grid Opacity="{Binding IsAdded, Converter={StaticResource FeedAddedToOpacityConverter}}" Background="#A1A1A1">
                     <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding ElementName=BdrAddedTick, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
                         <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
@@ -62,6 +62,8 @@
                 </Grid>
             </Button>
         </DataTemplate>
+
+        <common:SearchFeedSelector x:Key="ResultsTemplateSelector" LocalFeed="{StaticResource FeedTemplate}" SearchFeed="{StaticResource SearchFeedTemplate}" />
 
         <DataTemplate x:Key="CategoryTextTemplate">
             <TextBlock Text="{Binding}" Margin="10,0,10,0" />
@@ -117,7 +119,7 @@
             </Grid.RowDefinitions>
             <TextBlock Margin="60,80,0,0" Text="{Binding Header, Converter={StaticResource UpperCaseConverter}}" Style="{StaticResource HeaderTextStyle}" Foreground="Black" />
             <ScrollViewer Grid.Row="1" Margin="40,20,0,0" ZoomMode="Disabled" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled">
-                <ItemsControl Name="ItmCtrlFeeds" ItemsSource="{Binding CategoryItems}" ItemTemplate="{StaticResource FeedTemplate}" Foreground="Black" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0,0">
+                <ItemsControl Name="ItmCtrlFeeds" ItemsSource="{Binding CategoryItems}" ItemTemplateSelector="{StaticResource ResultsTemplateSelector}" Foreground="Black" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0,0">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapGrid Orientation="Horizontal" />

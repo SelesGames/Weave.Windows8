@@ -173,4 +173,21 @@ namespace Weave.Common
             return base.SelectTemplateCore(item, container);
         }
     }
+
+    public class SearchFeedSelector : DataTemplateSelector
+    {
+        public DataTemplate SearchFeed { get; set; }
+        public DataTemplate LocalFeed { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        {
+            if (item != null)
+            {
+                if (item is ViewModels.Browse.FeedManagementViewModel.SearchItemViewModel) return SearchFeed;
+                else return LocalFeed;
+            }
+
+            return base.SelectTemplateCore(item, container);
+        }
+    }
 }

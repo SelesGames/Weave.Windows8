@@ -20,6 +20,13 @@ namespace Weave.ViewModels.Browse
 
         private FeedSearchService.FeedSearchService _searchService;
 
+        public class SearchItemViewModel : FeedItemViewModel
+        {
+            public SearchItemViewModel(Feed feed) : base(feed)
+            {
+            }
+        }
+
         public FeedManagementViewModel()
         {
             _searchService = new FeedSearchService.FeedSearchService();
@@ -115,6 +122,13 @@ namespace Weave.ViewModels.Browse
                 {
                     List<FeedItemViewModel> resultsVm = new List<FeedItemViewModel>();
                     Feed feed;
+
+                    List<FeedItemViewModel> localResults = GetLocalResults(query);
+                    foreach (FeedItemViewModel local in localResults)
+                    {
+                        resultsVm.Add(local);
+                    }
+
                     foreach (FeedSearchService.Entry item in result.responseData.entries)
                     {
                         feed = new Feed();
@@ -122,13 +136,34 @@ namespace Weave.ViewModels.Browse
                         item.Sanitize();
                         feed.Name = item.title;
                         feed.Uri = item.url;
-                        resultsVm.Add(new FeedItemViewModel(feed));
+                        resultsVm.Add(new SearchItemViewModel(feed));
                     }
                     _categoryItems = resultsVm;
                     OnPropertyChanged("CategoryItems");
                 }
                 IsLoading = false;
             }
+        }
+
+        private List<FeedItemViewModel> GetLocalResults(String query)
+        {
+            List<FeedItemViewModel> results = new List<FeedItemViewModel>();
+
+            if (_categoryFeedMap != null)
+            {
+                foreach (List<FeedItemViewModel> feeds in _categoryFeedMap.Values)
+                {
+                    foreach (FeedItemViewModel item in feeds)
+                    {
+                        if (item.Feed.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1)
+                        {
+                            results.Add(item);
+                        }
+                    }
+                }
+            }
+
+            return results;
         }
 
         public List<String> Categories
