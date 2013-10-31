@@ -25,6 +25,7 @@ namespace Weave.ViewModels.Browse
         private Dictionary<CategoryViewModel, List<FeedItemViewModel>> _cateogyrFeedsMap = new Dictionary<CategoryViewModel,List<FeedItemViewModel>>();
         private HashSet<CategoryViewModel> _collapsedCategories = new HashSet<CategoryViewModel>();
 
+        public const int NavSpacerHeightSmall = 12;
         public const int NavSpacerHeight = 40;
         public const int DefaultInitialSelection = 2;
 
@@ -49,12 +50,12 @@ namespace Weave.ViewModels.Browse
         {
             int initialSelection = DefaultInitialSelection;
             _items.Add(new CategoryViewModel() { DisplayName = "All News", Info = new CategoryInfo() { Category = "All News" }, Type = CategoryViewModel.CategoryType.All, CanCollapse = false });
-            _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 3) });
+            _items.Add(new SpacerViewModel() { SpacerHeight = NavSpacerHeightSmall });
             _items.Add(new CategoryViewModel() { DisplayName = "Latest News", Type = CategoryViewModel.CategoryType.Latest, CanCollapse = false });
-            _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 3) });
+            _items.Add(new SpacerViewModel() { SpacerHeight = NavSpacerHeightSmall });
             if (InitialSelectedSpecial != null && InitialSelectedSpecial.Value == CategoryViewModel.CategoryType.Favorites) initialSelection = _items.Count;
             _items.Add(new CategoryViewModel() { DisplayName = "Favorites", Type = CategoryViewModel.CategoryType.Favorites, CanCollapse = false });
-            _items.Add(new SpacerViewModel() { SpacerHeight = (NavSpacerHeight / 3) });
+            _items.Add(new SpacerViewModel() { SpacerHeight = NavSpacerHeightSmall });
             _items.Add(new CategoryViewModel() { DisplayName = "Previously Read", Type = CategoryViewModel.CategoryType.PreviousRead, CanCollapse = false });
             _items.Add(new SpacerViewModel() { SpacerHeight = NavSpacerHeight });
 
@@ -106,7 +107,7 @@ namespace Weave.ViewModels.Browse
                             newCount += feed.NewArticleCount;
                         }
                         categoryVm.NewCount = newCount;
-                        _items.Add(new SpacerViewModel() { SpacerHeight = NavSpacerHeight });
+                        _items.Add(new SpacerViewModel() { SpacerHeight = categoryVm.IsCollapsed ? NavSpacerHeightSmall : NavSpacerHeight });
                     }
                 }
 
@@ -282,6 +283,8 @@ namespace Weave.ViewModels.Browse
 
                     while (_items[index] is FeedItemViewModel) _items.RemoveAt(index);
 
+                    if (index < _items.Count && _items[index] is SpacerViewModel) ((SpacerViewModel)_items[index]).SpacerHeight = NavSpacerHeightSmall;
+
                     _collapsedCategories.Add(category);
 
                     category.IsCollapsed = true;
@@ -300,6 +303,8 @@ namespace Weave.ViewModels.Browse
                 if (index > -1 && _cateogyrFeedsMap.ContainsKey(category) && _items[index + 1] is SpacerViewModel)
                 {
                     index++;
+
+                    ((SpacerViewModel)_items[index]).SpacerHeight = NavSpacerHeight;
 
                     List<FeedItemViewModel> feeds = _cateogyrFeedsMap[category];
                     foreach (FeedItemViewModel feed in feeds) _items.Insert(index++, feed);
