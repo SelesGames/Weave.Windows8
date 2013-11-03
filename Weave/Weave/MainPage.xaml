@@ -272,7 +272,7 @@
                 </ListView>
             </SemanticZoom.ZoomedInView>
             <SemanticZoom.ZoomedOutView>
-                <ListView Name="LstVwZoomed" ItemsSource="{Binding ElementName=LstVwMain, Path=ItemsSource}" Style="{StaticResource ZoomedListViewStyle}" Padding="0" CanDragItems="False" CanReorderItems="False" SelectionMode="None" IsItemClickEnabled="False">
+                <ListView Name="LstVwZoomed" ItemsSource="{Binding ElementName=LstVwMain, Path=ItemsSource}" Style="{StaticResource ZoomedListViewStyle}" Padding="0" AllowDrop="True" CanDragItems="False" CanReorderItems="True" SelectionMode="None" IsItemClickEnabled="False">
                 </ListView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>

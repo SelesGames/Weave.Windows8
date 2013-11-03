@@ -138,6 +138,7 @@ namespace Weave.ViewModels.Browse
                         feed.Uri = item.url;
                         resultsVm.Add(new SearchItemViewModel(feed));
                     }
+
                     _categoryItems = resultsVm;
                     OnPropertyChanged("CategoryItems");
                 }

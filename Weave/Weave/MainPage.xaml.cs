@@ -52,6 +52,10 @@ namespace Weave
 
         private const String CustomHeroIdKey = "CustomHeroId"; // stores the custom hero article id for showcasing
 
+        private const String ItemOrder = "ItemOrder"; // stores the order of the items
+        private const String LatestArticlesIndexKey = "LatestArticlesIndex";
+        private const String SourcesIndexKey = "SourcesIndex";
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -66,6 +70,8 @@ namespace Weave
 
                 _defaultStartItemCount = _startItems.Count - AppendixItemCount;
             }
+
+            _startItems.CollectionChanged += _startItems_CollectionChanged;
 
 #if DEBUG
             AppBarClearRoaming.Visibility = Windows.UI.Xaml.Visibility.Visible;
@@ -306,6 +312,7 @@ namespace Weave
 
             if (_startItems.Count > _defaultStartItemCount + AppendixItemCount) ClearClusters();
             await InitClusters();
+            RepositionSections();
             RefreshClusters();
         }
 
@@ -567,7 +574,7 @@ namespace Weave
         private async void RefreshClusters()
         {
             StartClusterViewModel cluster;
-            for (int i = _defaultStartItemCount; i < _startItems.Count - AppendixItemCount; i++)
+            for (int i = 0; i < _startItems.Count; i++)
             {
                 cluster = _startItems[i] as StartClusterViewModel;
                 if (cluster != null) await cluster.InitCluster();
@@ -576,8 +583,15 @@ namespace Weave
 
         private void ClearClusters()
         {
-            int totalStartCount = _defaultStartItemCount + AppendixItemCount;
-            while (_startItems.Count > totalStartCount) _startItems.RemoveAt(_defaultStartItemCount);
+            List<StartItemBase> removeItems = new List<StartItemBase>();
+            foreach (StartItemBase item in _startItems)
+            {
+                if (item is StartClusterViewModel) removeItems.Add(item);
+            }
+            foreach (StartItemBase item in removeItems)
+            {
+                _startItems.Remove(item);
+            }
         }
 
         private async void AddCategoryCluster(String header, String categoryKey)
@@ -609,11 +623,14 @@ namespace Weave
         {
             List<String> clusterOrder = new List<string>();
             StartClusterViewModel cluster;
-            for (int i = _defaultStartItemCount; i < _startItems.Count - AppendixItemCount; i++)
+            for (int i = 1; i < _startItems.Count - AppendixItemCount; i++)
             {
-                cluster = _startItems[i] as StartClusterViewModel;
-                if (!String.IsNullOrEmpty(cluster.Category)) clusterOrder.Add(cluster.Category);
-                else if (cluster.FeedId != null) clusterOrder.Add(cluster.FeedId.ToString());
+                if (_startItems[i] is StartClusterViewModel)
+                {
+                    cluster = (StartClusterViewModel)_startItems[i];
+                    if (!String.IsNullOrEmpty(cluster.Category)) clusterOrder.Add(cluster.Category);
+                    else if (cluster.FeedId != null) clusterOrder.Add(cluster.FeedId.ToString());
+                }
             }
             return clusterOrder;
         }
@@ -754,6 +771,78 @@ namespace Weave
         private void AppBarClearRoaming_Click(object sender, RoutedEventArgs e)
         {
             UserHelper.Instance.ClearRoamingData();
+        }
+
+        private void _startItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add && e.NewItems.Count > 0 && !semanticZoomControl.IsZoomedInViewActive)
+            {
+                if (e.NewItems[0] is StartHeroArticle)
+                {
+                    CannotReorderHero(e.NewStartingIndex);
+                }
+                else if (e.NewItems[0] is StartAddViewModel)
+                {
+                    CannotReorderAdd(e.NewStartingIndex);
+                }
+                else
+                {
+                    SaveCustomIndices();
+                    ClusterHelper.UpdateClusterOrder(GetClusterOrder());
+                }
+            }
+        }
+
+        private async void CannotReorderHero(int newIndexRequest)
+        {
+            await Task.Delay(1);
+            _startItems.Move(newIndexRequest, 0);
+            MessageDialog dialog = new MessageDialog("Cannot move the hero section", "Oops!");
+            await dialog.ShowAsync();
+        }
+
+        private async void CannotReorderAdd(int newIndexRequest)
+        {
+            await Task.Delay(1);
+            _startItems.Move(newIndexRequest, _startItems.Count - AppendixItemCount);
+            MessageDialog dialog = new MessageDialog("Cannot move the add cluster section", "Oops!");
+            await dialog.ShowAsync();
+        }
+
+        /// <summary>
+        /// Repositions the standard sections if they have been customised.
+        /// </summary>
+        private void RepositionSections()
+        {
+            if (_startItems.Count > 0)
+            {
+                ApplicationDataContainer settings = UserHelper.Instance.GetUserContainer(true);
+                int latestArticleIndex = _startItems.IndexOf(_latestArticlesVm);
+                if (settings.Values.ContainsKey(LatestArticlesIndexKey))
+                {
+                    int newIndex = (int)settings.Values[LatestArticlesIndexKey];
+                    if (newIndex != latestArticleIndex) _startItems.Move(latestArticleIndex, newIndex);
+                }
+
+                int sourcesIndex = _startItems.IndexOf(_sourcesVm);
+                if (settings.Values.ContainsKey(SourcesIndexKey))
+                {
+                    int newIndex = (int)settings.Values[SourcesIndexKey];
+                    if (newIndex != sourcesIndex) _startItems.Move(sourcesIndex, newIndex);
+                }
+            }
+        }
+
+        private void SaveCustomIndices()
+        {
+            if (_startItems.Count > 0)
+            {
+                ApplicationDataContainer settings = UserHelper.Instance.GetUserContainer(true);
+                int latestArticleIndex = _startItems.IndexOf(_latestArticlesVm);
+                int sourcesIndex = _startItems.IndexOf(_sourcesVm);
+                settings.Values[LatestArticlesIndexKey] = latestArticleIndex;
+                settings.Values[SourcesIndexKey] = sourcesIndex;
+            }
         }
 
     } // end of class
