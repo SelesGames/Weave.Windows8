@@ -1077,8 +1077,16 @@ namespace Weave
             if (selected is CategoryViewModel)
             {
                 CategoryViewModel vm = (CategoryViewModel)selected;
-                await UserHelper.Instance.MarkCategoryAsRead(vm.Info.Category);
-                MarkAllArticlesRead();
+                if (vm.Type == CategoryViewModel.CategoryType.Specific)
+                {
+                    await UserHelper.Instance.MarkCategoryAsRead(vm.Info.Category);
+                    MarkAllArticlesRead();
+                }
+                else if (vm.Type == CategoryViewModel.CategoryType.Latest)
+                {
+                    await UserHelper.Instance.MarkSoftRead(UserHelper.Instance.GetLatestNews());
+                    MarkAllArticlesRead();
+                }
             }
             else if (selected is FeedItemViewModel)
             {
