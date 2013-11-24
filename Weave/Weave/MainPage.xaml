@@ -5,6 +5,7 @@
     xmlns:local="using:Weave"
     xmlns:common="using:Weave.Common"
     xmlns:views="using:Weave.Views.StartHub"
+    xmlns:advertUi="using:Microsoft.Advertising.WinRT.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -164,7 +165,18 @@
             <views:LoginView Margin="0,140,120,0" />
         </DataTemplate>
 
-        <common:StartItemSelector x:Name="StartItemSelector" HeroTemplate="{StaticResource HeroTemplate}" LatestTemplate="{StaticResource LatestArticlesTemplate}" SourcesTemplate="{StaticResource SourcesTemplate}" ClusterTemplate="{StaticResource ClusterTemplate}"  AddTemplate="{StaticResource AddTemplate}" LoginTemplate="{StaticResource LoginTemplate}" />
+        <DataTemplate x:Key="AdvertisingTemplate">
+            <Grid Margin="0,140,80,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Advertising" Style="{StaticResource SubheaderTextStyle}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" />
+                <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdHub}" Width="160" Height="600" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            </Grid>
+        </DataTemplate>
+
+        <common:StartItemSelector x:Name="StartItemSelector" HeroTemplate="{StaticResource HeroTemplate}" LatestTemplate="{StaticResource LatestArticlesTemplate}" SourcesTemplate="{StaticResource SourcesTemplate}" ClusterTemplate="{StaticResource ClusterTemplate}"  AddTemplate="{StaticResource AddTemplate}" LoginTemplate="{StaticResource LoginTemplate}" AdvertisingTemplate="{StaticResource AdvertisingTemplate}" />
         
         <DataTemplate x:Key="HeroTemplateZoomed">
             <views:HeroArticleZoomedView Margin="0,0,80,0" Tapped="ZoomedOutItem_Tapped" />
@@ -184,7 +196,7 @@
 
         <DataTemplate x:Key="EmptyItemTemplate" />
 
-        <common:StartItemSelector x:Name="ZoomedItemSelector" HeroTemplate="{StaticResource HeroTemplateZoomed}" LatestTemplate="{StaticResource LatestArticlesZoomedTemplate}" SourcesTemplate="{StaticResource SourcesZoomedTemplate}" ClusterTemplate="{StaticResource LatestArticlesZoomedTemplate}" AddTemplate="{StaticResource AddZoomedTemplate}" LoginTemplate="{StaticResource EmptyItemTemplate}" />
+        <common:StartItemSelector x:Name="ZoomedItemSelector" HeroTemplate="{StaticResource HeroTemplateZoomed}" LatestTemplate="{StaticResource LatestArticlesZoomedTemplate}" SourcesTemplate="{StaticResource SourcesZoomedTemplate}" ClusterTemplate="{StaticResource LatestArticlesZoomedTemplate}" AddTemplate="{StaticResource AddZoomedTemplate}" LoginTemplate="{StaticResource EmptyItemTemplate}" AdvertisingTemplate="{StaticResource EmptyItemTemplate}" />
 
         <Style x:Key="MainListViewStyle" TargetType="ListView">
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />

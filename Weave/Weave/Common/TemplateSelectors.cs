@@ -19,6 +19,7 @@ namespace Weave.Common
         public DataTemplate ClusterTemplate { get; set; }
         public DataTemplate AddTemplate { get; set; }
         public DataTemplate LoginTemplate { get; set; }
+        public DataTemplate AdvertisingTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
@@ -32,6 +33,7 @@ namespace Weave.Common
                 else if (item is StartAddViewModel) return AddTemplate;
                 else if (item is StartHeroArticle) return HeroTemplate;
                 else if (item is StartLoginViewModel) return LoginTemplate;
+                else if (item is StartAdvertisingViewModel) return AdvertisingTemplate;
             }
 
             return base.SelectTemplateCore(item, container);
@@ -142,14 +144,19 @@ namespace Weave.Common
     {
         public DataTemplate ImageTemplate { get; set; }
         public DataTemplate TextTemplate { get; set; }
+        public DataTemplate AdvertisingTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            if (item != null && item is NewsItem)
+            if (item != null)
             {
-                NewsItem article = (NewsItem)item;
-                if (article.HasImage) return ImageTemplate;
-                else return TextTemplate;
+                if (item is AdvertisingNewsItem) return AdvertisingTemplate;
+                else if (item is NewsItem)
+                {
+                    NewsItem article = (NewsItem)item;
+                    if (article.HasImage) return ImageTemplate;
+                    else return TextTemplate;
+                }
             }
 
             return base.SelectTemplateCore(item, container);

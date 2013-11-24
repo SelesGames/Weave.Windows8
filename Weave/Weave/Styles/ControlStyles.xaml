@@ -8,6 +8,11 @@
     <SolidColorBrush x:Key="WeavePageBackground" Color="Black" />
     <SolidColorBrush x:Key="TextHighlightBrush" Color="SkyBlue" />
 
+    <x:String x:Key="AdvertisingApplicationId">d25517cb-12d4-4699-8bdc-52040c712cab</x:String>
+    <x:String x:Key="AdUnitIdHub">10043134</x:String>
+    <x:String x:Key="AdUnitIdBrowse">10043107</x:String>
+    <x:String x:Key="AdUnitIdBrowseLarge">10043055</x:String>
+
     <Style x:Key="LargeLoadingRingStyle" TargetType="ProgressRing">
         <Setter Property="IsHitTestVisible" Value="False" />
         <Setter Property="Width" Value="60" />

@@ -7,6 +7,7 @@
     xmlns:local="using:Weave"
     xmlns:common="using:Weave.Common"
     xmlns:browse="using:Weave.Views.Browse"
+    xmlns:advertUi="using:Microsoft.Advertising.WinRT.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -610,6 +611,14 @@
             </Grid>
         </DataTemplate>
 
+        <DataTemplate x:Key="AdvertisingItemTemplate">
+            <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdBrowse}" Width="250" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="AdvertisingItemTemplateLarge">
+            <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdBrowseLarge}" Width="440" Height="380" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        </DataTemplate>
+
         <DataTemplate x:Key="ArticleTextItemTemplateLarge">
             <Grid HorizontalAlignment="Left" Width="440" Height="380" Margin="0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
                 <Grid.RowDefinitions>
@@ -662,9 +671,9 @@
             </Grid>
         </DataTemplate>
 
-        <common:BrowseArticleSelector x:Name="ArticleSelector" ImageTemplate="{StaticResource ArticleImageItemTemplate}" TextTemplate="{StaticResource ArticleTextItemTemplate}" />
+        <common:BrowseArticleSelector x:Name="ArticleSelector" ImageTemplate="{StaticResource ArticleImageItemTemplate}" TextTemplate="{StaticResource ArticleTextItemTemplate}" AdvertisingTemplate="{StaticResource AdvertisingItemTemplate}" />
 
-        <common:BrowseArticleSelector x:Name="ArticleSelectorLarge" ImageTemplate="{StaticResource ArticleImageItemTemplateLarge}" TextTemplate="{StaticResource ArticleTextItemTemplateLarge}" />
+        <common:BrowseArticleSelector x:Name="ArticleSelectorLarge" ImageTemplate="{StaticResource ArticleImageItemTemplateLarge}" TextTemplate="{StaticResource ArticleTextItemTemplateLarge}" AdvertisingTemplate="{StaticResource AdvertisingItemTemplateLarge}" />
 
         <Style x:Key="GridViewStyleLandscape" TargetType="GridView">
             <!--<Setter Property="ItemTemplateSelector" Value="{StaticResource ArticleSelector}" />-->

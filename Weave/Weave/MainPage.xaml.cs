@@ -41,6 +41,7 @@ namespace Weave
         private static StartSourcesViewModel _sourcesVm = new StartSourcesViewModel();
         private static StartAddViewModel _addVm = new StartAddViewModel();
         private static StartLoginViewModel _loginVm = new StartLoginViewModel();
+        private static StartAdvertisingViewModel _advertisingVm = new StartAdvertisingViewModel();
 
         private const double BaseSectionHeight = 450; // base height of each major section (profile, timeline, photos, etc)
         private static double _savedScrollPosition = 0;
@@ -65,6 +66,7 @@ namespace Weave
                 _startItems.Add(_heroArticleVm);
                 _startItems.Add(_latestArticlesVm);
                 _startItems.Add(_sourcesVm);
+                _startItems.Add(_advertisingVm);
                 _startItems.Add(_addVm);
                 _startItems.Add(_loginVm);
 

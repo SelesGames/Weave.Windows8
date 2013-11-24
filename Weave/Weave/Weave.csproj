@@ -132,6 +132,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\Browse\AdvertisingNewsItem.cs" />
     <Compile Include="ViewModels\Browse\CategoryViewModel.cs" />
     <Compile Include="ViewModels\Browse\FeedManagementViewModel.cs" />
     <Compile Include="ViewModels\Browse\NavigationViewModel.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="ViewModels\NewsFeed.cs" />
     <Compile Include="ViewModels\NewsItemIcon.cs" />
     <Compile Include="ViewModels\StartHub\StartAddViewModel.cs" />
+    <Compile Include="ViewModels\StartHub\StartAdvertisingViewModel.cs" />
     <Compile Include="ViewModels\StartHub\StartClusterViewModel.cs" />
     <Compile Include="ViewModels\StartHub\StartHeroArticle.cs" />
     <Compile Include="ViewModels\StartHub\StartItemBase.cs" />
@@ -451,6 +453,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="MSAdvertisingXaml, Version=6.1">
+      <Name>Microsoft Advertising SDK for Windows 8 %28Xaml%29</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

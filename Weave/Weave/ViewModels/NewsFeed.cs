@@ -41,10 +41,18 @@ namespace Weave.ViewModels
             _feedParam = feedParam;
         }
 
+        private int _lastAdvertIndex = 0;
+        private const int AdvertSeparation = 10;
+
         public bool AddItem(NewsItem item)
         {
             if (!_idsAdded.Contains(item.Id))
             {
+                if (_idsAdded.Count - _lastAdvertIndex >= AdvertSeparation)
+                {
+                    _lastAdvertIndex = _idsAdded.Count;
+                    Items.Add(new Weave.ViewModels.Browse.AdvertisingNewsItem());
+                }
                 _idsAdded.Add(item.Id);
                 if (_idsAdded.Count == 1 && FirstVideoLoaded != null) FirstVideoLoaded(this);
                 Items.Add(new NewsItemIcon(item));
@@ -68,6 +76,7 @@ namespace Weave.ViewModels
             _feedType = FeedType.None;
             _feedParam = null;
             _total = 0;
+            _lastAdvertIndex = 0;
             Items.Clear();
             _idsAdded.Clear();
         }

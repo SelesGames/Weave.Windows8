@@ -140,7 +140,7 @@ namespace Weave
 
         private void itemGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (e.ClickedItem != null)
+            if (e.ClickedItem != null && !(e.ClickedItem is AdvertisingNewsItem))
             {
                 _showAppBarOnSelection = false;
                 itemGridView.SelectedItem = e.ClickedItem;
@@ -772,10 +772,14 @@ namespace Weave
                 NewsItem item = e.AddedItems[0] as NewsItem;
                 if (item != null)
                 {
-                    LeftPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                    AppBarFavorite.Visibility = item.IsFavorite ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
-                    if (_showAppBarOnSelection) BottomAppBar.IsOpen = true;
-                    handled = true;
+                    if (item is AdvertisingNewsItem) itemGridView.SelectedItem = null;
+                    else
+                    {
+                        LeftPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                        AppBarFavorite.Visibility = item.IsFavorite ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
+                        if (_showAppBarOnSelection) BottomAppBar.IsOpen = true;
+                        handled = true;
+                    }
                 }
             }
 
