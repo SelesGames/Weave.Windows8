@@ -42,7 +42,7 @@ namespace Weave.ViewModels
         }
 
         private int _lastAdvertIndex = 0;
-        private const int AdvertSeparation = 10;
+        private const int AdvertSeparation = 20;
 
         public bool AddItem(NewsItem item)
         {
