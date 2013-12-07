@@ -16,6 +16,7 @@
     <Page.Resources>
 
         <common:UpperCaseConverter x:Key="UpperCaseConverter" />
+        <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
         <Style x:Key="ListBoxItemStyleCategory" TargetType="ListBoxItem">
             <Setter Property="Background" Value="Transparent"/>
@@ -172,7 +173,10 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="Advertising" Style="{StaticResource SubheaderTextStyle}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" />
-                <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdHub}" Width="160" Height="600" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <Button Style="{StaticResource ButtonStyleBasic}" Width="160" Height="600" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="BtnFallbackAd_Click">
+                    <Image Source="{Binding FallbackAdPath}" Visibility="{Binding ShowFallbackAd, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="None" />
+                </Button>
+                <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdHub}" Width="160" Height="600" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ErrorOccurred="AdControl_ErrorOccurred" />
             </Grid>
         </DataTemplate>
 

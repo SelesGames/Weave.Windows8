@@ -847,5 +847,15 @@ namespace Weave
             }
         }
 
+        private void AdControl_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
+        {
+            _advertisingVm.ShowFallbackAd = true;
+        }
+
+        private void BtnFallbackAd_Click(object sender, RoutedEventArgs e)
+        {
+            _advertisingVm.ExecuteFallbackAd();
+        }
+
     } // end of class
 }

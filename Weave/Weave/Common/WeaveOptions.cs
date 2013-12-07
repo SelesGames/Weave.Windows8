@@ -84,5 +84,29 @@ namespace Weave.Common
             }
         }
 
+        public enum ArticlePlacement { Auto, Right, Center };
+        private const String ArticlePlacementKey = "ArticlePlacement";
+        private static ArticlePlacement? _articlePlacement = null;
+        public static ArticlePlacement CurrentArticlePlacement
+        {
+            get
+            {
+                if (_articlePlacement == null)
+                {
+                    ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
+                    ArticlePlacement placement;
+                    if (container.Values.ContainsKey(ArticlePlacementKey) && Enum.TryParse<ArticlePlacement>((String)container.Values[ArticlePlacementKey], out placement)) _articlePlacement = placement;
+                    else _articlePlacement = ArticlePlacement.Auto;
+                }
+                return _articlePlacement == null ? ArticlePlacement.Auto : _articlePlacement.Value;
+            }
+            set
+            {
+                _articlePlacement = value;
+                ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
+                container.Values[ArticlePlacementKey] = value.ToString();
+            }
+        }
+
     }
 }

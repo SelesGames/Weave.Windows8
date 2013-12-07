@@ -140,12 +140,19 @@ namespace Weave
 
         private void itemGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (e.ClickedItem != null && !(e.ClickedItem is AdvertisingNewsItem))
+            if (e.ClickedItem != null)
             {
-                _showAppBarOnSelection = false;
-                itemGridView.SelectedItem = e.ClickedItem;
-                _showAppBarOnSelection = true;
-                ShowArticle(e.ClickedItem as NewsItem);
+                if (e.ClickedItem is AdvertisingNewsItem)
+                {
+                    ((AdvertisingNewsItem)e.ClickedItem).ExecuteFallbackAd();
+                }
+                else
+                {
+                    _showAppBarOnSelection = false;
+                    itemGridView.SelectedItem = e.ClickedItem;
+                    _showAppBarOnSelection = true;
+                    ShowArticle(e.ClickedItem as NewsItem);
+                }
             }
         }
 
@@ -1159,6 +1166,32 @@ namespace Weave
                 PopupAppBarMenu.HorizontalOffset = rect.Left + 15;
                 PopupAppBarMenu.VerticalOffset = -172;
                 PopupAppBarMenu.IsOpen = true;
+            }
+        }
+
+        private void AdControl_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
+        {
+            Microsoft.Advertising.WinRT.UI.AdControl adControl = sender as Microsoft.Advertising.WinRT.UI.AdControl;
+            if (adControl != null)
+            {
+                AdvertisingNewsItem item = adControl.DataContext as AdvertisingNewsItem;
+                if (item != null)
+                {
+                    item.SelectFallbackAd(false);
+                }
+            }
+        }
+
+        private void AdControlLarge_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
+        {
+            Microsoft.Advertising.WinRT.UI.AdControl adControl = sender as Microsoft.Advertising.WinRT.UI.AdControl;
+            if (adControl != null)
+            {
+                AdvertisingNewsItem item = adControl.DataContext as AdvertisingNewsItem;
+                if (item != null)
+                {
+                    item.SelectFallbackAd(true);
+                }
             }
         }
 

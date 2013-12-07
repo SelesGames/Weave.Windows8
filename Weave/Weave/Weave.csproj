@@ -211,6 +211,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Add.png" />
+    <Content Include="Assets\Ads\160x600-WeaveWP.png" />
+    <Content Include="Assets\Ads\250x250-WeaveWP.png" />
+    <Content Include="Assets\Ads\300x250-WeaveWP.png" />
     <Content Include="Assets\Buttons\FavAddButton.png" />
     <Content Include="Assets\Buttons\FavAddButtonPressed.png" />
     <Content Include="Assets\Buttons\FavRemoveButton.png" />
@@ -459,6 +462,7 @@
       <Name>Microsoft Advertising SDK for Windows 8 %28Xaml%29</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>

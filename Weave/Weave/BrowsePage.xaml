@@ -612,11 +612,17 @@
         </DataTemplate>
 
         <DataTemplate x:Key="AdvertisingItemTemplate">
-            <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdBrowse}" Width="250" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Grid>
+                <Image Source="{Binding FallbackAdPath}" Visibility="{Binding ShowFallbackAd, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="UniformToFill" Width="250" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdBrowse}" Width="250" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top" ErrorOccurred="AdControl_ErrorOccurred" />
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="AdvertisingItemTemplateLarge">
-            <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdBrowseLarge}" Width="440" Height="380" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Grid>
+                <Image Source="{Binding FallbackAdPath}" Visibility="{Binding ShowFallbackAd, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="UniformToFill" Width="440" Height="380" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdBrowseLarge}" Width="440" Height="380" HorizontalAlignment="Left" VerticalAlignment="Top" ErrorOccurred="AdControlLarge_ErrorOccurred" />
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="ArticleTextItemTemplateLarge">
