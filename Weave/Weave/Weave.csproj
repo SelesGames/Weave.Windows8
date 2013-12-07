@@ -213,7 +213,7 @@
     <Content Include="Assets\Add.png" />
     <Content Include="Assets\Ads\160x600-WeaveWP.png" />
     <Content Include="Assets\Ads\250x250-WeaveWP.png" />
-    <Content Include="Assets\Ads\300x250-WeaveWP.png" />
+    <Content Include="Assets\Ads\440x380-WeaveWP.png" />
     <Content Include="Assets\Buttons\FavAddButton.png" />
     <Content Include="Assets\Buttons\FavAddButtonPressed.png" />
     <Content Include="Assets\Buttons\FavRemoveButton.png" />

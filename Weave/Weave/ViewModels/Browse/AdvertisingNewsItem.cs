@@ -11,7 +11,7 @@ namespace Weave.ViewModels.Browse
         public enum FallbackSelect { Weave };
 
         private const String WeaveImage = "/Assets/Ads/250x250-WeaveWP.png";
-        private const String WeaveImageWide = "/Assets/Ads/300x250-WeaveWP.png";
+        private const String WeaveImageWide = "/Assets/Ads/440x380-WeaveWP.png";
 
         private FallbackSelect _currentFallbackAd = FallbackSelect.Weave;
 
