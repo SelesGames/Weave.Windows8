@@ -43,6 +43,27 @@ namespace Weave.ViewModels.StartHub
         {
             Items.Clear();
             int index = 0;
+
+            // ensure first item has an image
+            if (newsItems.Count > 1 && !newsItems[0].NewsItem.HasImage)
+            {
+                int imageItemIndex = -1;
+                for (int i = 1; i < newsItems.Count; i++)
+                {
+                    if (newsItems[i].NewsItem.HasImage)
+                    {
+                        imageItemIndex = i;
+                    }
+                }
+
+                if (imageItemIndex > -1)
+                {
+                    StartNewsItemContainer temp = newsItems[imageItemIndex];
+                    newsItems.RemoveAt(imageItemIndex);
+                    newsItems.Insert(0, temp);
+                }
+            }
+
             foreach (StartNewsItemContainer item in newsItems)
             {
                 PrepareItem(index, item);

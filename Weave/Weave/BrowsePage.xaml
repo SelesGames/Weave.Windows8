@@ -994,9 +994,14 @@
                         <Button x:Name="AppBarUnfavorite" Style="{StaticResource UnfavoriteAppBarButtonStyle}" Click="AppBarUnfavorite_Click" Visibility="{Binding ElementName=AppBarFavorite, Path=Visibility, Converter={StaticResource VisibilityInverter}}" />
                     </Grid>
                     <Button x:Name="AppBarShare" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Share" Content="&#xE1D7;" Click="AppBarShare_Click" FontSize="14" />
+                    <Line x:Name="AppBarSeparator" X1="0" Y1="60" Margin="20,12,20,0"  StrokeThickness="1" Stroke="White" Visibility="{Binding ElementName=AppBarFontSize, Path=Visibility}" />
                     <Button x:Name="AppBarFontSize" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Font size" Content="&#xE185;" Click="AppBarFontSize_Click" Visibility="Collapsed" />
                     <Button x:Name="AppBarReadingTheme" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Reading theme" Content="&#xE158;" Click="AppBarReadingTheme_Click" Visibility="Collapsed" />
                     <Button x:Name="AppBarArticleView" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Article view" Content="&#xE12A;" Click="AppBarArticleView_Click" Visibility="Collapsed" />
+                    <Grid x:Name="GrdArticlePosition" Visibility="{Binding ElementName=AppBarFontSize, Path=Visibility}">
+                        <Button x:Name="AppBarPositionCenter" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Position center" Content="&#xE176;" Click="AppBarPositionCenter_Click" />
+                        <Button x:Name="AppBarPositionRight" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Position right" Content="&#xE140;" Click="AppBarPositionRight_Click" Visibility="{Binding ElementName=AppBarPositionCenter, Path=Visibility, Converter={StaticResource VisibilityInverter}}" />
+                    </Grid>
                 </StackPanel>
                 <StackPanel x:Name="RightPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
                     <Button x:Name="AppBarMarkAllRead" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Mark all read" Content="&#xE119;" Click="AppBarMarkAllRead_Click" />

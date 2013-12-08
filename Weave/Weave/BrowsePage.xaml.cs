@@ -229,6 +229,7 @@ namespace Weave
             GrdVwNavigation.DataContext = _nav;
             GrdVwNavigation.SelectedIndex = initialSelection;
             UpdateArticleContainerBackground();
+            AppBarPositionCenter.Visibility = WeaveOptions.CurrentArticlePlacement == WeaveOptions.ArticlePlacement.Center ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
         }
 
         private void UpdateMainScrollOrientation(ApplicationViewState viewState)
@@ -415,7 +416,7 @@ namespace Weave
             BtnBrowserBack.IsEnabled = false;
             if (item != null)
             {
-                if (CheckForMouse()) ArticleContainer.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
+                if (WeaveOptions.CurrentArticlePlacement == WeaveOptions.ArticlePlacement.Center) ArticleContainer.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
                 if (item.IsNew) item.IsNew = false;
                 int fontSize = GetFontSize();
                 int articleWidth = GetArticleWidth(fontSize);
@@ -1052,19 +1053,6 @@ namespace Weave
         }
 
 
-
-        private bool CheckForMouse()
-        {
-            if (_isMouse == null)
-            {
-                Windows.Devices.Input.MouseCapabilities mouseCapabilities = new Windows.Devices.Input.MouseCapabilities();
-                Windows.Devices.Input.TouchCapabilities touchCapabilities = new Windows.Devices.Input.TouchCapabilities();
-                if (touchCapabilities.TouchPresent == 0) _isMouse = true;
-                else _isMouse = mouseCapabilities.MousePresent > 0;
-            }
-            return _isMouse == null ? false : _isMouse.Value;
-        }
-
         private void PopupEditFeed_Opened(object sender, object e)
         {
             SbEditFeedPopIn.Begin();
@@ -1193,6 +1181,20 @@ namespace Weave
                     item.SelectFallbackAd(true);
                 }
             }
+        }
+
+        private void AppBarPositionCenter_Click(object sender, RoutedEventArgs e)
+        {
+            WeaveOptions.CurrentArticlePlacement = WeaveOptions.ArticlePlacement.Center;
+            ArticleContainer.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
+            AppBarPositionCenter.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+        }
+
+        private void AppBarPositionRight_Click(object sender, RoutedEventArgs e)
+        {
+            WeaveOptions.CurrentArticlePlacement = WeaveOptions.ArticlePlacement.Right;
+            ArticleContainer.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Right;
+            AppBarPositionCenter.Visibility = Windows.UI.Xaml.Visibility.Visible;
         }
 
     } // end of class

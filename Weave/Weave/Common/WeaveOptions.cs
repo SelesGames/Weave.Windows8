@@ -84,7 +84,7 @@ namespace Weave.Common
             }
         }
 
-        public enum ArticlePlacement { Auto, Right, Center };
+        public enum ArticlePlacement { Right, Center };
         private const String ArticlePlacementKey = "ArticlePlacement";
         private static ArticlePlacement? _articlePlacement = null;
         public static ArticlePlacement CurrentArticlePlacement
@@ -96,9 +96,9 @@ namespace Weave.Common
                     ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
                     ArticlePlacement placement;
                     if (container.Values.ContainsKey(ArticlePlacementKey) && Enum.TryParse<ArticlePlacement>((String)container.Values[ArticlePlacementKey], out placement)) _articlePlacement = placement;
-                    else _articlePlacement = ArticlePlacement.Auto;
+                    else _articlePlacement = CheckForMouse() ? ArticlePlacement.Center : ArticlePlacement.Right;
                 }
-                return _articlePlacement == null ? ArticlePlacement.Auto : _articlePlacement.Value;
+                return _articlePlacement == null ? ArticlePlacement.Right : _articlePlacement.Value;
             }
             set
             {
@@ -106,6 +106,16 @@ namespace Weave.Common
                 ApplicationDataContainer container = ApplicationData.Current.LocalSettings;
                 container.Values[ArticlePlacementKey] = value.ToString();
             }
+        }
+
+        private static bool CheckForMouse()
+        {
+            bool hasMouse;
+            Windows.Devices.Input.MouseCapabilities mouseCapabilities = new Windows.Devices.Input.MouseCapabilities();
+            Windows.Devices.Input.TouchCapabilities touchCapabilities = new Windows.Devices.Input.TouchCapabilities();
+            if (touchCapabilities.TouchPresent == 0) hasMouse = true;
+            else hasMouse = mouseCapabilities.MousePresent > 0;
+            return hasMouse;
         }
 
     }
