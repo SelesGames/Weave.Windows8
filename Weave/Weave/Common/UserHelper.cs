@@ -46,6 +46,9 @@ namespace Weave.Common
         private Dictionary<String, Feed> _feedIdMap = new Dictionary<string,ViewModels.Feed>();
         private Dictionary<String, List<Feed>> _categoryFeedMap;
 
+        private DateTime _lastUserRefresh = DateTime.MinValue;
+        private static readonly TimeSpan UserRefreshInterval = TimeSpan.FromMinutes(30);
+
         private static UserHelper _instance = new UserHelper();
         public static UserHelper Instance
         {
@@ -158,6 +161,7 @@ namespace Weave.Common
                     _loadingEvent.Set();
                     _loading = false;
                     _isLoaded = true;
+                    _lastUserRefresh = DateTime.Now;
                 }
                 else await Task.Run(() => _loadingEvent.WaitOne()); // wait for loading to complete
             }
@@ -615,6 +619,11 @@ namespace Weave.Common
             }
 
             return result;
+        }
+
+        public bool RequireUserRefresh
+        {
+            get { return DateTime.Now.Subtract(_lastUserRefresh) > UserRefreshInterval; }
         }
 
     } // end of class

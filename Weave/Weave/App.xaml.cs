@@ -31,6 +31,15 @@ namespace Weave
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            this.Resuming += App_Resuming;
+        }
+
+        void App_Resuming(object sender, object e)
+        {
+            if (_rootFrame.Content is MainPage && Weave.Common.UserHelper.Instance.RequireUserRefresh)
+            {
+                ((MainPage)_rootFrame.Content).Refresh();
+            }
         }
 
         private static Frame _rootFrame;

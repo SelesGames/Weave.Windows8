@@ -227,7 +227,7 @@ namespace Weave
             }
             else // check if anything requires refreshing
             {
-                if (RequireAllRefresh)
+                if (RequireAllRefresh || UserHelper.Instance.RequireUserRefresh)
                 {
                     RequireAllRefresh = false;
                     await Refresh();
@@ -715,11 +715,11 @@ namespace Weave
             await Refresh();
         }
 
-        private async Task Refresh()
+        public async Task Refresh()
         {
             LstVwMain.ItemsSource = null;
-            await UserHelper.Instance.LoadUser(true);
             PrgRngLoadingMain.IsActive = true;
+            await UserHelper.Instance.LoadUser(true);
             await LoadViewModels();
             LstVwMain.ItemsSource = _startItems;
             PrgRngLoadingMain.IsActive = false;
