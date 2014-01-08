@@ -32,6 +32,14 @@ namespace Weave
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.Resuming += App_Resuming;
+            this.UnhandledException += App_UnhandledException;
+        }
+
+        async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            String output = String.Format("{0}\n\n{1}", e.Message, e.Exception.StackTrace);
+            ShowStandardError(output);
+            e.Handled = true;
         }
 
         void App_Resuming(object sender, object e)
@@ -164,11 +172,14 @@ namespace Weave
             // add logging logic
         }
 
-        public static async System.Threading.Tasks.Task ShowStandardError(String message)
+        public static void ShowStandardError(String message)
         {
-            Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(message, "Oops!");
-            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Ok", null, null));
-            await dialog.ShowAsync();
+            Weave.Common.ThreadHelper.CheckBeginInvokeOnUI(async () =>
+            {
+                Windows.UI.Popups.MessageDialog dialog = new Windows.UI.Popups.MessageDialog(message, "Oops!");
+                dialog.Commands.Add(new Windows.UI.Popups.UICommand("Ok", null, null));
+                await dialog.ShowAsync();
+            });
         }
 
     } // end of class

@@ -777,7 +777,7 @@ namespace Weave
 
         private void _startItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add && e.NewItems.Count > 0 && !semanticZoomControl.IsZoomedInViewActive)
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add && e.NewItems.Count > 0 && !semanticZoomControl.IsZoomedInViewActive && !_initialRepositionSections)
             {
                 if (e.NewItems[0] is StartHeroArticle)
                 {
@@ -811,6 +811,8 @@ namespace Weave
             await dialog.ShowAsync();
         }
 
+        private bool _initialRepositionSections = false;
+
         /// <summary>
         /// Repositions the standard sections if they have been customised.
         /// </summary>
@@ -818,6 +820,7 @@ namespace Weave
         {
             if (_startItems.Count > 0)
             {
+                _initialRepositionSections = true;
                 ApplicationDataContainer settings = UserHelper.Instance.GetUserContainer(true);
                 int latestArticleIndex = _startItems.IndexOf(_latestArticlesVm);
                 if (settings.Values.ContainsKey(LatestArticlesIndexKey))
@@ -832,6 +835,7 @@ namespace Weave
                     int newIndex = (int)settings.Values[SourcesIndexKey];
                     if (newIndex != sourcesIndex) _startItems.Move(sourcesIndex, newIndex);
                 }
+                _initialRepositionSections = false;
             }
         }
 
@@ -849,7 +853,7 @@ namespace Weave
 
         private void AdControl_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
         {
-            _advertisingVm.ShowFallbackAd = true;
+            ThreadHelper.CheckBeginInvokeOnUI(() => _advertisingVm.ShowFallbackAd = true);
         }
 
         private void BtnFallbackAd_Click(object sender, RoutedEventArgs e)

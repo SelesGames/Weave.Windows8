@@ -141,7 +141,7 @@ namespace Weave.Views.StartHub
             }
             if (!await UserHelper.Instance.InitUserWithFeeds(toAdd))
             {
-                await App.ShowStandardError("There was a problem creating your account. Please check your connection and try again.");
+                App.ShowStandardError("There was a problem creating your account. Please check your connection and try again.");
             }
         }
 

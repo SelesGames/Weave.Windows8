@@ -173,8 +173,8 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="Advertising" Style="{StaticResource SubheaderTextStyle}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" />
-                <Button Style="{StaticResource ButtonStyleBasic}" Width="160" Height="600" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="BtnFallbackAd_Click">
-                    <Image Source="{Binding FallbackAdPath}" Visibility="{Binding ShowFallbackAd, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="None" />
+                <Button Style="{StaticResource ButtonStyleBasic}" Width="160" Height="600" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="BtnFallbackAd_Click" Visibility="{Binding ShowFallbackAd, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Image Source="{Binding FallbackAdPath}" Stretch="None" />
                 </Button>
                 <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdHub}" Width="160" Height="600" Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ErrorOccurred="AdControl_ErrorOccurred" />
             </Grid>

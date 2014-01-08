@@ -125,6 +125,7 @@
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Common\TemplateSelectors.cs" />
     <Compile Include="Common\TestData.cs" />
+    <Compile Include="Common\ThreadHelper.cs" />
     <Compile Include="Common\UserHelper.cs" />
     <Compile Include="Common\VariableGridView.cs" />
     <Compile Include="Common\WeaveOptions.cs" />
