@@ -300,5 +300,11 @@ namespace Weave.User.Service.Client
             //return new SelesGames.Rest.Protobuf.ProtobufRestClient { UseGzip = true };
             return new SelesGames.Rest.JsonDotNet.JsonDotNetRestClient { UseGzip = true };
         }
+
+
+        public Task SetArticleDeleteTimes(Guid userId, Incoming.ArticleDeleteTimes articleDeleteTimes)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
