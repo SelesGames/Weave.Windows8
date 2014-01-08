@@ -144,7 +144,8 @@ namespace Weave
             {
                 if (e.ClickedItem is AdvertisingNewsItem)
                 {
-                    ((AdvertisingNewsItem)e.ClickedItem).ExecuteFallbackAd();
+                    AdvertisingNewsItem ad = (AdvertisingNewsItem)e.ClickedItem;
+                    if (ad.ShowFallbackAd) ad.ExecuteFallbackAd();
                 }
                 else
                 {
