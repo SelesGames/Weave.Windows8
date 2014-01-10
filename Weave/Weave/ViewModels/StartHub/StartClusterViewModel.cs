@@ -75,7 +75,7 @@ namespace Weave.ViewModels.StartHub
                 containerItems.Add(new StartNewsItemContainer(itemWithIcon));
                 index++;
             }
-            if (ZoomedArticle == null) ZoomedArticle = containerItems[0].NewsItem;
+            if (ZoomedArticle == null && containerItems.Count > 0) ZoomedArticle = containerItems[0].NewsItem;
 
             int layoutChoice = _random.Next() % LayoutCount;
             if (imageIndices.Count == 0) layoutChoice = 1;
