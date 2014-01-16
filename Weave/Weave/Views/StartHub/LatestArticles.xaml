@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    x:Name="LatestArticleControl"
     >
     
     <UserControl.Resources>
@@ -108,11 +109,10 @@
             <common:VariableGridView Margin="-5,-5,-5,-5" SelectionMode="None" IsItemClickEnabled="True" ItemClick="VariableGridView_ItemClick" ItemsSource="{Binding Items}" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" ItemTemplateSelector="{StaticResource StartLatestItemSelector}" ItemContainerStyle="{StaticResource GridViewItemStyleWeave}">
                 <common:VariableGridView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <VariableSizedWrapGrid VerticalAlignment="Top" ItemWidth="250" ItemHeight="115" Orientation="Vertical" />
+                        <VariableSizedWrapGrid VerticalAlignment="Top" ItemWidth="{Binding ElementName=LatestArticleControl, Path=ItemWidth}" ItemHeight="{Binding ElementName=LatestArticleControl, Path=ItemHeight}" Orientation="Vertical" />
                     </ItemsPanelTemplate>
                 </common:VariableGridView.ItemsPanel>
             </common:VariableGridView>
-            <!--<TextBlock Text="Could not retrieve videos from YouTube" Style="{StaticResource SubheaderTextStyle}" Opacity="0.6" Visibility="{Binding ErrorLoadingItems, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
             <ProgressRing IsActive="{Binding IsLoading}" Style="{StaticResource LargeLoadingRingStyle}" />
         </Grid>
     </Grid>

@@ -178,6 +178,12 @@
     <Compile Include="Views\StartHub\ClusterView.xaml.cs">
       <DependentUpon>ClusterView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\StartHub\SourcesViewPortrait.xaml.cs">
+      <DependentUpon>SourcesViewPortrait.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StartHub\HeroArticleViewPortrait.xaml.cs">
+      <DependentUpon>HeroArticleViewPortrait.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StartHub\FirstLaunchView.xaml.cs">
       <DependentUpon>FirstLaunchView.xaml</DependentUpon>
     </Compile>
@@ -343,6 +349,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\StartHub\ClusterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\StartHub\SourcesViewPortrait.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\StartHub\HeroArticleViewPortrait.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

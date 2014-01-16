@@ -354,6 +354,7 @@ namespace Weave
         {
             AdjustForScreenResolution();
             if (LstVwMain.ItemsSource != null) BottomAppBar.Visibility = ApplicationView.Value == ApplicationViewState.Snapped ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
+            SetViewMode(e.NewSize);
         }
 
         private void MainScrollChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -859,6 +860,21 @@ namespace Weave
         private void BtnFallbackAd_Click(object sender, RoutedEventArgs e)
         {
             _advertisingVm.ExecuteFallbackAd();
+        }
+
+        private void SetViewMode(Size size)
+        {
+            if (size.Width > 0 && size.Height > 0)
+            {
+                if (size.Height > size.Width)
+                {
+                    LstVwMain.Style = this.Resources["MainListViewStylePortrait"] as Style;
+                }
+                else
+                {
+                    LstVwMain.Style = this.Resources["MainListViewStyle"] as Style;
+                }
+            }
         }
 
     } // end of class

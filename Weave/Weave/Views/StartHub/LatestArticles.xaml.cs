@@ -80,5 +80,31 @@ namespace Weave.Views.StartHub
             }
         }
 
+
+        public int ItemWidth { get; set; }
+        //public int ItemWidth
+        //{
+        //    get { return (int)GetValue(ItemWidthProperty); }
+        //    set { SetValue(ItemWidthProperty, value); }
+        //}
+
+        //// Using a DependencyProperty as the backing store for ItemWidth.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty ItemWidthProperty =
+        //    DependencyProperty.Register("ItemWidth", typeof(int), typeof(LatestArticles), new PropertyMetadata(0));
+
+
+        //public int ItemHeight
+        //{
+        //    get { return (int)GetValue(ItemHeightProperty); }
+        //    set { SetValue(ItemHeightProperty, value); }
+        //}
+
+        //// Using a DependencyProperty as the backing store for ItemHeight.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty ItemHeightProperty =
+        //    DependencyProperty.Register("ItemHeight", typeof(int), typeof(LatestArticles), new PropertyMetadata(0));
+
+        public int ItemHeight { get; set; }
+
+
     } // end of class
 }
