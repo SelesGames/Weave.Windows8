@@ -57,6 +57,8 @@ namespace Weave
         private const String LatestArticlesIndexKey = "LatestArticlesIndex";
         private const String SourcesIndexKey = "SourcesIndex";
 
+        private const int DynamicThreshold = 700;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -325,7 +327,7 @@ namespace Weave
 
         private void AdjustForScreenResolution()
         {
-            if (ApplicationView.Value == ApplicationViewState.FullScreenPortrait)
+            if (this.ActualHeight > this.ActualWidth)
             {
                 _expansionFactor = ((this.ActualWidth - BaseHeight) / BinHeight);
             }
@@ -868,7 +870,15 @@ namespace Weave
             {
                 if (size.Height > size.Width)
                 {
-                    LstVwMain.Style = this.Resources["MainListViewStylePortrait"] as Style;
+                    if (size.Width < DynamicThreshold)
+                    {
+                        //LstVwMain.Style = this.Resources["MainListViewStyleDynamic"] as Style;
+                        LstVwMain.Style = this.Resources["MainListViewStylePortrait"] as Style;
+                    }
+                    else
+                    {
+                        LstVwMain.Style = this.Resources["MainListViewStylePortrait"] as Style;
+                    }
                 }
                 else
                 {

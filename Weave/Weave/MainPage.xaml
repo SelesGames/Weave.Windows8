@@ -157,7 +157,11 @@
         </DataTemplate>
 
         <DataTemplate x:Key="LatestArticlesTemplatePortrait">
-            <views:LatestArticles Margin="100,80,0,0" ItemWidth="195" ItemHeight="115" />
+            <views:LatestArticles Margin="100,80,0,0" ItemWidth="195" ItemHeight="115" MaxHeight="550" MaxWidth="580" HorizontalAlignment="Left" />
+        </DataTemplate>
+        
+        <DataTemplate x:Key="LatestArticlesTemplateDynamic">
+            <views:LatestArticlesDynamic Margin="60,80,0,0" HorizontalAlignment="Stretch" />
         </DataTemplate>
 
         <DataTemplate x:Key="SourcesTemplate">
@@ -208,6 +212,7 @@
 
         <common:StartItemSelector x:Name="StartItemSelector" HeroTemplate="{StaticResource HeroTemplate}" LatestTemplate="{StaticResource LatestArticlesTemplate}" SourcesTemplate="{StaticResource SourcesTemplate}" ClusterTemplate="{StaticResource ClusterTemplate}"  AddTemplate="{StaticResource AddTemplate}" LoginTemplate="{StaticResource LoginTemplate}" AdvertisingTemplate="{StaticResource AdvertisingTemplate}" />
         <common:StartItemSelector x:Name="StartItemSelectorPortrait" HeroTemplate="{StaticResource HeroTemplatePortrait}" LatestTemplate="{StaticResource LatestArticlesTemplatePortrait}" SourcesTemplate="{StaticResource SourcesTemplatePortrait}" ClusterTemplate="{StaticResource ClusterTemplatePortrait}"  AddTemplate="{StaticResource AddTemplatePortrait}" LoginTemplate="{StaticResource LoginTemplatePortrait}" AdvertisingTemplate="{StaticResource EmptyItemTemplate}" />
+        <common:StartItemSelector x:Name="StartItemSelectorDynamic" HeroTemplate="{StaticResource HeroTemplatePortrait}" LatestTemplate="{StaticResource LatestArticlesTemplateDynamic}" SourcesTemplate="{StaticResource SourcesTemplatePortrait}" ClusterTemplate="{StaticResource ClusterTemplatePortrait}"  AddTemplate="{StaticResource AddTemplatePortrait}" LoginTemplate="{StaticResource LoginTemplatePortrait}" AdvertisingTemplate="{StaticResource EmptyItemTemplate}" />
         
         <DataTemplate x:Key="HeroTemplateZoomed">
             <views:HeroArticleZoomedView Margin="0,0,80,0" Tapped="ZoomedOutItem_Tapped" />
@@ -248,6 +253,21 @@
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
             <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
             <Setter Property="ItemTemplateSelector" Value="{StaticResource StartItemSelectorPortrait}" />
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,0" />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MainListViewStyleDynamic" TargetType="ListView">
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+            <Setter Property="ItemTemplateSelector" Value="{StaticResource StartItemSelectorDynamic}" />
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
