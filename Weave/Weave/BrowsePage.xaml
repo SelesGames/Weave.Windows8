@@ -909,7 +909,7 @@
 
         <Popup Name="PopupManageFeeds" Margin="0,0,0,0" Grid.RowSpan="2" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Closed="PopupManageFeeds_Closed" Opened="PopupManageFeeds_Opened">
             <Popup.Resources>
-                <Storyboard x:Name="SbManageFeedsPopIn">
+                <Storyboard x:Name="SbManageFeedsPopIn" Completed="SbManageFeedsPopIn_Completed">
                     <PopInThemeAnimation TargetName="GrdManageFeedsContent" FromVerticalOffset="0" FromHorizontalOffset="-346" />
                 </Storyboard>
             </Popup.Resources>

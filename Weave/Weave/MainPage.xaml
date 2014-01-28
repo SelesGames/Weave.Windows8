@@ -400,13 +400,27 @@
                     <TextBlock Grid.Column="1" Text="Select a category or source to pin to your main hub..." TextWrapping="Wrap" FontWeight="Light" FontSize="15" Foreground="{StaticResource SubtleTextBrush}" Margin="20,20,20,20" />
                 </Grid>
                 <Grid Margin="40" Grid.Row="1">
-                    <ListBox Name="LstBxCategorySelector" Style="{StaticResource ListBoxStyleListSelector}" ItemTemplateSelector="{StaticResource PinItemSelector}" Grid.Row="4" SelectionMode="Single" Margin="-10" SelectionChanged="LstBxCategorySelector_SelectionChanged" ItemContainerStyleSelector="{StaticResource PinItemStyleSelector}" Background="Transparent" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Loaded="LstBxCategorySelector_Loaded">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ListBox Name="LstBxCategorySelector" Style="{StaticResource ListBoxStyleListSelector}" ItemTemplateSelector="{StaticResource PinItemSelector}" SelectionMode="Single" Margin="-10,-10,-10,0" SelectionChanged="LstBxCategorySelector_SelectionChanged" ItemContainerStyleSelector="{StaticResource PinItemStyleSelector}" Background="Transparent" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Loaded="LstBxCategorySelector_Loaded">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel />
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
                     </ListBox>
+                    <Rectangle Fill="{StaticResource SubtleTextBrush}" Height="1" Grid.Row="1" Margin="0,20,0,20"/>
+                    <Button Name="BtnAddSources" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{StaticResource ButtonStyleBasic}" Margin="0,0,0,0" Click="BtnAddSources_Click">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
+                                <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </Border>
+                            <TextBlock Text="Add sources" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Foreground="{StaticResource SubtleTextBrush}" Margin="10,0,0,0" />
+                        </StackPanel>
+                    </Button>
                 </Grid>
                 <Rectangle Grid.RowSpan="2" HorizontalAlignment="Right" Width="2" Fill="{StaticResource ApplicationPageBackgroundThemeBrush}" />
             </Grid>

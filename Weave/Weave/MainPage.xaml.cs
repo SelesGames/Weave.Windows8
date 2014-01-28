@@ -887,5 +887,12 @@ namespace Weave
             }
         }
 
+        private void BtnAddSources_Click(object sender, RoutedEventArgs e)
+        {
+            Dictionary<String, object> parameters = new Dictionary<string, object>();
+            parameters.Add(BrowsePage.NavParamAddSourceKey, true);
+            App.Navigate(typeof(BrowsePage), parameters);
+        }
+
     } // end of class
 }
