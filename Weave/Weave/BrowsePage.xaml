@@ -586,8 +586,60 @@
             </Grid>
         </DataTemplate>
 
+        <DataTemplate x:Key="ArticleTextItemTemplateSnapped">
+            <Grid HorizontalAlignment="Stretch" Height="250" Margin="20,0,0,0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Rectangle Grid.RowSpan="2" Fill="White" Opacity="0.05" />
+                <TextBlock Text="{Binding Title}" Style="{StaticResource SubheaderTextStyle}" VerticalAlignment="Top" Foreground="White" FontWeight="Light" Margin="20,14,20,0" MaxHeight="150" TextTrimming="None" />
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,0,0,20">
+                    <Image Stretch="UniformToFill" Width="20" Height="20" Margin="0,0,10,0">
+                        <Image.Source>
+                            <BitmapImage UriSource="{Binding SourceIconUrl}" DecodePixelHeight="20" DecodePixelWidth="20"/>
+                        </Image.Source>
+                    </Image>
+                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="110" VerticalAlignment="Center" />
+                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
+                    <Grid Margin="5,0,0,0">
+                        <Border Visibility="{Binding ElementName=FavouriteIcon, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
+                            <TextBlock Text="New!" FontSize="12" Foreground="{StaticResource WeaveBrush}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Name="FavouriteIcon" Text="&#xE113;" FontFamily="Segoe UI Symbol" Foreground="{StaticResource WeaveBrush}" FontSize="15" VerticalAlignment="Center" Visibility="{Binding DisplayState, Converter={StaticResource FavoritedToVisibilityConverter}}" Margin="0,-5,0,-5" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
         <DataTemplate x:Key="ArticleImageItemTemplate">
             <Grid HorizontalAlignment="Left" Width="250" Height="250" Margin="0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="160" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Height="200" Background="{StaticResource ImagePlaceholderBrush}">
+                    <Image Source="{Binding ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </Border>
+                <TextBlock Grid.Row="1" Text="{Binding Title}" FontSize="15" Foreground="White" FontWeight="SemiBold" Margin="0,20,0,0" MaxHeight="40" TextTrimming="None" TextWrapping="Wrap" />
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,3,0,0">
+                    <TextBlock Text="{Binding OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" MaxWidth="170" />
+                    <TextBlock Text="|" Margin="5,0,5,0" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
+                    <TextBlock Text="{Binding PublishDate}" FontSize="12" FontWeight="Normal" Foreground="{StaticResource SubtleTextBrush}" />
+                    <Grid Margin="5,0,0,0">
+                        <Border Visibility="{Binding ElementName=FavouriteIcon, Path=Visibility, Converter={StaticResource VisibilityInverter}}">
+                            <TextBlock Text="New!" FontSize="12" Foreground="{StaticResource WeaveBrush}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Name="FavouriteIcon" Text="&#xE113;" FontFamily="Segoe UI Symbol" Foreground="{StaticResource WeaveBrush}" FontSize="15" VerticalAlignment="Center" Visibility="{Binding DisplayState, Converter={StaticResource FavoritedToVisibilityConverter}}" Margin="0,-5,0,-5" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ArticleImageItemTemplateSnapped">
+            <Grid HorizontalAlignment="Stretch" Height="250" Margin="20,0,0,0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="160" />
                     <RowDefinition Height="Auto" />
@@ -615,6 +667,13 @@
             <Grid>
                 <Image Source="{Binding FallbackAdPath}" Visibility="{Binding ShowFallbackAd, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="UniformToFill" Width="250" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdBrowse}" Width="250" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top" ErrorOccurred="AdControl_ErrorOccurred" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="AdvertisingItemTemplateSnapped">
+            <Grid>
+                <Image Source="{Binding FallbackAdPath}" Visibility="{Binding ShowFallbackAd, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="UniformToFill" Margin="20,0,0,0" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <advertUi:AdControl ApplicationId="{StaticResource AdvertisingApplicationId}" AdUnitId="{StaticResource AdUnitIdBrowse}" Margin="20,0,0,0" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top" ErrorOccurred="AdControl_ErrorOccurred" />
             </Grid>
         </DataTemplate>
 
@@ -681,7 +740,9 @@
 
         <common:BrowseArticleSelector x:Name="ArticleSelectorLarge" ImageTemplate="{StaticResource ArticleImageItemTemplateLarge}" TextTemplate="{StaticResource ArticleTextItemTemplateLarge}" AdvertisingTemplate="{StaticResource AdvertisingItemTemplateLarge}" />
 
-        <Style x:Key="GridViewStyleLandscape" TargetType="GridView">
+        <common:BrowseArticleSelector x:Name="ArticleSelectorSnapped" ImageTemplate="{StaticResource ArticleImageItemTemplateSnapped}" TextTemplate="{StaticResource ArticleTextItemTemplateSnapped}" AdvertisingTemplate="{StaticResource AdvertisingItemTemplateSnapped}" />
+
+        <Style x:Key="GridViewStyleBrowse" TargetType="GridView">
             <!--<Setter Property="ItemTemplateSelector" Value="{StaticResource ArticleSelector}" />-->
             <Setter Property="ItemsPanel">
                 <Setter.Value>
@@ -771,10 +832,11 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <GridView Grid.RowSpan="2" Grid.Column="1" x:Name="itemGridView" Loaded="GridView_Loaded" SelectionChanged="itemGridView_SelectionChanged" Style="{StaticResource GridViewStyleLandscape}" Margin="-20,-20,0,0" SelectionMode="Single" IsItemClickEnabled="True" ItemClick="itemGridView_ItemClick" ItemContainerStyle="{StaticResource GridViewItemStyleArticle}" ItemsSource="{Binding Items}">
+        <GridView Grid.RowSpan="2" Grid.Column="1" x:Name="itemGridView" Loaded="GridView_Loaded" SelectionChanged="itemGridView_SelectionChanged" Style="{StaticResource GridViewStyleBrowse}" Margin="-20,-20,0,0" SelectionMode="Single" IsItemClickEnabled="True" ItemClick="itemGridView_ItemClick" ItemContainerStyle="{StaticResource GridViewItemStyleArticle}" ItemsSource="{Binding Items}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled">
         </GridView>
 
-        <Rectangle Name="RectNavBackground" Grid.RowSpan="2" Fill="#101010" Margin="0,0,80,0" RenderTransformOrigin="0,0" RenderTransform="{Binding ElementName=LstVwNavigation, Path=RenderTransform}" />
+        <Rectangle Name="RectNavBackground" Visibility="{Binding ElementName=StkPnlNavigation, Path=Visibility}" Grid.RowSpan="2" Fill="#101010" Margin="0,0,80,0" RenderTransformOrigin="0,0" />
+        <Rectangle Name="RectNavBackgroundSnapped" Visibility="Collapsed" Grid.Column="1" Fill="#101010" Margin="0,0,0,0" RenderTransformOrigin="0,0" />
 
         <StackPanel Name="StkPnlNavigation" Grid.Row="1">
             <GridView Name="GrdVwNavigation" Width="340" SelectionChanged="GrdVwNavigation_SelectionChanged" ItemContainerStyleSelector="{StaticResource NavigationItemStyleSelector}" ItemTemplateSelector="{StaticResource NavigationItemSelector}" ItemsSource="{Binding Items}" RenderTransformOrigin="0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,40,80,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled">
@@ -827,6 +889,9 @@
                 </StackPanel>
                 <ProgressRing Name="PrgRngLoading" IsActive="{Binding IsLoading}" Style="{StaticResource LargeLoadingRingStyle}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,20,0,0" />
             </StackPanel>
+            <Button Name="BtnMenuSnapped" Click="BtnMenuSnapped_Click" Style="{StaticResource ButtonStyleBasic}" Visibility="Collapsed" Grid.ColumnSpan="2" Margin="0,40,20,0" HorizontalAlignment="Right">
+                <TextBlock Text="&#xE169;" Foreground="White" FontSize="20" FontFamily="Segoe UI Symbol"/>
+            </Button>
         </Grid>
         
         <Rectangle Name="RectOverlay" Visibility="Collapsed" PointerPressed="RectOverlay_PointerPressed" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="Black" Opacity="0.85" />
@@ -903,10 +968,6 @@
 
         <Button x:Name="BtnBackArticlePortrait" Click="GoBack" Visibility="Collapsed" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource PortraitBackButtonStyle}"/>
 
-        <Grid Name="GrdSnappedPlaceholder" Background="#222222" Grid.RowSpan="2" Grid.ColumnSpan="2" Visibility="Collapsed">
-            <Image Source="/Assets/SplashScreen.png" Stretch="Uniform" />
-        </Grid>
-
         <Popup Name="PopupManageFeeds" Margin="0,0,0,0" Grid.RowSpan="2" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Closed="PopupManageFeeds_Closed" Opened="PopupManageFeeds_Opened">
             <Popup.Resources>
                 <Storyboard x:Name="SbManageFeedsPopIn" Completed="SbManageFeedsPopIn_Completed">
@@ -948,6 +1009,23 @@
             <Grid Name="GrdFlyoutContent" Height="{Binding ElementName=GrdRoot, Path=ActualHeight}">
             </Grid>
         </Popup>
+        
+        <Popup Name="PopupNavSnapped" Grid.Row="1" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupNavSnapped_Opened">
+            <Popup.Resources>
+                <Storyboard x:Name="SbNavSnappedPopIn">
+                    <PopInThemeAnimation TargetName="GrdNavSnappedContainer" FromVerticalOffset="500" FromHorizontalOffset="0" />
+                </Storyboard>
+            </Popup.Resources>
+            <Grid Name="GrdNavSnappedContainer" Background="#101010" Height="{Binding ElementName=itemGridView, Path=ActualHeight}" Width="{Binding ElementName=pageRoot, Path=ActualWidth}">
+                <GridView Name="GrdVwNavigationSnapped" SelectionChanged="GrdVwNavigationSnapped_SelectionChanged" DataContext="{Binding ElementName=GrdVwNavigation, Path=DataContext}" ItemContainerStyleSelector="{StaticResource NavigationItemStyleSelector}" ItemTemplateSelector="{StaticResource NavigationItemSelector}" ItemsSource="{Binding Items}" RenderTransformOrigin="0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled">
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+            </Grid>
+        </Popup>
 
         <VisualStateManager.VisualStateGroups>
 
@@ -958,26 +1036,10 @@
 
                 <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
                 <VisualState x:Name="FullScreenPortrait">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
                 </VisualState>
 
                 <!-- The back button and title have different styles when snapped -->
                 <VisualState x:Name="Snapped">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="GrdSnappedPlaceholder" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StkPnlNavigation" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>

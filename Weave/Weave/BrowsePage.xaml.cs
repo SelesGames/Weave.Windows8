@@ -75,6 +75,8 @@ namespace Weave
 
         private bool _initialAddFeed = false;
 
+        private const int SnappedThreshold = App.BaseSnappedWidth + 100;
+
         public BrowsePage()
         {
             this.InitializeComponent();
@@ -210,16 +212,16 @@ namespace Weave
             }
         }
 
-        private VariableSizedWrapGrid _videosContentPanel = null;
+        private VariableSizedWrapGrid _itemsContentPanel = null;
 
         private void WrapGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_videosContentPanel == null && sender is VariableSizedWrapGrid)
+            if (_itemsContentPanel == null && sender is VariableSizedWrapGrid)
             {
-                _videosContentPanel = (VariableSizedWrapGrid)sender;
+                _itemsContentPanel = (VariableSizedWrapGrid)sender;
+                _itemsContentPanel.Tag = _itemsContentPanel.Margin;
 
-                ApplicationViewState state = ApplicationView.Value;
-                UpdateItemGridView(state);
+                SetViewMode();
 
                 GridView_Loaded(itemGridView, null);
             }
@@ -237,32 +239,6 @@ namespace Weave
             AppBarPositionCenter.Visibility = WeaveOptions.CurrentArticlePlacement == WeaveOptions.ArticlePlacement.Center ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
         }
 
-        private void UpdateMainScrollOrientation(ApplicationViewState viewState)
-        {
-            if (viewState == Windows.UI.ViewManagement.ApplicationViewState.FullScreenPortrait)
-            {
-                MainScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-                MainScrollViewer.VerticalScrollMode = ScrollMode.Enabled;
-                MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-                MainScrollViewer.HorizontalScrollMode = ScrollMode.Disabled;
-            }
-            else if (viewState == ApplicationViewState.Snapped)
-            {
-                MainScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-                MainScrollViewer.VerticalScrollMode = ScrollMode.Enabled;
-                MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-                MainScrollViewer.HorizontalScrollMode = ScrollMode.Disabled;
-                if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
-            }
-            else
-            {
-                MainScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-                MainScrollViewer.VerticalScrollMode = ScrollMode.Enabled;
-                MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-                MainScrollViewer.HorizontalScrollMode = ScrollMode.Disabled;
-            }
-        }
-
         private void pageRoot_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (e.NewSize.Height > 0)
@@ -271,35 +247,75 @@ namespace Weave
                 double maxHeight = this.ActualHeight - (navTop + BtnAddSources.ActualHeight + BtnAddSources.Margin.Top + BtnAddSources.Margin.Bottom);
                 GrdVwNavigation.MaxHeight = maxHeight;
             }
-
-            ApplicationViewState state = ApplicationView.Value;
-            BottomAppBar.Visibility = state == ApplicationViewState.Snapped ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
-            UpdateItemGridView(state);
+            if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible && e.PreviousSize.Width > 0 && e.PreviousSize.Width < SnappedThreshold && e.NewSize.Width > SnappedThreshold)
+            {
+                // close article if going from snapped to expanded state
+                CloseArticle();
+            }
+            SetViewMode();
         }
 
-        private void UpdateItemGridView(ApplicationViewState state)
+        private void SetViewMode()
         {
             if (_pageLoaded)
             {
-                if (_videosContentPanel != null)
+                Size size = new Size(this.ActualWidth, this.ActualHeight);
+                if (size.Width > 0 && size.Height > 0)
                 {
-                    UpdateMainScrollOrientation(state);
+                    if (size.Width < SnappedThreshold)
+                    {
+                        if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
+                        Grid.SetRow(itemGridView, 1);
+                        StkPnlNavigation.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                        backButton.Style = App.Current.Resources["SnappedBackButtonStyle"] as Style;
+                        BtnMenuSnapped.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                        RectNavBackgroundSnapped.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                        _itemsContentPanel.Margin = new Thickness(0,20,0,40);
+                    }
+                    else
+                    {
+                        if (size.Height > size.Width)
+                        {
+                            Grid.SetRow(itemGridView, 0);
+                            StkPnlNavigation.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                            backButton.Style = App.Current.Resources["PortraitBackButtonStyle"] as Style;
+                            BtnMenuSnapped.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                            RectNavBackgroundSnapped.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                            if (_itemsContentPanel.Tag != null) _itemsContentPanel.Margin = (Thickness)_itemsContentPanel.Tag;
+                        }
+                        else
+                        {
+                            Grid.SetRow(itemGridView, 0);
+                            StkPnlNavigation.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                            backButton.Style = App.Current.Resources["BackButtonStyle"] as Style;
+                            BtnMenuSnapped.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                            RectNavBackgroundSnapped.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                            if (_itemsContentPanel.Tag != null) _itemsContentPanel.Margin = (Thickness)_itemsContentPanel.Tag;
+                        }
+                    }
                 }
-
                 UpdateTemplateSelector();
             }
         }
 
         private void UpdateTemplateSelector()
         {
-            switch (WeaveOptions.CurrentLayoutSize)
+            Size size = new Size(this.ActualWidth, this.ActualHeight);
+            if (size.Width < SnappedThreshold)
             {
-                case WeaveOptions.LayoutSize.Large:
-                    itemGridView.ItemTemplateSelector = this.Resources["ArticleSelectorLarge"] as DataTemplateSelector;
-                    break;
-                default:
-                    itemGridView.ItemTemplateSelector = this.Resources["ArticleSelector"] as DataTemplateSelector;
-                    break;
+                itemGridView.ItemTemplateSelector = this.Resources["ArticleSelectorSnapped"] as DataTemplateSelector;
+            }
+            else
+            {
+                switch (WeaveOptions.CurrentLayoutSize)
+                {
+                    case WeaveOptions.LayoutSize.Large:
+                        itemGridView.ItemTemplateSelector = this.Resources["ArticleSelectorLarge"] as DataTemplateSelector;
+                        break;
+                    default:
+                        itemGridView.ItemTemplateSelector = this.Resources["ArticleSelector"] as DataTemplateSelector;
+                        break;
+                }
             }
         }
 
@@ -307,7 +323,7 @@ namespace Weave
         {
             if (_pageLoaded && e.AddedItems.Count > 0)
             {
-                await ProcessSelectedNav();
+                await ProcessSelectedNav(GrdVwNavigation.SelectedItem);
 
                 if (_initialSelectedItemId != null)
                 {
@@ -330,12 +346,11 @@ namespace Weave
             }
         }
 
-        private async Task ProcessSelectedNav(bool refresh = false)
+        private async Task ProcessSelectedNav(object selected, bool refresh = false)
         {
             if (MainScrollViewer != null) MainScrollViewer.ScrollToVerticalOffset(0);
             itemGridView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             _feed.ClearData();
-            object selected = GrdVwNavigation.SelectedItem;
             if (selected is FeedItemViewModel)
             {
                 await ProcessFeedSelection((FeedItemViewModel)selected, refresh);
@@ -415,9 +430,12 @@ namespace Weave
             return (int)((int)WeaveOptions.CurrentFontSize * scale);
         }
 
-        public static int GetArticleWidth(int fontSize)
+        public int GetArticleWidth(int fontSize)
         {
-            return (int)(fontSize * 43);
+            int width = (int)(fontSize * 43);
+            if (this.ActualWidth < SnappedThreshold) width = (int)this.ActualWidth - 40;
+            else if (width > this.ActualWidth - MinimumArticleTextPadding) width = (int)this.ActualWidth - MinimumArticleTextPadding;
+            return width;
         }
 
         private const int MinimumArticleTextPadding = 160;
@@ -432,7 +450,6 @@ namespace Weave
                 if (item.IsNew) item.IsNew = false;
                 int fontSize = GetFontSize();
                 int articleWidth = GetArticleWidth(fontSize);
-                if (articleWidth > this.ActualWidth - MinimumArticleTextPadding) articleWidth = (int)this.ActualWidth - MinimumArticleTextPadding;
                 AdjustArticleViewWidth(articleWidth);
                 RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 ArticleContainer.DataContext = item;
@@ -1223,6 +1240,25 @@ namespace Weave
                 await Task.Delay(1500); // delay to fix weird rendering order bug that overlays content over popup on initial load
                 itemGridView.Visibility = Visibility.Visible;
             }
+        }
+
+        private async void GrdVwNavigationSnapped_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_pageLoaded && e.AddedItems.Count > 0)
+            {
+                PopupNavSnapped.IsOpen = false;
+                await ProcessSelectedNav(GrdVwNavigationSnapped.SelectedItem);
+            }
+        }
+
+        private void BtnMenuSnapped_Click(object sender, RoutedEventArgs e)
+        {
+            PopupNavSnapped.IsOpen = true;
+        }
+
+        private void PopupNavSnapped_Opened(object sender, object e)
+        {
+            SbNavSnappedPopIn.Begin();
         }
 
     } // end of class
