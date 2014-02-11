@@ -178,6 +178,9 @@
     <Compile Include="Views\StartHub\AddZoomedView.xaml.cs">
       <DependentUpon>AddZoomedView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\StartHub\ClusterViewDynamic.xaml.cs">
+      <DependentUpon>ClusterViewDynamic.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StartHub\ClusterView.xaml.cs">
       <DependentUpon>ClusterView.xaml</DependentUpon>
     </Compile>
@@ -353,6 +356,10 @@
     <Page Include="Views\StartHub\AddZoomedView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StartHub\ClusterViewDynamic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\StartHub\ClusterView.xaml">
       <Generator>MSBuild:Compile</Generator>

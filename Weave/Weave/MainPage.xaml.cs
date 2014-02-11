@@ -872,8 +872,8 @@ namespace Weave
                 {
                     if (size.Width < DynamicThreshold)
                     {
-                        //LstVwMain.Style = this.Resources["MainListViewStyleDynamic"] as Style;
-                        LstVwMain.Style = this.Resources["MainListViewStylePortrait"] as Style;
+                        LstVwMain.Style = this.Resources["MainListViewStyleDynamic"] as Style;
+                        //LstVwMain.Style = this.Resources["MainListViewStylePortrait"] as Style;
                     }
                     else
                     {
