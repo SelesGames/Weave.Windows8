@@ -40,7 +40,7 @@ namespace Weave
         public const String NavParamSelectedCategoryKey = "Category";
         public const String NavParamSelectedSourceKey = "Source";
         public const String NavParamSelectedSpecialKey = "Special";
-
+        public const String NavParamAddSourceKey = "AddSource";
         private NewsFeed _feed = new NewsFeed();
         private NavigationViewModel _nav = new NavigationViewModel();
         private FeedManagementViewModel _feedManageVm = new FeedManagementViewModel();
@@ -71,6 +71,8 @@ namespace Weave
         private bool? _isMouse = null;
 
         private bool _ignoreScrollIntoView = false;
+
+        private bool _initialAddFeed = false;
 
         public BrowsePage()
         {
@@ -117,6 +119,7 @@ namespace Weave
             if (navigationParameter != null && navigationParameter is Dictionary<String, object>)
             {
                 Dictionary<String, object> parameters = (Dictionary<String, object>)navigationParameter;
+                if (parameters.ContainsKey(NavParamAddSourceKey)) _initialAddFeed = true;
                 if (parameters.ContainsKey(NavParamSelectedCategoryKey)) _nav.InitialSelectedCategory = parameters[NavParamSelectedCategoryKey] as String;
                 if (parameters.ContainsKey(NavParamSelectionKey)) _initialSelectedItemId = (Guid)parameters[NavParamSelectionKey];
                 if (parameters.ContainsKey(NavParamSelectedSourceKey)) _nav.InitialSelectedFeed = (Guid)parameters[NavParamSelectedSourceKey];
@@ -318,6 +321,11 @@ namespace Weave
                         _initialSelectedItemId = null;
                     }
                 }
+                if (_initialAddFeed)
+                {
+                    itemGridView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    PopupManageFeeds.IsOpen = true;
+                }
             }
         }
 
@@ -406,10 +414,17 @@ namespace Weave
             return (int)((int)WeaveOptions.CurrentFontSize * scale);
         }
 
-        public static int GetArticleWidth(int fontSize)
+        public int GetArticleWidth(int fontSize)
         {
-            return (int)(fontSize * 43);
+            int width = (int)(fontSize * 43);
+            if (width > this.ActualWidth - MinimumArticleTextPadding)
+            {
+                width = (int)this.ActualWidth - MinimumArticleTextPadding;
+            }
+            return width;
         }
+
+        private const int MinimumArticleTextPadding = 200;
 
         private void ShowArticle(NewsItem item, bool allowMobilizer = true, bool showLoading = true)
         {
@@ -936,7 +951,11 @@ namespace Weave
                     break;
             }
 
-            if (width > (this.ActualWidth - 100)) width = (int)this.ActualWidth - 100;
+            if (this.ActualHeight > this.ActualWidth)
+            {
+                width = (int)this.ActualWidth - 100;
+                ArticleContainer.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Right;
+            }
 
             if (_browserDisplayWidth != width)
             {
@@ -1198,5 +1217,14 @@ namespace Weave
             AppBarPositionCenter.Visibility = Windows.UI.Xaml.Visibility.Visible;
         }
 
+        private async void SbManageFeedsPopIn_Completed(object sender, object e)
+        {
+            if (_initialAddFeed)
+            {
+                _initialAddFeed = false;
+                await Task.Delay(1500); // delay to fix weird rendering order bug that overlays content over popup on initial load
+                itemGridView.Visibility = Visibility.Visible;
+            }
+        }
     } // end of class
 }
