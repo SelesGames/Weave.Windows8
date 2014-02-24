@@ -18,49 +18,47 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="200" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0">
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
-                <TextBlock Grid.Row="1" Text="{Binding NewsItem.Title, Converter={StaticResource UpperCaseConverter}}" Style="{StaticResource SubheaderTextStyle}" FontWeight="Bold" Margin="0,10,0,0" MaxHeight="60" TextTrimming="None" Visibility="Collapsed" />
-                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,20,0,0" VerticalAlignment="Top" Visibility="Collapsed">
+                <TextBlock Grid.Row="1" Text="{Binding NewsItem.Title, Converter={StaticResource UpperCaseConverter}}" Style="{StaticResource SubheaderTextStyle}" FontWeight="Bold" Margin="0,10,0,0" MaxHeight="60" TextTrimming="None" />
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,10,0,0" VerticalAlignment="Top">
                     <TextBlock Text="{Binding NewsItem.OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="|" Margin="5,-1,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="{Binding NewsItem.PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                 </StackPanel>
-                <Rectangle Height="1" Grid.Row="2" VerticalAlignment="Bottom" Fill="{StaticResource SubtleTextBrush}" />
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="LargeTemplate">
-            <Grid Margin="4" RightTapped="Grid_RightTapped">
+            <Grid Margin="4,14,4,4" RightTapped="Grid_RightTapped">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="200" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid Background="{StaticResource ImagePlaceholderBrush}" Grid.Row="0">
                     <Image Source="{Binding NewsItem.ImageUrl}" Stretch="UniformToFill" Height="500" VerticalAlignment="Center" HorizontalAlignment="Center" ImageOpened="Image_ImageOpened" Opacity="0" Loaded="Image_Loaded" />
                 </Grid>
-                <TextBlock Grid.Row="1" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,10,0,0" MaxHeight="60" TextTrimming="None" Visibility="Collapsed" />
-                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,20,0,0" VerticalAlignment="Top" Visibility="Collapsed">
+                <TextBlock Grid.Row="1" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,10,0,0" MaxHeight="60" TextTrimming="None" />
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,10,0,0" VerticalAlignment="Top">
                     <TextBlock Text="{Binding NewsItem.OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="|" Margin="5,-1,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="{Binding NewsItem.PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                 </StackPanel>
-                <Rectangle Height="1" Grid.Row="2" VerticalAlignment="Bottom" Fill="{StaticResource SubtleTextBrush}" />
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="LargeNoImageTemplate">
-            <Grid Margin="4" RightTapped="Grid_RightTapped">
+            <Grid Margin="4,14,4,4" RightTapped="Grid_RightTapped">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,0" MaxHeight="60" TextTrimming="None" Visibility="Collapsed" />
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,20,0,0" VerticalAlignment="Top" Visibility="Collapsed">
+                <TextBlock Grid.Row="0" Text="{Binding NewsItem.Title}" Style="{StaticResource SubheaderTextStyle}" Margin="0,0,0,0" MaxHeight="60" TextTrimming="None" />
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,10,0,0" VerticalAlignment="Top">
                     <TextBlock Text="{Binding NewsItem.OriginalSource, Converter={StaticResource UpperCaseConverter}}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="|" Margin="5,-1,5,0" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
                     <TextBlock Text="{Binding NewsItem.PublishDate}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource SubtleTextBrush}" />
@@ -78,10 +76,6 @@
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
         <Button Style="{StaticResource ButtonStyleBasic}" Padding="20" Margin="-20" Click="Header_Click">
             <StackPanel Orientation="Horizontal" Margin="5,0,0,0">
                 <TextBlock Text="{Binding Header}" Style="{StaticResource SubheaderTextStyle}" />

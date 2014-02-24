@@ -872,8 +872,8 @@ namespace Weave
                 {
                     if (size.Width < DynamicThreshold)
                     {
-                        //LstVwMain.Style = this.Resources["MainListViewStyleDynamic"] as Style;
-                        LstVwMain.Style = this.Resources["MainListViewStylePortrait"] as Style;
+                        LstVwMain.Style = this.Resources["MainListViewStyleDynamic"] as Style;
+                        //LstVwMain.Style = this.Resources["MainListViewStylePortrait"] as Style;
                     }
                     else
                     {
@@ -885,6 +885,13 @@ namespace Weave
                     LstVwMain.Style = this.Resources["MainListViewStyle"] as Style;
                 }
             }
+        }
+
+        private void BtnAddSources_Click(object sender, RoutedEventArgs e)
+        {
+            Dictionary<String, object> parameters = new Dictionary<string, object>();
+            parameters.Add(BrowsePage.NavParamAddSourceKey, true);
+            App.Navigate(typeof(BrowsePage), parameters);
         }
 
     } // end of class

@@ -161,7 +161,7 @@
         </DataTemplate>
         
         <DataTemplate x:Key="LatestArticlesTemplateDynamic">
-            <views:LatestArticlesDynamic Margin="60,80,0,0" HorizontalAlignment="Stretch" />
+            <views:LatestArticlesDynamic Margin="40,40,40,0" HorizontalAlignment="Stretch" />
         </DataTemplate>
 
         <DataTemplate x:Key="SourcesTemplate">
@@ -172,12 +172,20 @@
             <views:SourcesViewPortrait Margin="100,20,0,0" />
         </DataTemplate>
 
+        <DataTemplate x:Key="SourcesTemplateDynamic">
+            <views:SourcesViewPortrait Margin="45,20,0,0" />
+        </DataTemplate>
+
         <DataTemplate x:Key="ClusterTemplate">
             <views:ClusterView Margin="0,140,70,0" MinWidth="250" />
         </DataTemplate>
 
         <DataTemplate x:Key="ClusterTemplatePortrait">
             <views:ClusterView Margin="100,80,0,0" Width="500" HorizontalAlignment="Left" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ClusterTemplateDynamic">
+            <views:ClusterViewDynamic Margin="40,40,40,40" />
         </DataTemplate>
 
         <DataTemplate x:Key="AddTemplate">
@@ -212,7 +220,7 @@
 
         <common:StartItemSelector x:Name="StartItemSelector" HeroTemplate="{StaticResource HeroTemplate}" LatestTemplate="{StaticResource LatestArticlesTemplate}" SourcesTemplate="{StaticResource SourcesTemplate}" ClusterTemplate="{StaticResource ClusterTemplate}"  AddTemplate="{StaticResource AddTemplate}" LoginTemplate="{StaticResource LoginTemplate}" AdvertisingTemplate="{StaticResource AdvertisingTemplate}" />
         <common:StartItemSelector x:Name="StartItemSelectorPortrait" HeroTemplate="{StaticResource HeroTemplatePortrait}" LatestTemplate="{StaticResource LatestArticlesTemplatePortrait}" SourcesTemplate="{StaticResource SourcesTemplatePortrait}" ClusterTemplate="{StaticResource ClusterTemplatePortrait}"  AddTemplate="{StaticResource AddTemplatePortrait}" LoginTemplate="{StaticResource LoginTemplatePortrait}" AdvertisingTemplate="{StaticResource EmptyItemTemplate}" />
-        <common:StartItemSelector x:Name="StartItemSelectorDynamic" HeroTemplate="{StaticResource HeroTemplatePortrait}" LatestTemplate="{StaticResource LatestArticlesTemplateDynamic}" SourcesTemplate="{StaticResource SourcesTemplatePortrait}" ClusterTemplate="{StaticResource ClusterTemplatePortrait}"  AddTemplate="{StaticResource AddTemplatePortrait}" LoginTemplate="{StaticResource LoginTemplatePortrait}" AdvertisingTemplate="{StaticResource EmptyItemTemplate}" />
+        <common:StartItemSelector x:Name="StartItemSelectorDynamic" HeroTemplate="{StaticResource HeroTemplatePortrait}" LatestTemplate="{StaticResource LatestArticlesTemplateDynamic}" SourcesTemplate="{StaticResource SourcesTemplateDynamic}" ClusterTemplate="{StaticResource ClusterTemplateDynamic}"  AddTemplate="{StaticResource EmptyItemTemplate}" LoginTemplate="{StaticResource EmptyItemTemplate}" AdvertisingTemplate="{StaticResource EmptyItemTemplate}" />
         
         <DataTemplate x:Key="HeroTemplateZoomed">
             <views:HeroArticleZoomedView Margin="0,0,80,0" Tapped="ZoomedOutItem_Tapped" />
@@ -375,10 +383,6 @@
         <Grid Name="GrdFirstLaunch" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" Grid.RowSpan="2" Visibility="Collapsed">
             <!--<views:FirstLaunchView x:Name="FirstLaunchControl" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />-->
         </Grid>
-        
-        <Grid Name="GrdSnappedPlaceholder" Background="#222222" Grid.RowSpan="2" Visibility="Collapsed">
-            <Image Source="/Assets/SplashScreen.png" Stretch="Uniform" />
-        </Grid>
 
         <Popup Name="PopupListSelector" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupListSelector_Opened">
             <Popup.Resources>
@@ -400,13 +404,27 @@
                     <TextBlock Grid.Column="1" Text="Select a category or source to pin to your main hub..." TextWrapping="Wrap" FontWeight="Light" FontSize="15" Foreground="{StaticResource SubtleTextBrush}" Margin="20,20,20,20" />
                 </Grid>
                 <Grid Margin="40" Grid.Row="1">
-                    <ListBox Name="LstBxCategorySelector" Style="{StaticResource ListBoxStyleListSelector}" ItemTemplateSelector="{StaticResource PinItemSelector}" Grid.Row="4" SelectionMode="Single" Margin="-10" SelectionChanged="LstBxCategorySelector_SelectionChanged" ItemContainerStyleSelector="{StaticResource PinItemStyleSelector}" Background="Transparent" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Loaded="LstBxCategorySelector_Loaded">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ListBox Name="LstBxCategorySelector" Style="{StaticResource ListBoxStyleListSelector}" ItemTemplateSelector="{StaticResource PinItemSelector}" SelectionMode="Single" Margin="-10,-10,-10,0" SelectionChanged="LstBxCategorySelector_SelectionChanged" ItemContainerStyleSelector="{StaticResource PinItemStyleSelector}" Background="Transparent" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Loaded="LstBxCategorySelector_Loaded">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel />
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
                     </ListBox>
+                    <Rectangle Fill="{StaticResource SubtleTextBrush}" Height="1" Grid.Row="1" Margin="0,20,0,20"/>
+                    <Button Name="BtnAddSources" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{StaticResource ButtonStyleBasic}" Margin="0,0,0,0" Click="BtnAddSources_Click">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Border Background="{StaticResource WeaveBrush}" Width="30" Height="30">
+                                <TextBlock Text="&#xE109;" FontFamily="Segoe UI Symbol" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </Border>
+                            <TextBlock Text="Add sources" VerticalAlignment="Center" FontSize="{StaticResource ControlContentThemeFontSize}" Foreground="{StaticResource SubtleTextBrush}" Margin="10,0,0,0" />
+                        </StackPanel>
+                    </Button>
                 </Grid>
                 <Rectangle Grid.RowSpan="2" HorizontalAlignment="Right" Width="2" Fill="{StaticResource ApplicationPageBackgroundThemeBrush}" />
             </Grid>
@@ -444,9 +462,6 @@
                         <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>-->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="GrdSnappedPlaceholder" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
-                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
