@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">
+<html lang="en">
+
+<head>
+    <title>[TITLE]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no !important">
+</head>
+
+<body>
+    <article>
+        <header>
+            [HEROIMAGE]
+            <h1>[SOURCE]</h1>
+            <h3>
+               <a href="[LINK]">
+                  View article on original site
+               </a>
+            </h3>
+        </header>
+        <div>[BODY]</div>
+        <footer>
+            <a href="[LINK]">
+                <div>View article on original site</div>
+            </a>
+        </footer>
+    </article>
+</body>
+</html>
