@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Advertising.WinRT.UI;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -999,6 +1000,51 @@ namespace Weave
             Windows.ApplicationModel.DataTransfer.DataTransferManager.ShowShareUI();
         }
 
+        private void AppBarSaveToOneNote_Click(object sender, RoutedEventArgs e)
+        {
+            // For an example of how to save to OneNote, see Weave WP8 project
+            // class:  ReadabilityPage.xaml.cs
+            // line: 682 (SendToOneNoteMenuItemClick function)
+            // TODO: open some sort of flyout/page or something, and show the LiveSDK login button
+            /*
+             * 
+            psuedo-code:
+            
+            var selectedNewsItem = CURRENTNEWSITEM;
+            if ((articleViewType == ArticleViewingType.Mobilizer || articleViewType == ArticleViewingType.MobilizerOnly)
+                && viewModel.CurrentMobilizedArticle != null)
+            {
+                var mobilizedArticle = viewModel.CurrentMobilizedArticle;
+
+                var oneNoteSave = new MobilizedOneNoteItem
+                {
+                    Title = mobilizedArticle.Title,
+                    Link = mobilizedArticle.Link,
+                    Source = mobilizedArticle.CombinedPublicationAndDate,
+                    HeroImage = mobilizedArticle.HeroImageUrl,
+                    BodyHtml = mobilizedArticle.ContentHtml,
+                };
+                saveTask = () => oneNoteSave.SendToOneNote(token);
+            }
+
+            else
+            {
+                var oneNoteSave = new HtmlLinkOneNoteItem
+                {
+                    Title = viewModel.NewsItem.Title,
+                    Link = viewModel.NewsItem.Link,
+                    Source = viewModel.NewsItem.FormattedForMainPageSourceAndDate,
+                };
+                saveTask = () => oneNoteSave.SendToOneNote(token);
+            }
+            
+            frame.OverlayText = "Saving to OneNote...";
+            frame.IsLoading = true;
+            var response = await saveTask();
+            frame.IsLoading = false;
+            */
+        }
+
         private void AppBarLayout_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -1192,9 +1238,9 @@ namespace Weave
             }
         }
 
-        private void AdControl_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
+        private void AdControl_ErrorOccurred(object sender, AdErrorEventArgs e)
         {
-            Microsoft.Advertising.WinRT.UI.AdControl adControl = sender as Microsoft.Advertising.WinRT.UI.AdControl;
+            var adControl = sender as AdControl;
             if (adControl != null)
             {
                 AdvertisingNewsItem item = adControl.DataContext as AdvertisingNewsItem;
@@ -1205,9 +1251,9 @@ namespace Weave
             }
         }
 
-        private void AdControlLarge_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
+        private void AdControlLarge_ErrorOccurred(object sender, AdErrorEventArgs e)
         {
-            Microsoft.Advertising.WinRT.UI.AdControl adControl = sender as Microsoft.Advertising.WinRT.UI.AdControl;
+            var adControl = sender as AdControl;
             if (adControl != null)
             {
                 AdvertisingNewsItem item = adControl.DataContext as AdvertisingNewsItem;

@@ -105,6 +105,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="OneNoteFlyout.xaml.cs">
+      <DependentUpon>OneNoteFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AboutFlyout.xaml.cs">
       <DependentUpon>AboutFlyout.xaml</DependentUpon>
     </Compile>
@@ -306,6 +309,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="OneNoteFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="AboutFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -441,6 +448,14 @@
       <Project>{0f188fc9-d10c-48db-917a-ff1cb9c8e795}</Project>
       <Name>Weave.ViewModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Microsoft.OneNote\Common.Microsoft.OneNote.csproj">
+      <Project>{2e012124-842d-414f-a646-93dcec568d22}</Project>
+      <Name>Common.Microsoft.OneNote</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Microsoft\Common.Microsoft.csproj">
+      <Project>{113c83c2-28c9-48cf-9244-50f2f58b02d3}</Project>
+      <Name>Common.Microsoft</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SelesGames.Rest.JsonDotNet\SelesGames.Rest.JsonDotNet.csproj">
       <Project>{467aacf0-a84b-46bd-9fe4-1ad6849f4e72}</Project>
       <Name>SelesGames.Rest.JsonDotNet</Name>
@@ -468,6 +483,10 @@
     <ProjectReference Include="..\Weave.Identity.Service.Client\Weave.Identity.Service.Client.csproj">
       <Project>{ea654d32-eb8d-4ea6-a4c7-c4cb6f48a443}</Project>
       <Name>Weave.Identity.Service.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weave.Microsoft.OneNote\Weave.Microsoft.OneNote.csproj">
+      <Project>{40dd10db-45ae-41ac-91b0-99fe84280a88}</Project>
+      <Name>Weave.Microsoft.OneNote</Name>
     </ProjectReference>
     <ProjectReference Include="..\Weave.Mobilizer.Client\Weave.Mobilizer.Client.csproj">
       <Project>{e69950f6-0a2e-4481-adcf-839301969b3e}</Project>

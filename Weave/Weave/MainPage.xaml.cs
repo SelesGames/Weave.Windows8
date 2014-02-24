@@ -26,6 +26,7 @@ using Windows.Storage;
 using Windows.UI.Popups;
 using Weave.Views.StartHub;
 using Windows.UI.ApplicationSettings;
+using Microsoft.Advertising.WinRT.UI;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -854,7 +855,7 @@ namespace Weave
             }
         }
 
-        private void AdControl_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
+        private void AdControl_ErrorOccurred(object sender, AdErrorEventArgs e)
         {
             ThreadHelper.CheckBeginInvokeOnUI(() => _advertisingVm.ShowFallbackAd = true);
         }
