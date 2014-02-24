@@ -121,10 +121,13 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="Formatter.cs" />
-    <Compile Include="MobilizerResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Mobilizer.Contracts\Weave.Mobilizer.Contracts.csproj">
+      <Project>{fc776ca4-35b3-4024-8667-cb265805a519}</Project>
+      <Name>Weave.Mobilizer.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.Mobilizer.DTOs\Weave.Mobilizer.DTOs.csproj">
       <Project>{0a9019e4-e76f-4fac-a5c7-70f32cf5e2c1}</Project>
       <Name>Weave.Mobilizer.DTOs</Name>

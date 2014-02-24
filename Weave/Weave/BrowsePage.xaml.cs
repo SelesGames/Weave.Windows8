@@ -411,6 +411,8 @@ namespace Weave
             return (int)(fontSize * 43);
         }
 
+        private const int MinimumArticleTextPadding = 160;
+
         private void ShowArticle(NewsItem item, bool allowMobilizer = true, bool showLoading = true)
         {
             _browserBackStack.Clear();
@@ -421,6 +423,7 @@ namespace Weave
                 if (item.IsNew) item.IsNew = false;
                 int fontSize = GetFontSize();
                 int articleWidth = GetArticleWidth(fontSize);
+                if (articleWidth > this.ActualWidth - MinimumArticleTextPadding) articleWidth = (int)this.ActualWidth - MinimumArticleTextPadding;
                 AdjustArticleViewWidth(articleWidth);
                 RectOverlay.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 ArticleContainer.DataContext = item;
@@ -444,6 +447,7 @@ namespace Weave
             AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             AppBarArticleView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            BtnBackArticlePortrait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
         }
 
         private void Image_ImageOpened(object sender, RoutedEventArgs e)
@@ -936,7 +940,11 @@ namespace Weave
                     break;
             }
 
-            if (width > (this.ActualWidth - 100)) width = (int)this.ActualWidth - 100;
+            if (this.ActualHeight > this.ActualWidth)
+            {
+                width = (int)this.ActualWidth;
+                BtnBackArticlePortrait.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            }
 
             if (_browserDisplayWidth != width)
             {

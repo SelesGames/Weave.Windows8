@@ -43,7 +43,7 @@ namespace Weave.Common
 
             try
             {
-                MobilizerResult content = await _client.GetAsync(item.Link);
+                var content = await _client.Get(item.Link);
                 String body = content.content;
                 int firstCharIndex = -1;
                 StringBuilder sb = new StringBuilder();

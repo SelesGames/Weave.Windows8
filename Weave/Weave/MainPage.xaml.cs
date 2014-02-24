@@ -57,6 +57,8 @@ namespace Weave
         private const String LatestArticlesIndexKey = "LatestArticlesIndex";
         private const String SourcesIndexKey = "SourcesIndex";
 
+        private const int DynamicThreshold = 700;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -325,7 +327,7 @@ namespace Weave
 
         private void AdjustForScreenResolution()
         {
-            if (ApplicationView.Value == ApplicationViewState.FullScreenPortrait)
+            if (this.ActualHeight > this.ActualWidth)
             {
                 _expansionFactor = ((this.ActualWidth - BaseHeight) / BinHeight);
             }
@@ -354,6 +356,7 @@ namespace Weave
         {
             AdjustForScreenResolution();
             if (LstVwMain.ItemsSource != null) BottomAppBar.Visibility = ApplicationView.Value == ApplicationViewState.Snapped ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
+            SetViewMode(e.NewSize);
         }
 
         private void MainScrollChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -859,6 +862,29 @@ namespace Weave
         private void BtnFallbackAd_Click(object sender, RoutedEventArgs e)
         {
             _advertisingVm.ExecuteFallbackAd();
+        }
+
+        private void SetViewMode(Size size)
+        {
+            if (size.Width > 0 && size.Height > 0)
+            {
+                if (size.Height > size.Width)
+                {
+                    if (size.Width < DynamicThreshold)
+                    {
+                        //LstVwMain.Style = this.Resources["MainListViewStyleDynamic"] as Style;
+                        LstVwMain.Style = this.Resources["MainListViewStylePortrait"] as Style;
+                    }
+                    else
+                    {
+                        LstVwMain.Style = this.Resources["MainListViewStylePortrait"] as Style;
+                    }
+                }
+                else
+                {
+                    LstVwMain.Style = this.Resources["MainListViewStyle"] as Style;
+                }
+            }
         }
 
     } // end of class

@@ -18,12 +18,12 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Weave.Views.StartHub
 {
-    public sealed partial class LatestArticles : UserControl
+    public sealed partial class LatestArticlesDynamic : UserControl
     {
         // special event for testing to select hero image
         public static event Action<StartNewsItemContainer> HeroSelected;
 
-        public LatestArticles()
+        public LatestArticlesDynamic()
         {
             this.InitializeComponent();
         }

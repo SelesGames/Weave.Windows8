@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave", "Weave\Weave.csproj", "{7EC89818-57BE-4B54-8B69-38E7C7E8470E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.ViewModels", "..\..\Weave.Portable\Weave.ViewModels\Weave.ViewModels.csproj", "{0F188FC9-D10C-48DB-917A-FF1CB9C8E795}"
@@ -52,6 +54,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.FeedSearchService", "Weave.FeedSearchService\Weave.FeedSearchService.csproj", "{76361B4A-F393-409D-BDD8-3CDA0CC5D118}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.Identity.Service.Client", "Weave.Identity.Service.Client\Weave.Identity.Service.Client.csproj", "{EA654D32-EB8D-4EA6-A4C7-C4CB6F48A443}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weave.Mobilizer.Contracts", "..\..\Weave.Portable\Weave.Mobilizer.Contracts\Weave.Mobilizer.Contracts.csproj", "{FC776CA4-35B3-4024-8667-CB265805A519}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -323,6 +327,16 @@ Global
 		{EA654D32-EB8D-4EA6-A4C7-C4CB6F48A443}.Release|x64.Build.0 = Release|x64
 		{EA654D32-EB8D-4EA6-A4C7-C4CB6F48A443}.Release|x86.ActiveCfg = Release|x86
 		{EA654D32-EB8D-4EA6-A4C7-C4CB6F48A443}.Release|x86.Build.0 = Release|x86
+		{FC776CA4-35B3-4024-8667-CB265805A519}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC776CA4-35B3-4024-8667-CB265805A519}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC776CA4-35B3-4024-8667-CB265805A519}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{FC776CA4-35B3-4024-8667-CB265805A519}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC776CA4-35B3-4024-8667-CB265805A519}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC776CA4-35B3-4024-8667-CB265805A519}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC776CA4-35B3-4024-8667-CB265805A519}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC776CA4-35B3-4024-8667-CB265805A519}.Release|ARM.ActiveCfg = Release|Any CPU
+		{FC776CA4-35B3-4024-8667-CB265805A519}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC776CA4-35B3-4024-8667-CB265805A519}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -342,6 +356,7 @@ Global
 		{DC04916F-B6E4-4405-99E9-7F5C6E3E2762} = {1D25790F-8753-4688-BEED-A00939942FBF}
 		{0A9019E4-E76F-4FAC-A5C7-70F32CF5E2C1} = {A15109C9-4A41-4B57-A7EC-0772C4AC6EE4}
 		{E69950F6-0A2E-4481-ADCF-839301969B3E} = {A15109C9-4A41-4B57-A7EC-0772C4AC6EE4}
+		{FC776CA4-35B3-4024-8667-CB265805A519} = {A15109C9-4A41-4B57-A7EC-0772C4AC6EE4}
 		{02F3363F-7B0F-4C5F-9123-B388F2870C35} = {5AC2BF2A-504E-4872-BA9E-D7DF966118A4}
 		{98813633-270C-449D-A7F4-6A914D47E269} = {5AC2BF2A-504E-4872-BA9E-D7DF966118A4}
 		{75F2F4B1-BEB2-4AC6-A935-5A795C5A79A0} = {5AC2BF2A-504E-4872-BA9E-D7DF966118A4}

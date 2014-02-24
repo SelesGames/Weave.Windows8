@@ -1,24 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="SelesGames.WeaveNewsReader" Publisher="CN=432DBEB3-4322-4B37-A907-C81DF70BA9A7" Version="0.1.0.5" />
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
+  <Identity Name="SelesGames.WeaveNewsReader" Publisher="CN=432DBEB3-4322-4B37-A907-C81DF70BA9A7" Version="0.2.0.0" />
   <Properties>
     <DisplayName>Weave News Reader</DisplayName>
     <PublisherDisplayName>Seles Games</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
-    <OSMinVersion>6.2.1</OSMinVersion>
-    <OSMaxVersionTested>6.2.1</OSMaxVersionTested>
+    <OSMinVersion>6.3.0</OSMinVersion>
+    <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
   </Prerequisites>
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Weave.App">
-      <VisualElements DisplayName="Weave News Reader" Logo="Assets\LiveTile.png" SmallLogo="Assets\SmallLogo.png" Description="Weave" ForegroundText="light" BackgroundColor="#222222">
-        <DefaultTile ShowName="noLogos" WideLogo="Assets\LiveTileWide.png" />
-        <SplashScreen Image="Assets\SplashScreen.png" />
-      </VisualElements>
+      <m2:VisualElements DisplayName="Weave News Reader" Description="Weave" BackgroundColor="#222222" ForegroundText="light" Square150x150Logo="Assets\LiveTile.png" Square30x30Logo="Assets\SmallLogo.png">
+        <m2:DefaultTile Wide310x150Logo="Assets\LiveTileWide.png">
+        </m2:DefaultTile>
+        <m2:SplashScreen Image="Assets\SplashScreen.png" />
+      </m2:VisualElements>
     </Application>
   </Applications>
   <Capabilities>

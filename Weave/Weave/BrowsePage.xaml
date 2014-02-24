@@ -901,6 +901,8 @@
             </StackPanel>-->
         </Grid>
 
+        <Button x:Name="BtnBackArticlePortrait" Click="GoBack" Visibility="Collapsed" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource PortraitBackButtonStyle}"/>
+
         <Grid Name="GrdSnappedPlaceholder" Background="#222222" Grid.RowSpan="2" Grid.ColumnSpan="2" Visibility="Collapsed">
             <Image Source="/Assets/SplashScreen.png" Stretch="Uniform" />
         </Grid>
