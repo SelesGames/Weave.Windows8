@@ -1010,7 +1010,9 @@ namespace Weave
              * 
             psuedo-code:
             
-            var selectedNewsItem = CURRENTNEWSITEM;
+            var articleViewType = viewModel.NewsItem.Feed.ArticleViewingType;
+            Func<Task<BaseResponse>> saveTask;
+            
             if ((articleViewType == ArticleViewingType.Mobilizer || articleViewType == ArticleViewingType.MobilizerOnly)
                 && viewModel.CurrentMobilizedArticle != null)
             {
