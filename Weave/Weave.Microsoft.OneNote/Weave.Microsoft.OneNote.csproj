@@ -117,12 +117,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Microsoft.OneNote\Common.Microsoft.OneNote.csproj">
-      <Project>{2e012124-842d-414f-a646-93dcec568d22}</Project>
+    <ProjectReference Include="..\..\..\Weave.Portable\Common.Microsoft.OneNote\Common.Microsoft.OneNote.csproj">
+      <Project>{7b342c99-3758-4fa0-be6e-576f07286df7}</Project>
       <Name>Common.Microsoft.OneNote</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Microsoft\Common.Microsoft.csproj">
-      <Project>{113c83c2-28c9-48cf-9244-50f2f58b02d3}</Project>
+    <ProjectReference Include="..\..\..\Weave.Portable\Common.Microsoft\Common.Microsoft.csproj">
+      <Project>{c323425e-3a4b-4a22-9ce5-acf8d7124897}</Project>
       <Name>Common.Microsoft</Name>
     </ProjectReference>
   </ItemGroup>

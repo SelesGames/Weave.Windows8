@@ -1,4 +1,4 @@
-﻿using SelesGames.Rest.JsonDotNet;
+﻿using SelesGames.HttpClient;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +13,7 @@ namespace Weave.Mobilizer.Client
 
         public async Task<MobilizerResult> Get(string url, bool stripLeadImage = true)
         {
-            var client = new JsonDotNetRestClient();
+            var client = new SmartHttpClient();
             var encodedUrl = Uri.EscapeDataString(url);
             var fUrl = string.Format(R_URL_TEMPLATE, encodedUrl);
 

@@ -107,7 +107,7 @@ namespace Weave.Mobilizer.Client
             return sb.ToString();
         }
 
-        private async Task ReadHtmlTemplate()
+        async Task ReadHtmlTemplate()
         {
             htmlTemplate1 = await LoadTemplate(HTML_TEMPLATE_PATH1);
             htmlTemplate2 = await LoadTemplate(HTML_TEMPLATE_PATH2);
@@ -119,22 +119,14 @@ namespace Weave.Mobilizer.Client
             areTemplatesLoaded = true;
         }
 
-        private async Task<String> LoadTemplate(string templatePath)
+        async Task<String> LoadTemplate(string templatePath)
         {
-            String template = null;
-            try
+            var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri(templatePath));// await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(templatePath);
+            using (var stream = await file.OpenStreamForReadAsync())
+            using (StreamReader streamReader = new StreamReader(stream, Encoding))
             {
-                var file = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri(templatePath));// await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(templatePath);
-                using (var stream = await file.OpenStreamForReadAsync())
-                using (StreamReader streamReader = new StreamReader(stream, Encoding))
-                {
-                    template = streamReader.ReadToEnd();
-                }
+                return streamReader.ReadToEnd();
             }
-            catch (Exception e)
-            {
-            }
-            return template;
         }
     }
 }

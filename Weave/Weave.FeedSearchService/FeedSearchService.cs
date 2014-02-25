@@ -1,4 +1,4 @@
-﻿using SelesGames.Rest;
+﻿using SelesGames.HttpClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +12,15 @@ namespace Weave.FeedSearchService
 {
     public class FeedSearchService
     {
-        RestClient googleSearchClient, directSearchClient;
+        SmartHttpClient googleSearchClient;//, directSearchClient;
 
         public FeedSearchService()
         {
-            googleSearchClient = new SelesGames.Rest.JsonDotNet.JsonDotNetRestClient();
+            googleSearchClient = new SmartHttpClient(ContentEncoderSettings.Json);
+            var jsonFormatter = googleSearchClient.Formatters.First();
+            jsonFormatter.SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue("text/javascript"));
+
+            //jsonFormatter
             //directSearchClient = new DelegateRestClient(stream =>
             //{
             //    using (var reader = XmlReader.Create(stream))
