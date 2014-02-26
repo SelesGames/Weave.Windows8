@@ -1022,6 +1022,7 @@ namespace Weave
 
                     AsyncAction saveTask;
                     AppBarSaveToOneNote.IsEnabled = false;
+                    PrgRngSharingOneNote.IsActive = true;
                     
                     if (isMobilized)
                     {
@@ -1065,6 +1066,7 @@ namespace Weave
                     {
                     }
 
+                    PrgRngSharingOneNote.IsActive = false;
                     AppBarSaveToOneNote.IsEnabled = true;
                 }
             }
