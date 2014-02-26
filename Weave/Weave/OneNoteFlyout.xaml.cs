@@ -99,5 +99,9 @@ namespace Weave
             PrgRngBusy.IsActive = false;
         }
 
+        private void backButton_Click(object sender, RoutedEventArgs e)
+        {
+            Windows.UI.ApplicationSettings.SettingsPane.Show();
+        }
     }
 }
