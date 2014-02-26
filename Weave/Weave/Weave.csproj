@@ -18,6 +18,8 @@
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <TargetFrameworkVersion />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -421,9 +423,21 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Article.Service.Client\Weave.Article.Service.Client.csproj">
+      <Project>{620200b1-17f4-4c5a-a301-ca9aed702806}</Project>
+      <Name>Weave.Article.Service.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.Article.Service.Contracts\Weave.Article.Service.Contracts.csproj">
       <Project>{d727f239-ee96-4b05-8f17-65871b52b260}</Project>
       <Name>Weave.Article.Service.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.FeedLibrary\Weave.FeedLibrary.csproj">
+      <Project>{588b02fc-6bb9-49ae-8ece-2a4bac9b470b}</Project>
+      <Name>Weave.FeedLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Identity.Service.Client\Weave.Identity.Service.Client.csproj">
+      <Project>{42e619ba-2842-44a7-94d4-4b1485c7136b}</Project>
+      <Name>Weave.Identity.Service.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.Identity.Service.Contracts\Weave.Identity.Service.Contracts.csproj">
       <Project>{cce98720-6054-4ef8-ba8c-14821b35ec1d}</Project>
@@ -437,6 +451,10 @@
       <Project>{0a9019e4-e76f-4fac-a5c7-70f32cf5e2c1}</Project>
       <Name>Weave.Mobilizer.DTOs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Weave.User.Service.Client\Weave.User.Service.Client.csproj">
+      <Project>{3bd5fab6-6843-4dad-8846-2033aaf03fd7}</Project>
+      <Name>Weave.User.Service.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.User.Service.Contracts\Weave.User.Service.Contracts.csproj">
       <Project>{02f3363f-7b0f-4c5f-9123-b388f2870c35}</Project>
       <Name>Weave.User.Service.Contracts</Name>
@@ -449,41 +467,9 @@
       <Project>{0f188fc9-d10c-48db-917a-ff1cb9c8e795}</Project>
       <Name>Weave.ViewModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Microsoft.OneNote\Common.Microsoft.OneNote.csproj">
-      <Project>{2e012124-842d-414f-a646-93dcec568d22}</Project>
-      <Name>Common.Microsoft.OneNote</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Microsoft\Common.Microsoft.csproj">
-      <Project>{113c83c2-28c9-48cf-9244-50f2f58b02d3}</Project>
-      <Name>Common.Microsoft</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SelesGames.Rest.JsonDotNet\SelesGames.Rest.JsonDotNet.csproj">
-      <Project>{467aacf0-a84b-46bd-9fe4-1ad6849f4e72}</Project>
-      <Name>SelesGames.Rest.JsonDotNet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SelesGames.Rest.Protobuf\SelesGames.Rest.Protobuf.csproj">
-      <Project>{55aae2e9-c4ed-4fcc-a819-d210df31dc04}</Project>
-      <Name>SelesGames.Rest.Protobuf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SelesGames.Rest\SelesGames.Rest.csproj">
-      <Project>{b9cb0e64-278a-4cc3-add0-1651622d5209}</Project>
-      <Name>SelesGames.Rest</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Weave.Article.Service.Client\Weave.Article.Service.Client.csproj">
-      <Project>{9b600d9e-ce49-4587-8b10-41abfb518cef}</Project>
-      <Name>Weave.Article.Service.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Weave.FeedLibrary\Weave.FeedLibrary.csproj">
-      <Project>{d8af7f32-f682-4d59-9fd0-85ff1fde49f4}</Project>
-      <Name>Weave.FeedLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Weave.FeedSearchService\Weave.FeedSearchService.csproj">
       <Project>{76361b4a-f393-409d-bdd8-3cda0cc5d118}</Project>
       <Name>Weave.FeedSearchService</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Weave.Identity.Service.Client\Weave.Identity.Service.Client.csproj">
-      <Project>{ea654d32-eb8d-4ea6-a4c7-c4cb6f48a443}</Project>
-      <Name>Weave.Identity.Service.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\Weave.Microsoft.OneNote\Weave.Microsoft.OneNote.csproj">
       <Project>{40dd10db-45ae-41ac-91b0-99fe84280a88}</Project>
@@ -492,10 +478,6 @@
     <ProjectReference Include="..\Weave.Mobilizer.Client\Weave.Mobilizer.Client.csproj">
       <Project>{e69950f6-0a2e-4481-adcf-839301969b3e}</Project>
       <Name>Weave.Mobilizer.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Weave.UserFeedAggregator.Client\Weave.User.Service.Client.csproj">
-      <Project>{98813633-270c-449d-a7f4-6a914d47e269}</Project>
-      <Name>Weave.User.Service.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -511,15 +493,17 @@
       <HintPath>..\lib\Microsoft.WindowsAzure.Mobile.Ext.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\netcore45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http.Extensions, Version=2.2.15.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\System.Net.Http.Extensions.dll</HintPath>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.18\lib\win8\System.Net.Http.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http.Primitives, Version=4.2.15.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+    <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\System.Net.Http.Primitives.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.1\lib\portable-wp8+netcore45+net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.18\lib\win8\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -531,6 +515,12 @@
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
