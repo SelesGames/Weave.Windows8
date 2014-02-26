@@ -37,6 +37,19 @@ namespace Weave.Common
             else return "#121212";
         }
 
+        public static async Task<String> GetMobilizedBody(NewsItem item)
+        {
+            String result = null;
+            try
+            {
+                result = (await _client.Get(item.Link)).content;
+            }
+            catch (Exception)
+            {
+            }
+            return result;
+        }
+
         public static async Task<String> GetMobilizedHtml(NewsItem item, int fontSize, int articleWidth)
         {
             String result = null;

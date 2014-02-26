@@ -1,4 +1,6 @@
-﻿using Microsoft.Advertising.WinRT.UI;
+﻿using Common.Microsoft.OneNote.Response;
+using Microsoft.Advertising.WinRT.UI;
+using Microsoft.Live;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Weave.Common;
+using Weave.Microsoft.OneNote;
 using Weave.ViewModels;
 using Weave.ViewModels.Browse;
 using Weave.Views.Browse;
@@ -1000,8 +1003,74 @@ namespace Weave
             Windows.ApplicationModel.DataTransfer.DataTransferManager.ShowShareUI();
         }
 
-        private void AppBarSaveToOneNote_Click(object sender, RoutedEventArgs e)
+        private delegate Task<BaseResponse> AsyncAction(string token);
+
+        private async void AppBarSaveToOneNote_Click(object sender, RoutedEventArgs e)
         {
+            LiveAccountHelper helper = LiveAccountHelper.Instance;
+            if (!LiveAccountHelper.Instance.LoginChecked) await LiveAccountHelper.Instance.SilentSignIn();
+
+            if (helper.IsSignedIn)
+            {
+                String token = helper.AuthClient.Session.AccessToken;
+                NewsItem selectedNewsItem = itemGridView.SelectedItem as NewsItem;
+                if (selectedNewsItem != null)
+                {
+                    ArticleViewingType viewType = selectedNewsItem.Feed.ArticleViewingType;
+                    bool isMobilized = (viewType == ArticleViewingType.Mobilizer || viewType == ArticleViewingType.MobilizerOnly);
+                    if (IsArticleOpen && GrdBrowserControls.Visibility == Windows.UI.Xaml.Visibility.Visible) isMobilized = false;
+
+                    AsyncAction saveTask;
+                    AppBarSaveToOneNote.IsEnabled = false;
+                    
+                    if (isMobilized)
+                    {
+                        String imageUrl = null;
+                        if (selectedNewsItem.HasImage)
+                        {
+                            if (selectedNewsItem.Image != null) imageUrl = selectedNewsItem.Image.OriginalUrl;
+                            else if (!String.IsNullOrEmpty(selectedNewsItem.ImageUrl)) imageUrl = selectedNewsItem.ImageUrl;
+                        }
+
+                        String bodyHtml = await MobilizerHelper.GetMobilizedBody(selectedNewsItem);
+
+                        var oneNoteSave = new MobilizedOneNoteItem
+                        {
+                            Title = selectedNewsItem.Title,
+                            Link = selectedNewsItem.Link,
+                            Source = selectedNewsItem.FormattedForMainPageSourceAndDate,
+                            HeroImage = imageUrl,
+                            BodyHtml = bodyHtml,
+                        };
+                        saveTask = oneNoteSave.SendToOneNote;
+                    }
+                    else
+                    {
+                        var oneNoteSave = new HtmlLinkOneNoteItem
+                        {
+                            Title = selectedNewsItem.Title,
+                            Link = selectedNewsItem.Link,
+                            Source = selectedNewsItem.FormattedForMainPageSourceAndDate,
+                        };
+                        saveTask = oneNoteSave.SendToOneNote;
+                    }
+
+                    try
+                    {
+                        BaseResponse response = await saveTask(token);
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    AppBarSaveToOneNote.IsEnabled = true;
+                }
+            }
+            else
+            {
+                OneNoteFlyout flyout = new OneNoteFlyout();
+                flyout.ShowIndependent();
+            }
             // For an example of how to save to OneNote, see Weave WP8 project
             // class:  ReadabilityPage.xaml.cs
             // line: 682 (SendToOneNoteMenuItemClick function)
@@ -1076,6 +1145,7 @@ namespace Weave
         void Page_CommandsRequested(Windows.UI.ApplicationSettings.SettingsPane sender, Windows.UI.ApplicationSettings.SettingsPaneCommandsRequestedEventArgs args)
         {
             args.Request.ApplicationCommands.Add(new SettingsCommand("About", "About", new UICommandInvokedHandler(OnAboutClicked)));
+            args.Request.ApplicationCommands.Add(new SettingsCommand("Live Account", "Live Account", new UICommandInvokedHandler(OnLiveAccountClicked)));
         }
 
         private void OnAboutClicked(IUICommand command)
@@ -1083,6 +1153,12 @@ namespace Weave
             GrdFlyoutContent.Children.Clear();
             GrdFlyoutContent.Children.Add(new AboutFlyout());
             PopupFlyout.IsOpen = true;
+        }
+
+        private void OnLiveAccountClicked(IUICommand command)
+        {
+            OneNoteFlyout flyout = new OneNoteFlyout();
+            flyout.Show();
         }
 
         private void AppBarReadingTheme_Click(object sender, RoutedEventArgs e)
@@ -1305,6 +1381,11 @@ namespace Weave
         private void PopupNavSnapped_Opened(object sender, object e)
         {
             SbNavSnappedPopIn.Begin();
+        }
+
+        private bool IsArticleOpen
+        {
+            get { return ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible; }
         }
 
     } // end of class

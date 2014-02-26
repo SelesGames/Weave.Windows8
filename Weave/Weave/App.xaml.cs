@@ -97,6 +97,7 @@ namespace Weave
             }
             // Ensure the current window is active
             Window.Current.Activate();
+            Weave.Common.LiveAccountHelper.Instance.SilentSignIn();
         }
 
         /// <summary>
