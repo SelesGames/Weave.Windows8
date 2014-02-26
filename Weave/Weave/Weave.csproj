@@ -423,6 +423,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Weave.Portable\Common.Microsoft.OneNote\Common.Microsoft.OneNote.csproj">
+      <Project>{7b342c99-3758-4fa0-be6e-576f07286df7}</Project>
+      <Name>Common.Microsoft.OneNote</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Weave.Portable\Common.Microsoft\Common.Microsoft.csproj">
+      <Project>{c323425e-3a4b-4a22-9ce5-acf8d7124897}</Project>
+      <Name>Common.Microsoft</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.Article.Service.Client\Weave.Article.Service.Client.csproj">
       <Project>{620200b1-17f4-4c5a-a301-ca9aed702806}</Project>
       <Name>Weave.Article.Service.Client</Name>

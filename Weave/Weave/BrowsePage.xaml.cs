@@ -1058,6 +1058,8 @@ namespace Weave
                     try
                     {
                         BaseResponse response = await saveTask(token);
+                        MessageDialog dialog = new MessageDialog(String.Format("response code: {0}", response.StatusCode));
+                        dialog.ShowAsync();
                     }
                     catch (Exception)
                     {
