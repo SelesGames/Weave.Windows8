@@ -423,6 +423,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Weave.Portable\Common.Compression\Common.Compression.csproj">
+      <Project>{00617b68-c1f0-4ad8-8307-25c0608d745d}</Project>
+      <Name>Common.Compression</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Weave.Portable\Common.Microsoft.OneNote\Common.Microsoft.OneNote.csproj">
       <Project>{7b342c99-3758-4fa0-be6e-576f07286df7}</Project>
       <Name>Common.Microsoft.OneNote</Name>
@@ -474,6 +478,10 @@
     <ProjectReference Include="..\..\..\Weave.Portable\Weave.ViewModels\Weave.ViewModels.csproj">
       <Project>{0f188fc9-d10c-48db-917a-ff1cb9c8e795}</Project>
       <Name>Weave.ViewModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Windows.Compression\Common.Windows.Compression.csproj">
+      <Project>{2aada961-3a53-4f1d-ac3d-d3cb75dd5e80}</Project>
+      <Name>Common.Windows.Compression</Name>
     </ProjectReference>
     <ProjectReference Include="..\Weave.FeedSearchService\Weave.FeedSearchService.csproj">
       <Project>{76361b4a-f393-409d-bdd8-3cda0cc5d118}</Project>
