@@ -44,7 +44,7 @@ namespace Weave.Common
         }
 
         private LiveAuthClient _authClient;
-        private static readonly string[] Scopes = new[] { "wl.signin", "wl.basic" }; //TODO: Add once new scope enabled "Office.OneNote_Create" };
+        private static readonly string[] Scopes = new[] { "wl.signin", "wl.basic", "Office.OneNote_create" }; //TODO: Add once new scope enabled "Office.OneNote_Create" };
 
         private bool _loginChecked = false;
         public bool LoginChecked
