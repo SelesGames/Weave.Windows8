@@ -68,7 +68,7 @@ namespace Weave
 
         private const int SnappedThreshold = App.BaseSnappedWidth + 100;
 
-        double MIN_NARROW_ASPECT_RATIO = 0.8d;
+        double MIN_NARROW_ASPECT_RATIO = 0.7d;
         private Mode _currentMode = Mode.Normal;
 
         enum Mode
