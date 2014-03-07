@@ -1,32 +1,19 @@
 ﻿using Common.Microsoft.OneNote.Response;
 using Microsoft.Advertising.WinRT.UI;
-using Microsoft.Live;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Weave.Common;
 using Weave.Microsoft.OneNote;
 using Weave.ViewModels;
 using Weave.ViewModels.Browse;
 using Weave.Views.Browse;
-using Windows.Data.Xml.Dom;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Popups;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
@@ -80,6 +67,15 @@ namespace Weave
         private bool _initialAddFeed = false;
 
         private const int SnappedThreshold = App.BaseSnappedWidth + 100;
+
+        double MIN_NARROW_ASPECT_RATIO = 0.8d;
+        private Mode _currentMode = Mode.Normal;
+
+        enum Mode
+        {
+            Normal,
+            NarrowWidth
+        }
 
         public BrowsePage()
         {
@@ -261,51 +257,52 @@ namespace Weave
 
         private void SetViewMode()
         {
-            if (_pageLoaded)
+            if (!_pageLoaded)
+                return;
+
+            var currentAspectRatio = ActualWidth / ActualHeight;
+
+            _currentMode = (currentAspectRatio < MIN_NARROW_ASPECT_RATIO) || this.ActualWidth < SnappedThreshold ?
+                Mode.NarrowWidth : Mode.Normal;
+
+            Size size = new Size(this.ActualWidth, this.ActualHeight);
+            if (size.Width > 0 && size.Height > 0)
             {
-                Size size = new Size(this.ActualWidth, this.ActualHeight);
-                if (size.Width > 0 && size.Height > 0)
+                if (_currentMode == Mode.NarrowWidth)
                 {
-                    if (size.Width < SnappedThreshold)
-                    {
-                        if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
-                        Grid.SetRow(itemGridView, 1);
-                        StkPnlNavigation.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                        backButton.Style = App.Current.Resources["SnappedBackButtonStyle"] as Style;
-                        BtnMenuSnapped.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                        RectNavBackgroundSnapped.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                        _itemsContentPanel.Margin = new Thickness(0,20,0,40);
-                    }
-                    else
-                    {
-                        if (size.Height > size.Width)
-                        {
-                            Grid.SetRow(itemGridView, 0);
-                            StkPnlNavigation.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                            backButton.Style = App.Current.Resources["PortraitBackButtonStyle"] as Style;
-                            BtnMenuSnapped.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                            RectNavBackgroundSnapped.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                            if (_itemsContentPanel.Tag != null) _itemsContentPanel.Margin = (Thickness)_itemsContentPanel.Tag;
-                        }
-                        else
-                        {
-                            Grid.SetRow(itemGridView, 0);
-                            StkPnlNavigation.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                            backButton.Style = App.Current.Resources["BackButtonStyle"] as Style;
-                            BtnMenuSnapped.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                            RectNavBackgroundSnapped.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                            if (_itemsContentPanel.Tag != null) _itemsContentPanel.Margin = (Thickness)_itemsContentPanel.Tag;
-                        }
-                    }
+                    if (ArticleContainer.Visibility == Visibility.Visible) 
+                        CloseArticle();
+
+                    Grid.SetRow(itemGridView, 1);
+                    StkPnlNavigation.Visibility = Visibility.Collapsed;
+                    backButton.Style = App.Current.Resources["SnappedBackButtonStyle"] as Style;
+                    BtnMenuSnapped.Visibility = Visibility.Visible;
+                    RectNavBackgroundSnapped.Visibility = Visibility.Visible;
+                    _itemsContentPanel.Margin = new Thickness(0, 20, 0, 40);
                 }
-                UpdateTemplateSelector();
+                else
+                {
+                    Grid.SetRow(itemGridView, 0);
+                    StkPnlNavigation.Visibility = Visibility.Visible;
+                    BtnMenuSnapped.Visibility = Visibility.Collapsed;
+                    RectNavBackgroundSnapped.Visibility = Visibility.Collapsed;
+
+                    if (_itemsContentPanel.Tag != null) 
+                        _itemsContentPanel.Margin = (Thickness)_itemsContentPanel.Tag;
+
+                    if (size.Height > size.Width)
+                        backButton.Style = App.Current.Resources["PortraitBackButtonStyle"] as Style;
+                    
+                    else
+                        backButton.Style = App.Current.Resources["BackButtonStyle"] as Style;
+                }
             }
+            UpdateTemplateSelector();
         }
 
         private void UpdateTemplateSelector()
         {
-            Size size = new Size(this.ActualWidth, this.ActualHeight);
-            if (size.Width < SnappedThreshold)
+            if (_currentMode == Mode.NarrowWidth)
             {
                 itemGridView.ItemTemplateSelector = this.Resources["ArticleSelectorSnapped"] as DataTemplateSelector;
             }
@@ -437,7 +434,7 @@ namespace Weave
         public int GetArticleWidth(int fontSize)
         {
             int width = (int)(fontSize * 43);
-            if (this.ActualWidth < SnappedThreshold) width = (int)this.ActualWidth - 40;
+            if (_currentMode == Mode.NarrowWidth) width = (int)this.ActualWidth - 40;
             else if (width > this.ActualWidth - MinimumArticleTextPadding) width = (int)this.ActualWidth - MinimumArticleTextPadding;
             return width;
         }
@@ -506,7 +503,7 @@ namespace Weave
             ArticleContainer.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             WebVwArticle.NavigateToString("");
             GrdBrowserControls.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            ArticleContainer.Width = _browserDisplayWidth;
+            ArticleContainer.MaxWidth = _browserDisplayWidth;
         }
 
         private async void ParseArticle(NewsItem item, int fontSize, int articleWidth, bool allowMobilizer)
@@ -973,7 +970,7 @@ namespace Weave
             if (this.ActualHeight > this.ActualWidth)
             {
                 width = (int)this.ActualWidth;
-                BtnBackArticlePortrait.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                BtnBackArticlePortrait.Visibility = Visibility.Visible;
             }
 
             if (_browserDisplayWidth != width)
