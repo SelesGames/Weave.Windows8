@@ -832,7 +832,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <GridView Grid.RowSpan="2" Grid.Column="1" x:Name="itemGridView" Loaded="GridView_Loaded" SelectionChanged="itemGridView_SelectionChanged" Style="{StaticResource GridViewStyleBrowse}" Margin="-20,-20,0,0" SelectionMode="Single" IsItemClickEnabled="True" ItemClick="itemGridView_ItemClick" ItemContainerStyle="{StaticResource GridViewItemStyleArticle}" ItemsSource="{Binding Items}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled">
+        <GridView Grid.RowSpan="2" Grid.Column="1" x:Name="itemGridView" Loaded="GridView_Loaded" SelectionChanged="itemGridView_SelectionChanged" Style="{StaticResource GridViewStyleBrowse}" Margin="-20,-20,-20,0" SelectionMode="Single" IsItemClickEnabled="True" ItemClick="itemGridView_ItemClick" ItemContainerStyle="{StaticResource GridViewItemStyleArticle}" ItemsSource="{Binding Items}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled">
         </GridView>
 
         <Rectangle Name="RectNavBackground" Visibility="{Binding ElementName=StkPnlNavigation, Path=Visibility}" Grid.RowSpan="2" Fill="#101010" Margin="0,0,80,0" RenderTransformOrigin="0,0" />
@@ -1013,11 +1013,11 @@
         <Popup Name="PopupNavSnapped" Grid.Row="1" Grid.ColumnSpan="2" IsOpen="False" IsLightDismissEnabled="True" Opened="PopupNavSnapped_Opened">
             <Popup.Resources>
                 <Storyboard x:Name="SbNavSnappedPopIn">
-                    <PopInThemeAnimation TargetName="GrdNavSnappedContainer" FromVerticalOffset="500" FromHorizontalOffset="0" />
+                    <PopInThemeAnimation TargetName="GrdNavSnappedContainer" FromVerticalOffset="-500" FromHorizontalOffset="0" />
                 </Storyboard>
             </Popup.Resources>
             <Grid Name="GrdNavSnappedContainer" Background="#101010" Height="{Binding ElementName=itemGridView, Path=ActualHeight}" Width="{Binding ElementName=pageRoot, Path=ActualWidth}">
-                <GridView Name="GrdVwNavigationSnapped" SelectionChanged="GrdVwNavigationSnapped_SelectionChanged" DataContext="{Binding ElementName=GrdVwNavigation, Path=DataContext}" ItemContainerStyleSelector="{StaticResource NavigationItemStyleSelector}" ItemTemplateSelector="{StaticResource NavigationItemSelector}" ItemsSource="{Binding Items}" RenderTransformOrigin="0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,0,0,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled">
+                <GridView Name="GrdVwNavigationSnapped" SelectionChanged="GrdVwNavigationSnapped_SelectionChanged" DataContext="{Binding ElementName=GrdVwNavigation, Path=DataContext}" ItemContainerStyleSelector="{StaticResource NavigationItemStyleSelector}" ItemTemplateSelector="{StaticResource NavigationItemSelector}" ItemsSource="{Binding Items}" RenderTransformOrigin="0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,0,0,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel />
