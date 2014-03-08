@@ -1,5 +1,6 @@
 ﻿using Common.Microsoft.OneNote.Response;
 using Microsoft.Advertising.WinRT.UI;
+using Microsoft.Live;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -1002,14 +1003,11 @@ namespace Weave
 
         private delegate Task<BaseResponse> AsyncAction(string token);
 
-        private async void AppBarSaveToOneNote_Click(object sender, RoutedEventArgs e)
+        private async void SaveToOneNote()
         {
-            LiveAccountHelper helper = LiveAccountHelper.Instance;
-            if (!LiveAccountHelper.Instance.LoginChecked) await LiveAccountHelper.Instance.SilentSignIn();
-
-            if (helper.IsSignedIn)
+            String token = LiveAccountHelper.Instance.AuthClient.Session.AccessToken;
+            if (!String.IsNullOrEmpty(token))
             {
-                String token = helper.AuthClient.Session.AccessToken;
                 NewsItem selectedNewsItem = itemGridView.SelectedItem as NewsItem;
                 if (selectedNewsItem != null)
                 {
@@ -1018,9 +1016,7 @@ namespace Weave
                     if (IsArticleOpen && GrdBrowserControls.Visibility == Windows.UI.Xaml.Visibility.Visible) isMobilized = false;
 
                     AsyncAction saveTask;
-                    AppBarSaveToOneNote.IsEnabled = false;
-                    PrgRngSharingOneNote.IsActive = true;
-                    
+
                     if (isMobilized)
                     {
                         String imageUrl = null;
@@ -1063,58 +1059,43 @@ namespace Weave
                     {
                     }
 
-                    PrgRngSharingOneNote.IsActive = false;
-                    AppBarSaveToOneNote.IsEnabled = true;
+                    MessageDialog dialog = new MessageDialog(String.Format("\"{0}\" saved to OneNote", selectedNewsItem.Title));
+                    dialog.Commands.Add(new UICommand("Close"));
+                    dialog.ShowAsync();
                 }
             }
+        }
+
+        private async void AppBarSaveToOneNote_Click(object sender, RoutedEventArgs e)
+        {
+            AppBarSaveToOneNote.IsEnabled = false;
+            PrgRngSharingOneNote.IsActive = true;
+            LiveAccountHelper helper = LiveAccountHelper.Instance;
+            if (!LiveAccountHelper.Instance.LoginChecked) await LiveAccountHelper.Instance.SilentSignIn();
+
+            if (helper.IsSignedIn)
+            {
+                SaveToOneNote();
+            }
             else
             {
-                OneNoteFlyout flyout = new OneNoteFlyout();
-                flyout.ShowIndependent();
-            }
-            // For an example of how to save to OneNote, see Weave WP8 project
-            // class:  ReadabilityPage.xaml.cs
-            // line: 682 (SendToOneNoteMenuItemClick function)
-            // TODO: open some sort of flyout/page or something, and show the LiveSDK login button
-            /*
-             * 
-            psuedo-code:
-            
-            var articleViewType = viewModel.NewsItem.Feed.ArticleViewingType;
-            Func<Task<BaseResponse>> saveTask;
-            
-            if ((articleViewType == ArticleViewingType.Mobilizer || articleViewType == ArticleViewingType.MobilizerOnly)
-                && viewModel.CurrentMobilizedArticle != null)
-            {
-                var mobilizedArticle = viewModel.CurrentMobilizedArticle;
-
-                var oneNoteSave = new MobilizedOneNoteItem
+                try
                 {
-                    Title = mobilizedArticle.Title,
-                    Link = mobilizedArticle.Link,
-                    Source = mobilizedArticle.CombinedPublicationAndDate,
-                    HeroImage = mobilizedArticle.HeroImageUrl,
-                    BodyHtml = mobilizedArticle.ContentHtml,
-                };
-                saveTask = () => oneNoteSave.SendToOneNote(token);
+                    LiveLoginResult result = await LiveAccountHelper.Instance.SignIn();
+                    if (result.Status == LiveConnectSessionStatus.Connected)
+                    {
+                        BottomAppBar.IsOpen = true;
+                        SaveToOneNote();
+                    }
+                }
+                catch (LiveConnectException)
+                {
+                    // Handle exception.
+                }
             }
 
-            else
-            {
-                var oneNoteSave = new HtmlLinkOneNoteItem
-                {
-                    Title = viewModel.NewsItem.Title,
-                    Link = viewModel.NewsItem.Link,
-                    Source = viewModel.NewsItem.FormattedForMainPageSourceAndDate,
-                };
-                saveTask = () => oneNoteSave.SendToOneNote(token);
-            }
-            
-            frame.OverlayText = "Saving to OneNote...";
-            frame.IsLoading = true;
-            var response = await saveTask();
-            frame.IsLoading = false;
-            */
+            PrgRngSharingOneNote.IsActive = false;
+            AppBarSaveToOneNote.IsEnabled = true;
         }
 
         private void AppBarLayout_Click(object sender, RoutedEventArgs e)
@@ -1148,7 +1129,7 @@ namespace Weave
         void Page_CommandsRequested(Windows.UI.ApplicationSettings.SettingsPane sender, Windows.UI.ApplicationSettings.SettingsPaneCommandsRequestedEventArgs args)
         {
             args.Request.ApplicationCommands.Add(new SettingsCommand("About", "About", new UICommandInvokedHandler(OnAboutClicked)));
-            args.Request.ApplicationCommands.Add(new SettingsCommand("Live Account", "Live Account", new UICommandInvokedHandler(OnLiveAccountClicked)));
+            args.Request.ApplicationCommands.Add(new SettingsCommand("LiveAccount", "Microsoft Live Account", new UICommandInvokedHandler(OnLiveAccountClicked)));
         }
 
         private void OnAboutClicked(IUICommand command)

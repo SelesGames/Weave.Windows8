@@ -17,7 +17,7 @@
     Background="#222222"
     Loaded="SettingsFlyout_Loaded"
     Unloaded="SettingsFlyout_Unloaded"
-    Title="Live Account"
+    Title="MS Live Account"
     >
 
     <Grid Background="#222222">
