@@ -63,6 +63,24 @@ namespace Weave
         private ReadingThemeSelection _readingThemeControl = new ReadingThemeSelection();
         ArticleViewSelection _articleSelectionControl = new ArticleViewSelection();
 
+        List<FrameworkElement> _leftPanelSelected = new List<FrameworkElement>();
+        List<FrameworkElement> _leftPanelArticleOpenMobilizer = new List<FrameworkElement>();
+        List<FrameworkElement> _leftPanelArticleOpenBrowser = new List<FrameworkElement>();
+
+        List<FrameworkElement> _leftPanelSelectedFull = new List<FrameworkElement>();
+        List<FrameworkElement> _leftPanelArticleOpenMobilizerFull = new List<FrameworkElement>();
+        List<FrameworkElement> _leftPanelArticleOpenBrowserFull = new List<FrameworkElement>();
+
+        private enum LeftPanelMode
+        {
+            Unselected,
+            Selected,
+            Mobilizer,
+            Browser
+        }
+
+        private LeftPanelMode _currentLeftPanelMode = LeftPanelMode.Unselected;
+
         private bool? _isMouse = null;
 
         private bool _ignoreScrollIntoView = false;
@@ -84,6 +102,8 @@ namespace Weave
         {
             this.InitializeComponent();
 
+            InitLeftPanelItems();
+
             _feed.FirstVideoLoaded += FirstVideoLoaded;
 
             _readTimer = new DispatcherTimer();
@@ -102,6 +122,39 @@ namespace Weave
             _articleSelectionControl.ArticleViewChanged += ArticleSelectionControl_ArticleViewChanged;
 
             EditFeedControl.SaveRequest += EditFeedControl_SaveRequest;
+        }
+
+        private void InitLeftPanelItems()
+        {
+            List<FrameworkElement> globalActions = new List<FrameworkElement>();
+            globalActions.Add(AppBarMarkAllRead);
+            globalActions.Add(AppBarLayout);
+            globalActions.Add(AppBarRefresh);
+
+            _leftPanelSelected.Add(GrdFavorite);
+            _leftPanelSelected.Add(AppBarShare);
+            _leftPanelSelected.Add(GrdSaveToOneNote);
+
+            _leftPanelSelectedFull.AddRange(_leftPanelSelected);
+            _leftPanelSelectedFull.AddRange(globalActions);
+
+            _leftPanelArticleOpenMobilizer.AddRange(_leftPanelSelected);
+            _leftPanelArticleOpenMobilizer.Add(AppBarFontSize);
+            _leftPanelArticleOpenMobilizer.Add(AppBarReadingTheme);
+            _leftPanelArticleOpenMobilizer.Add(AppBarArticleView);
+            _leftPanelArticleOpenMobilizer.Add(GrdArticlePosition);
+
+            _leftPanelArticleOpenBrowser.AddRange(_leftPanelSelected);
+            _leftPanelArticleOpenBrowser.Add(AppBarArticleView);
+            _leftPanelArticleOpenBrowser.Add(GrdArticlePosition);
+
+            _leftPanelArticleOpenMobilizerFull.AddRange(_leftPanelArticleOpenMobilizer);
+            _leftPanelArticleOpenMobilizerFull.AddRange(globalActions);
+
+            _leftPanelArticleOpenBrowserFull.AddRange(_leftPanelArticleOpenBrowser);
+            _leftPanelArticleOpenBrowserFull.AddRange(globalActions);
+
+            LeftPanel.Items.Clear();
         }
 
         /// <summary>
@@ -257,6 +310,7 @@ namespace Weave
             }
             if (e.NewSize.Width > 0 && e.NewSize.Width < RightPanelCollapseSize) RightPanelContainer.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             else RightPanelContainer.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            UpdateLeftPanelItems(_currentLeftPanelMode);
             SetViewMode();
         }
 
@@ -283,7 +337,7 @@ namespace Weave
                     backButton.Style = App.Current.Resources["SnappedBackButtonStyle"] as Style;
                     BtnMenuSnapped.Visibility = Visibility.Visible;
                     RectNavBackgroundSnapped.Visibility = Visibility.Visible;
-                    _itemsContentPanel.Margin = new Thickness(0, 20, 20, 40);
+                    _itemsContentPanel.Margin = new Thickness(20, 20, 20, 40);
                     StkPnlHeader.Margin = new Thickness(0, 10, 0, 0);
                 }
                 else if (_currentMode == Mode.NarrowWidth)
@@ -480,7 +534,6 @@ namespace Weave
                 SbArticleFlyIn.Begin();
                 ParseArticle(item, fontSize, articleWidth, allowMobilizer);
                 RightPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                AppBarArticleView.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
         }
 
@@ -491,8 +544,7 @@ namespace Weave
             AnimArticleFlyOut.To = Window.Current.Bounds.Width - p.X;
             SbArticleFlyOut.Begin();
             RightPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
-            AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            AppBarArticleView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            UpdateLeftPanelItems(LeftPanelMode.Selected);
             BtnBackArticlePortrait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
         }
 
@@ -538,7 +590,7 @@ namespace Weave
                     String result = await MobilizerHelper.GetMobilizedHtml(item, fontSize, articleWidth);
                     if (result != null)
                     {
-                        AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                        UpdateLeftPanelItems(LeftPanelMode.Mobilizer);
                         WebVwArticle.NavigateToString(result);
                     }
                     else
@@ -549,7 +601,7 @@ namespace Weave
 
                 if (loadWebBrowser)
                 {
-                    AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    UpdateLeftPanelItems(LeftPanelMode.Browser);
                     BrowseToWebPage(item.Link);
                 }
                 PrgRngArticleLoading.IsActive = false;
@@ -832,7 +884,7 @@ namespace Weave
                     if (item is AdvertisingNewsItem) itemGridView.SelectedItem = null;
                     else
                     {
-                        LeftPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                        UpdateLeftPanelItems(LeftPanelMode.Selected);
                         AppBarFavorite.Visibility = item.IsFavorite ? Visibility.Collapsed : Windows.UI.Xaml.Visibility.Visible;
                         if (_showAppBarOnSelection) BottomAppBar.IsOpen = true;
                         handled = true;
@@ -842,7 +894,7 @@ namespace Weave
 
             if (!handled)
             {
-                LeftPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                UpdateLeftPanelItems(LeftPanelMode.Unselected);
                 AppBarFavorite.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
         }
@@ -1390,6 +1442,52 @@ namespace Weave
         private bool IsArticleOpen
         {
             get { return ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible; }
+        }
+
+        private void UpdateLeftPanelItems(LeftPanelMode mode)
+        {
+            List<FrameworkElement> selected = null;
+            if (RightPanelContainer.Visibility == Windows.UI.Xaml.Visibility.Visible)
+            {
+                switch (mode)
+                {
+                    case LeftPanelMode.Selected:
+                        selected = _leftPanelSelected;
+                        break;
+                    case LeftPanelMode.Mobilizer:
+                        selected = _leftPanelArticleOpenMobilizer;
+                        break;
+                    case LeftPanelMode.Browser:
+                        selected = _leftPanelArticleOpenBrowser;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                switch (mode)
+                {
+                    case LeftPanelMode.Selected:
+                        selected = _leftPanelSelectedFull;
+                        break;
+                    case LeftPanelMode.Mobilizer:
+                        selected = _leftPanelArticleOpenMobilizerFull;
+                        break;
+                    case LeftPanelMode.Browser:
+                        selected = _leftPanelArticleOpenBrowserFull;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            LeftPanel.ItemsSource = selected;
+            _currentLeftPanelMode = mode;
+            //LeftPanel.Items.Clear();
+            //if (newItems != null)
+            //{
+            //    foreach (FrameworkElement element in newItems) LeftPanel.Items.Add(element);
+            //}
         }
 
     } // end of class

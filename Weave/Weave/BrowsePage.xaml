@@ -587,7 +587,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ArticleTextItemTemplateSnapped">
-            <Grid HorizontalAlignment="Stretch" Height="250" Margin="20,0,0,0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
+            <Grid HorizontalAlignment="Stretch" Height="250" Margin="0,0,0,0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
@@ -639,7 +639,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ArticleImageItemTemplateSnapped">
-            <Grid HorizontalAlignment="Stretch" Height="250" Margin="20,0,0,0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
+            <Grid HorizontalAlignment="Stretch" Height="250" Margin="0,0,0,0" Opacity="{Binding DisplayState, Converter={StaticResource DisplayStateToOpacityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="160" />
                     <RowDefinition Height="Auto" />
@@ -1049,42 +1049,54 @@
         <AppBar Padding="10,0,10,0" Background="{StaticResource WeaveBrush}" Opened="AppBar_Opened" Closed="AppBar_Closed">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel x:Name="LeftPanel" Orientation="Horizontal" Visibility="Collapsed" Grid.Column="0" HorizontalAlignment="Left">
-                    <Grid>
-                        <Button x:Name="AppBarFavorite" Style="{StaticResource FavoriteAppBarButtonStyle}" Click="AppBarFavorite_Click" />
-                        <Button x:Name="AppBarUnfavorite" Style="{StaticResource UnfavoriteAppBarButtonStyle}" Click="AppBarUnfavorite_Click" Visibility="{Binding ElementName=AppBarFavorite, Path=Visibility, Converter={StaticResource VisibilityInverter}}" />
-                    </Grid>
-                    <Button x:Name="AppBarShare" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Share" Content="&#xE1D7;" Click="AppBarShare_Click" FontSize="14" />
-                    <Grid>
-                        <Button x:Name="AppBarSaveToOneNote" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="OneNote" Content="&#xE1D7;" Click="AppBarSaveToOneNote_Click" FontSize="14">
-                            <!--<Button.Flyout>
-                                <Flyout>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Style="{StaticResource BasicTextStyle}" VerticalAlignment="Center" Foreground="Black">Sharing to OneNote...</TextBlock>
-                                        <ProgressRing Name="PrgRngSharingOneNote" Foreground="{StaticResource WeaveBrush}" Width="30" Height="30" VerticalAlignment="Center" Margin="10,0,0,0" />
-                                    </StackPanel>
-                                </Flyout>
-                            </Button.Flyout>-->
-                        </Button>
-                        <ProgressRing Name="PrgRngSharingOneNote" Foreground="White" Width="30" Height="30" VerticalAlignment="Top" Margin="0,17,0,0" />
-                    </Grid>
-                    <Line x:Name="AppBarSeparator" X1="0" Y1="60" Margin="20,12,20,0"  StrokeThickness="1" Stroke="White" Visibility="{Binding ElementName=AppBarFontSize, Path=Visibility}" />
-                    <Button x:Name="AppBarFontSize" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Font size" Content="&#xE185;" Click="AppBarFontSize_Click" Visibility="Collapsed" />
-                    <Button x:Name="AppBarReadingTheme" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Reading theme" Content="&#xE158;" Click="AppBarReadingTheme_Click" Visibility="Collapsed" />
-                    <Button x:Name="AppBarArticleView" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Article view" Content="&#xE12A;" Click="AppBarArticleView_Click" Visibility="Collapsed" />
-                    <Grid x:Name="GrdArticlePosition" Visibility="{Binding ElementName=AppBarFontSize, Path=Visibility}">
-                        <Button x:Name="AppBarPositionCenter" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Position center" Content="&#xE176;" Click="AppBarPositionCenter_Click" />
-                        <Button x:Name="AppBarPositionRight" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Position right" Content="&#xE140;" Click="AppBarPositionRight_Click" Visibility="{Binding ElementName=AppBarPositionCenter, Path=Visibility, Converter={StaticResource VisibilityInverter}}" />
-                    </Grid>
-                </StackPanel>
-                <StackPanel x:Name="RightPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-                    <Button x:Name="AppBarMarkAllRead" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Mark all read" Content="&#xE119;" Click="AppBarMarkAllRead_Click" />
-                    <Button x:Name="AppBarLayout" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Layout" Content="&#xE138;" Click="AppBarLayout_Click" />
-                    <Button x:Name="AppBarRefresh" Style="{StaticResource RefreshAppBarButtonStyle}" Click="AppBarRefresh_Click" />
-                </StackPanel>
+                <ItemsControl x:Name="LeftPanel" HorizontalAlignment="Left">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapGrid Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.Items>
+                        <Grid Name="GrdFavorite">
+                            <Button x:Name="AppBarFavorite" Style="{StaticResource FavoriteAppBarButtonStyle}" Click="AppBarFavorite_Click" />
+                            <Button x:Name="AppBarUnfavorite" Style="{StaticResource UnfavoriteAppBarButtonStyle}" Click="AppBarUnfavorite_Click" Visibility="{Binding ElementName=AppBarFavorite, Path=Visibility, Converter={StaticResource VisibilityInverter}}" />
+                        </Grid>
+                        <Button x:Name="AppBarShare" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Share" Content="&#xE1D7;" Click="AppBarShare_Click" FontSize="14" />
+                        <Grid Name="GrdSaveToOneNote">
+                            <Button x:Name="AppBarSaveToOneNote" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="OneNote" Content="&#xE1D7;" Click="AppBarSaveToOneNote_Click" FontSize="14">
+                                <!--<Button.Flyout>
+                            <Flyout>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource BasicTextStyle}" VerticalAlignment="Center" Foreground="Black">Sharing to OneNote...</TextBlock>
+                                    <ProgressRing Name="PrgRngSharingOneNote" Foreground="{StaticResource WeaveBrush}" Width="30" Height="30" VerticalAlignment="Center" Margin="10,0,0,0" />
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>-->
+                            </Button>
+                            <ProgressRing Name="PrgRngSharingOneNote" Foreground="White" Width="30" Height="30" VerticalAlignment="Top" Margin="0,17,0,0" />
+                        </Grid>
+                        <!--<Line x:Name="AppBarSeparator" X1="0" Y1="60" Margin="20,12,-40,0"  StrokeThickness="1" Stroke="White" />-->
+                        <Button x:Name="AppBarFontSize" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Font size" Content="&#xE185;" Click="AppBarFontSize_Click" />
+                        <Button x:Name="AppBarReadingTheme" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Reading theme" Content="&#xE158;" Click="AppBarReadingTheme_Click" />
+                        <Button x:Name="AppBarArticleView" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Article view" Content="&#xE12A;" Click="AppBarArticleView_Click" />
+                        <Grid x:Name="GrdArticlePosition" Visibility="{Binding ElementName=AppBarFontSize, Path=Visibility}">
+                            <Button x:Name="AppBarPositionCenter" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Position center" Content="&#xE176;" Click="AppBarPositionCenter_Click" />
+                            <Button x:Name="AppBarPositionRight" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Position right" Content="&#xE140;" Click="AppBarPositionRight_Click" Visibility="{Binding ElementName=AppBarPositionCenter, Path=Visibility, Converter={StaticResource VisibilityInverter}}" />
+                        </Grid>
+                        <Button Name="AppBarMarkAllRead" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Mark all read" Content="&#xE119;" Click="AppBarMarkAllRead_Click" />
+                        <Button Name="AppBarLayout" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Layout" Content="&#xE138;" Click="AppBarLayout_Click" />
+                        <Button Name="AppBarRefresh" Style="{StaticResource RefreshAppBarButtonStyle}" Click="AppBarRefresh_Click" />
+                    </ItemsControl.Items>
+                </ItemsControl>
+                <Grid Name="RightPanelContainer" HorizontalAlignment="Right" Grid.Column="1">
+                    <StackPanel x:Name="RightPanel" Orientation="Horizontal">
+                        <Button Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Mark all read" Content="&#xE119;" Click="AppBarMarkAllRead_Click" />
+                        <Button Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Layout" Content="&#xE138;" Click="AppBarLayout_Click" />
+                        <Button Style="{StaticResource RefreshAppBarButtonStyle}" Click="AppBarRefresh_Click" />
+                    </StackPanel>
+                </Grid>
             </Grid>
         </AppBar>
     </Page.BottomAppBar>
