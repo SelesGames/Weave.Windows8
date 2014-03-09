@@ -1457,6 +1457,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid">
+                        <Ellipse Fill="Black" Opacity="0.3" Margin="5,5,5,5" />
                         <Grid Margin="-1,-16,0,0">
                             <TextBlock x:Name="BackgroundGlyph" Text="&#xE0A8;" Foreground="{StaticResource BackButtonBackgroundThemeBrush}"/>
                             <TextBlock x:Name="NormalGlyph" Text="{StaticResource BackButtonGlyph}" Foreground="{StaticResource BackButtonForegroundThemeBrush}"/>
@@ -1571,6 +1572,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Width="36" Height="36" Margin="-3,0,7,33">
+                        <Ellipse Fill="Black" Opacity="0.3" Margin="5,5,5,5" />
                         <Grid Margin="-1,-1,0,0">
                             <TextBlock x:Name="BackgroundGlyph" Text="&#xE0D4;" Foreground="{StaticResource BackButtonBackgroundThemeBrush}"/>
                             <TextBlock x:Name="NormalGlyph" Text="{StaticResource BackButtonSnappedGlyph}" Foreground="{StaticResource BackButtonForegroundThemeBrush}"/>

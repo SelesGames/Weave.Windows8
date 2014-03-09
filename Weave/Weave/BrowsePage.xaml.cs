@@ -43,6 +43,8 @@ namespace Weave
         private const int DefaultBrowserWidth = 817;
         private int _browserDisplayWidth = DefaultBrowserWidth;
 
+        private const int RightPanelCollapseSize = 630;
+
         private Stack<Uri> _browserBackStack = new Stack<Uri>();
 
         private Guid? _initialSelectedItemId = null;
@@ -253,6 +255,8 @@ namespace Weave
                 // close article if going from snapped to expanded state
                 CloseArticle();
             }
+            if (e.NewSize.Width > 0 && e.NewSize.Width < RightPanelCollapseSize) RightPanelContainer.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            else RightPanelContainer.Visibility = Windows.UI.Xaml.Visibility.Visible;
             SetViewMode();
         }
 
@@ -269,9 +273,9 @@ namespace Weave
             Size size = new Size(this.ActualWidth, this.ActualHeight);
             if (size.Width > 0 && size.Height > 0)
             {
-                if (_currentMode == Mode.NarrowWidth)
+                if (size.Width < SnappedThreshold)
                 {
-                    if (ArticleContainer.Visibility == Visibility.Visible) 
+                    if (ArticleContainer.Visibility == Visibility.Visible)
                         CloseArticle();
 
                     Grid.SetRow(itemGridView, 1);
@@ -279,7 +283,21 @@ namespace Weave
                     backButton.Style = App.Current.Resources["SnappedBackButtonStyle"] as Style;
                     BtnMenuSnapped.Visibility = Visibility.Visible;
                     RectNavBackgroundSnapped.Visibility = Visibility.Visible;
-                    _itemsContentPanel.Margin = new Thickness(0, 20, 0, 40);
+                    _itemsContentPanel.Margin = new Thickness(0, 20, 20, 40);
+                    StkPnlHeader.Margin = new Thickness(0, 10, 0, 0);
+                }
+                else if (_currentMode == Mode.NarrowWidth)
+                {
+                    if (ArticleContainer.Visibility == Visibility.Visible) 
+                        CloseArticle();
+
+                    Grid.SetRow(itemGridView, 1);
+                    backButton.Style = App.Current.Resources["PortraitBackButtonStyle"] as Style;
+                    StkPnlNavigation.Visibility = Visibility.Collapsed;
+                    BtnMenuSnapped.Visibility = Visibility.Visible;
+                    RectNavBackgroundSnapped.Visibility = Visibility.Visible;
+                    _itemsContentPanel.Margin = new Thickness(100, 80, 100, 80);
+                    StkPnlHeader.Margin = new Thickness();
                 }
                 else
                 {
@@ -287,6 +305,7 @@ namespace Weave
                     StkPnlNavigation.Visibility = Visibility.Visible;
                     BtnMenuSnapped.Visibility = Visibility.Collapsed;
                     RectNavBackgroundSnapped.Visibility = Visibility.Collapsed;
+                    StkPnlHeader.Margin = new Thickness();
 
                     if (_itemsContentPanel.Tag != null) 
                         _itemsContentPanel.Margin = (Thickness)_itemsContentPanel.Tag;
@@ -303,7 +322,7 @@ namespace Weave
 
         private void UpdateTemplateSelector()
         {
-            if (_currentMode == Mode.NarrowWidth)
+            if (this.ActualWidth < SnappedThreshold)
             {
                 itemGridView.ItemTemplateSelector = this.Resources["ArticleSelectorSnapped"] as DataTemplateSelector;
             }
@@ -473,7 +492,6 @@ namespace Weave
             SbArticleFlyOut.Begin();
             RightPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
             AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             AppBarArticleView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             BtnBackArticlePortrait.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
         }
@@ -521,7 +539,6 @@ namespace Weave
                     if (result != null)
                     {
                         AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                        AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Visible;
                         WebVwArticle.NavigateToString(result);
                     }
                     else
@@ -533,7 +550,6 @@ namespace Weave
                 if (loadWebBrowser)
                 {
                     AppBarFontSize.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                    AppBarReadingTheme.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                     BrowseToWebPage(item.Link);
                 }
                 PrgRngArticleLoading.IsActive = false;
@@ -681,7 +697,7 @@ namespace Weave
         private async void Refresh()
         {
             if (ArticleContainer.Visibility == Windows.UI.Xaml.Visibility.Visible) CloseArticle();
-            await ProcessSelectedNav(true);
+            await ProcessSelectedNav(GrdVwNavigation.SelectedItem, true);
         }
 
         private void ButtonGrid_Loaded(object sender, RoutedEventArgs e)
@@ -1003,7 +1019,7 @@ namespace Weave
 
         private delegate Task<BaseResponse> AsyncAction(string token);
 
-        private async void SaveToOneNote()
+        private async Task SaveToOneNote()
         {
             String token = LiveAccountHelper.Instance.AuthClient.Session.AccessToken;
             if (!String.IsNullOrEmpty(token))
@@ -1075,7 +1091,7 @@ namespace Weave
 
             if (helper.IsSignedIn)
             {
-                SaveToOneNote();
+                await SaveToOneNote();
             }
             else
             {
@@ -1085,7 +1101,7 @@ namespace Weave
                     if (result.Status == LiveConnectSessionStatus.Connected)
                     {
                         BottomAppBar.IsOpen = true;
-                        SaveToOneNote();
+                        await SaveToOneNote();
                     }
                 }
                 catch (LiveConnectException)
@@ -1213,28 +1229,32 @@ namespace Weave
         private async void AppBarMarkAllRead_Click(object sender, RoutedEventArgs e)
         {
             object selected = GrdVwNavigation.SelectedItem;
-            AppBarMarkAllRead.IsEnabled = false;
-            if (selected is CategoryViewModel)
+            Button button = sender as Button;
+            if (button != null)
             {
-                CategoryViewModel vm = (CategoryViewModel)selected;
-                if (vm.Type == CategoryViewModel.CategoryType.Specific)
+                button.IsEnabled = false;
+                if (selected is CategoryViewModel)
                 {
-                    await UserHelper.Instance.MarkCategoryAsRead(vm.Info.Category);
+                    CategoryViewModel vm = (CategoryViewModel)selected;
+                    if (vm.Type == CategoryViewModel.CategoryType.Specific)
+                    {
+                        await UserHelper.Instance.MarkCategoryAsRead(vm.Info.Category);
+                        MarkAllArticlesRead();
+                    }
+                    else if (vm.Type == CategoryViewModel.CategoryType.Latest)
+                    {
+                        await UserHelper.Instance.MarkSoftRead(UserHelper.Instance.GetLatestNews());
+                        MarkAllArticlesRead();
+                    }
+                }
+                else if (selected is FeedItemViewModel)
+                {
+                    FeedItemViewModel vm = (FeedItemViewModel)selected;
+                    await UserHelper.Instance.MarkFeedAsRead(vm.Feed);
                     MarkAllArticlesRead();
                 }
-                else if (vm.Type == CategoryViewModel.CategoryType.Latest)
-                {
-                    await UserHelper.Instance.MarkSoftRead(UserHelper.Instance.GetLatestNews());
-                    MarkAllArticlesRead();
-                }
+                button.IsEnabled = true;
             }
-            else if (selected is FeedItemViewModel)
-            {
-                FeedItemViewModel vm = (FeedItemViewModel)selected;
-                await UserHelper.Instance.MarkFeedAsRead(vm.Feed);
-                MarkAllArticlesRead();
-            }
-            AppBarMarkAllRead.IsEnabled = true;
         }
 
         private void MarkAllArticlesRead()
