@@ -1065,15 +1065,8 @@
                         </Grid>
                         <Button x:Name="AppBarShare" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="Share" Content="&#xE1D7;" Click="AppBarShare_Click" FontSize="14" />
                         <Grid Name="GrdSaveToOneNote">
-                            <Button x:Name="AppBarSaveToOneNote" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="OneNote" Content="&#xE1D7;" Click="AppBarSaveToOneNote_Click" FontSize="14">
-                                <!--<Button.Flyout>
-                            <Flyout>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Style="{StaticResource BasicTextStyle}" VerticalAlignment="Center" Foreground="Black">Sharing to OneNote...</TextBlock>
-                                    <ProgressRing Name="PrgRngSharingOneNote" Foreground="{StaticResource WeaveBrush}" Width="30" Height="30" VerticalAlignment="Center" Margin="10,0,0,0" />
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>-->
+                            <Button x:Name="AppBarSaveToOneNote" Style="{StaticResource AppBarButtonStyle}" AutomationProperties.Name="OneNote" Click="AppBarSaveToOneNote_Click" FontSize="14" >
+                                <Image Source="/Assets/Buttons/OneNoteAppBar.png" Stretch="Uniform" />
                             </Button>
                             <ProgressRing Name="PrgRngSharingOneNote" Foreground="White" Width="30" Height="30" VerticalAlignment="Top" Margin="0,17,0,0" />
                         </Grid>

@@ -1127,7 +1127,7 @@ namespace Weave
                     {
                     }
 
-                    MessageDialog dialog = new MessageDialog(String.Format("\"{0}\" saved to OneNote", selectedNewsItem.Title));
+                    MessageDialog dialog = new MessageDialog(String.Format("Successfully saved to OneNote"));
                     dialog.Commands.Add(new UICommand("Close"));
                     dialog.ShowAsync();
                 }

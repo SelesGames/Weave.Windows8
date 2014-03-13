@@ -229,6 +229,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\Buttons\OneNoteAppBar.png" />
     <Content Include="Fonts\LiveSymbol.ttf" />
     <None Include="packages.config" />
     <None Include="Weave_StoreKey.pfx" />
