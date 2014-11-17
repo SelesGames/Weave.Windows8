@@ -29,7 +29,7 @@ namespace Weave.Common
         private UserInfo _currentUser;
         private Weave.ViewModels.Contracts.Client.IViewModelRepository _repo;
 
-        private Identity.Service.Client.ServiceClient _identityClient;
+        private Weave.Services.Identity.Client _identityClient;
         private Weave.ViewModels.Identity.IdentityInfo _identityInfo;
 
         private bool _isLoaded;
@@ -58,10 +58,10 @@ namespace Weave.Common
         private UserHelper()
         {
             _repo = new ViewModels.Repository.StandardRepository(
-                        new Weave.User.Service.Client.Client(),
-                        new Weave.Article.Service.Client.ServiceClient());
+                        new Weave.Services.User.Client(),
+                        new Weave.Services.Article.Client.Client());
 
-            _identityClient = new Identity.Service.Client.ServiceClient();
+            _identityClient = new Weave.Services.Identity.Client();
             _identityInfo = new ViewModels.Identity.IdentityInfo(_identityClient);
             _identityInfo.UserIdChanged += IdentityInfo_UserIdChanged;
 
@@ -192,11 +192,11 @@ namespace Weave.Common
             }
         }
 
-        public async Task<NewsList> GetCategoryNews(String category, int start, int count, EntryType entry)
+        public async Task<NewsList> GetCategoryNews(String category, Guid? cursorId, int count, EntryType entry)
         {
             try
             {
-                return await _currentUser.GetNewsForCategory(category, entry, start, count);
+                return await _currentUser.GetNewsForCategory(category, entry, cursorId, count);
             }
             catch (Exception)
             {
@@ -204,11 +204,11 @@ namespace Weave.Common
             }
         }
 
-        public async Task<NewsList> GetFeedNews(Guid feedId, int start, int count, EntryType entry)
+        public async Task<NewsList> GetFeedNews(Guid feedId, Guid? cursorId, int count, EntryType entry)
         {
             try
             {
-                return await _currentUser.GetNewsForFeed(feedId, entry, start, count);
+                return await _currentUser.GetNewsForFeed(feedId, entry, cursorId, count);
             }
             catch (Exception)
             {

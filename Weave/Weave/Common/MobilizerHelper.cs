@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Weave.Mobilizer.Client;
+using Weave.Services.Mobilizer;
 using Weave.ViewModels;
 using Windows.UI.Xaml.Media;
 
@@ -42,7 +43,7 @@ namespace Weave.Common
             String result = null;
             try
             {
-                result = (await _client.Get(item.Link)).content;
+                result = (await _client.Get(item.Link, stripLeadImage: true)).content;
             }
             catch (Exception)
             {
@@ -56,7 +57,7 @@ namespace Weave.Common
 
             try
             {
-                var content = await _client.Get(item.Link);
+                var content = await _client.Get(item.Link, stripLeadImage: true);
                 String body = content.content;
                 int firstCharIndex = -1;
                 StringBuilder sb = new StringBuilder();

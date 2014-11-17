@@ -1,7 +1,7 @@
 ﻿
 namespace Common.Windows.Compression
 {
-    public class CompressionHandlerCollection : Common.Compression.CompressionHandlerCollection
+    public class CompressionHandlerCollection : Common.Net.Http.Compression.Settings.CompressionHandlerCollection
     {
         public CompressionHandlerCollection()
         {

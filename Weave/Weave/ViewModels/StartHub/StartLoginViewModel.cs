@@ -74,7 +74,7 @@ namespace Weave.ViewModels.StartHub
 
         public enum LoginService { Microsoft, Twitter, Facebook, Google };
 
-        Weave.Identity.Service.Client.ServiceClient _client;
+        Weave.Services.Identity.Client _client;
 
         private const String ImagePathFormat = "/Assets/Login/{0}.png";
 
@@ -82,7 +82,7 @@ namespace Weave.ViewModels.StartHub
         {
             Items = new ObservableCollection<LoginInfo>();
             Header = "Login & Sync";
-            _client = new Weave.Identity.Service.Client.ServiceClient();
+            _client = new Weave.Services.Identity.Client();
         }
 
         public async void InitLoginItems()

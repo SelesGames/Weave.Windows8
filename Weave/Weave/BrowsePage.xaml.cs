@@ -1,4 +1,4 @@
-﻿using Common.Microsoft.OneNote.Response;
+﻿using Common.Microsoft.Services.OneNote.Response;
 using Microsoft.Advertising.WinRT.UI;
 using Microsoft.Live;
 using System;

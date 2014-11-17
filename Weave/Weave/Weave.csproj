@@ -426,62 +426,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Weave.Portable\Common.Compression\Common.Compression.csproj">
-      <Project>{00617b68-c1f0-4ad8-8307-25c0608d745d}</Project>
-      <Name>Common.Compression</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Common.Microsoft.OneNote\Common.Microsoft.OneNote.csproj">
-      <Project>{7b342c99-3758-4fa0-be6e-576f07286df7}</Project>
-      <Name>Common.Microsoft.OneNote</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Common.Microsoft\Common.Microsoft.csproj">
-      <Project>{c323425e-3a4b-4a22-9ce5-acf8d7124897}</Project>
-      <Name>Common.Microsoft</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Article.Service.Client\Weave.Article.Service.Client.csproj">
-      <Project>{620200b1-17f4-4c5a-a301-ca9aed702806}</Project>
-      <Name>Weave.Article.Service.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Article.Service.Contracts\Weave.Article.Service.Contracts.csproj">
-      <Project>{d727f239-ee96-4b05-8f17-65871b52b260}</Project>
-      <Name>Weave.Article.Service.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.FeedLibrary\Weave.FeedLibrary.csproj">
-      <Project>{588b02fc-6bb9-49ae-8ece-2a4bac9b470b}</Project>
-      <Name>Weave.FeedLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Identity.Service.Client\Weave.Identity.Service.Client.csproj">
-      <Project>{42e619ba-2842-44a7-94d4-4b1485c7136b}</Project>
-      <Name>Weave.Identity.Service.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Identity.Service.Contracts\Weave.Identity.Service.Contracts.csproj">
-      <Project>{cce98720-6054-4ef8-ba8c-14821b35ec1d}</Project>
-      <Name>Weave.Identity.Service.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Mobilizer.Contracts\Weave.Mobilizer.Contracts.csproj">
-      <Project>{fc776ca4-35b3-4024-8667-cb265805a519}</Project>
-      <Name>Weave.Mobilizer.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.Mobilizer.DTOs\Weave.Mobilizer.DTOs.csproj">
-      <Project>{0a9019e4-e76f-4fac-a5c7-70f32cf5e2c1}</Project>
-      <Name>Weave.Mobilizer.DTOs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.User.Service.Client\Weave.User.Service.Client.csproj">
-      <Project>{3bd5fab6-6843-4dad-8846-2033aaf03fd7}</Project>
-      <Name>Weave.User.Service.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.User.Service.Contracts\Weave.User.Service.Contracts.csproj">
-      <Project>{02f3363f-7b0f-4c5f-9123-b388f2870c35}</Project>
-      <Name>Weave.User.Service.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.ViewModels.Repository\Weave.ViewModels.Repository.csproj">
-      <Project>{d326f8c2-8dcf-43d4-9bad-bc07ca6d6cce}</Project>
-      <Name>Weave.ViewModels.Repository</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Weave.Portable\Weave.ViewModels\Weave.ViewModels.csproj">
-      <Project>{0f188fc9-d10c-48db-917a-ff1cb9c8e795}</Project>
-      <Name>Weave.ViewModels</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Windows.Compression\Common.Windows.Compression.csproj">
       <Project>{2aada961-3a53-4f1d-ac3d-d3cb75dd5e80}</Project>
       <Name>Common.Windows.Compression</Name>
@@ -500,6 +444,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Common.Microsoft.Services">
+      <HintPath>..\packages\Common.Microsoft.Services.1.0.0.37566\lib\portable-net45+win+wpa81+wp80\Common.Microsoft.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Net.Http.Compression, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SelesGames.HttpClient.1.0.0.33816\lib\portable-net45+win+wpa81+wp80\Common.Net.Http.Compression.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Live, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\LiveSDK.5.6\WindowsXAML\Microsoft.Live.dll</HintPath>
@@ -516,6 +467,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\netcore45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="SelesGames.HttpClient, Version=1.0.0.33816, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SelesGames.HttpClient.1.0.0.33816\lib\portable-net45+win+wpa81+wp80\SelesGames.HttpClient.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http.Extensions, Version=2.2.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\win8\System.Net.Http.Extensions.dll</HintPath>
@@ -527,6 +482,13 @@
     <Reference Include="System.Net.Http.Primitives, Version=4.2.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\win8\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Weave.Services">
+      <HintPath>..\packages\Weave.Services.1.0.0.33183\lib\portable-net45+win+wpa81+wp80\Weave.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="Weave.ViewModels, Version=1.0.0.35732, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Weave.ViewModels.1.0.0.35732\lib\portable-net45+win+wpa81+wp80\Weave.ViewModels.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

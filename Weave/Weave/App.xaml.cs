@@ -36,7 +36,8 @@ namespace Weave
             this.Resuming += App_Resuming;
             this.UnhandledException += App_UnhandledException;
 
-            global::Common.Compression.Settings.CompressionHandlers = new global::Common.Windows.Compression.CompressionHandlerCollection();
+            global::Common.Net.Http.Compression.Settings.GlobalCompressionSettings.CompressionHandlers = 
+                new global::Common.Windows.Compression.CompressionHandlerCollection();
         }
 
         async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)

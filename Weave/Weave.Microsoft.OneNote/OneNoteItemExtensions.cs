@@ -1,6 +1,6 @@
-﻿using Common.Microsoft;
-using Common.Microsoft.OneNote;
-using Common.Microsoft.OneNote.Response;
+﻿using Common.Microsoft.Services;
+using Common.Microsoft.Services.OneNote;
+using Common.Microsoft.Services.OneNote.Response;
 using System.Threading.Tasks;
 
 namespace Weave.Microsoft.OneNote
